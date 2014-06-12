@@ -10,6 +10,21 @@
 #include "hardware.h"
 #include "driverlib.h"
 
+bool i_1_leftSelBtn = false;
+bool i_1_middleSelBtn = false;
+bool i_1_rightSelBtn = false ;
+bool i_1_leftDirBtn = false;
+bool i_1_rightDirBtn = false;
+bool i_1_upDirBtn = false;
+bool i_1_downDirBtn = false;
+
+bool I_leftSelBtn = false;
+bool I_middleSelBtn = false;
+bool I_rightSelBtn = false;
+bool I_rightDirBtn = false;
+bool I_leftDirBtn = false;
+bool I_upDirBtn = false;
+bool I_downDirBtn = false;
 
 /* Configures the system clocks:
  * MCLK = SMCLK = DCO/FLL = mclkFreq (expected to be expressed in Hz)
