@@ -1,6 +1,7 @@
 
 
 
+
 // Basic MSP430 and driverLib #includes
 #include "msp430.h"
 #include "driverlib/MSP430F5xx_6xx/wdt_a.h"
@@ -12,7 +13,6 @@
 #include "inc/hw_memmap.h"
 #include "grlib.h"
 #include "LcdDriver/Sharp96x96.h"
-#include "images/images.h"
 #include "driverlib.h"
 #include "stdint.h"
 
@@ -28,23 +28,22 @@ void InputEvents();
 
 
 
+#include "BasalProfiles.h"
+#include "Flash.h"
 
+void main(void){
 
-
-void main(void)
-{
     // Stop WDT
     WDT_A_hold(WDT_A_BASE);
 
     // Basic GPIO initialization
-    // initPorts();           // Config all the GPIOS for low-power (output low)
-    //initButtons();         // Config the GPIOS for the buttons
     boardInit();
     timerInit();
-    ledInit();
+    //ledInit();
     buttonInit();
 
     clockInit(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+
 
     // Set up the LCD
     Sharp96x96_LCDInit();
@@ -55,6 +54,7 @@ void main(void)
   	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
   	GrClearDisplay(&g_sContext);
   	GrFlush(&g_sContext);
+
 
   	InitMonitoredVariables();
   	c_pwrStatus = Ready;
@@ -81,11 +81,9 @@ void main(void)
 			updateScreen = false;
 		}
 
+		__no_operation();
 
-
-
-
-	//	InitMonitoredVariables();
+		InitMonitoredVariables();
 
 	}
 }
@@ -121,6 +119,3 @@ void InputEvents(){
 	I_downDirBtn = i_downDirBtn & !i_1_downDirBtn;
 	i_1_downDirBtn=i_downDirBtn;
 }
-
-
-

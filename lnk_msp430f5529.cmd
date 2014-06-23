@@ -62,7 +62,17 @@ MEMORY
     INFOB                   : origin = 0x1900, length = 0x0080
     INFOC                   : origin = 0x1880, length = 0x0080
     INFOD                   : origin = 0x1800, length = 0x0080
-    FLASH                   : origin = 0x4400, length = 0xBB80
+
+    // old flash line
+    //FLASH                   : origin = 0x4400, length = 0xBB80
+
+    // new allocation with my data
+    MYDATA1 					: origin = 0x4400, length = 0x0200
+    MYDATA2 					: origin = 0x4600, length = 0x0200
+    MYDATA3 					: origin = 0x4800, length = 0x0200
+    MYDATA4 					: origin = 0x4A00, length = 0x0200
+    FLASH                  		: origin = 0x4C00, length = 0x6380
+
     FLASH2                  : origin = 0x10000,length = 0x14400
     INT00                   : origin = 0xFF80, length = 0x0002
     INT01                   : origin = 0xFF82, length = 0x0002
@@ -130,6 +140,7 @@ MEMORY
     RESET                   : origin = 0xFFFE, length = 0x0002
 }
 
+
 /****************************************************************************/
 /* SPECIFY THE SECTIONS ALLOCATION INTO MEMORY                              */
 /****************************************************************************/
@@ -156,6 +167,11 @@ SECTIONS
     .infoB     : {} > INFOB
     .infoC     : {} > INFOC
     .infoD     : {} > INFOD
+
+    .mydata1 : {} > MYDATA1    /* my own segment in flash     */
+    .mydata2 : {} > MYDATA2    /* my own segment in flash     */
+    .mydata3 : {} > MYDATA3   /* my own segment in flash     */
+    .mydata4 : {} > MYDATA4    /* my own segment in flash     */
 
     /* MSP430 INTERRUPT VECTORS          */
     .int00       : {}               > INT00

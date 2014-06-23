@@ -1,3 +1,6 @@
+#ifndef HARDWARE_H
+#define HARDWARE_H
+
 #include "msp430.h"
 
 // Specify the input pins for push buttons
@@ -48,3 +51,5 @@ extern bool I_rightDirBtn;
 extern bool I_leftDirBtn;
 extern bool I_upDirBtn;
 extern bool I_downDirBtn;
+
+#endif

@@ -13,25 +13,16 @@ tRectangle g_sRect;
 uint8_t g_delayCounter = 0;
 
 y_basal p_inputProfile;
-int segments[k_segDay] = {k_segDay, 0};
-
-
+unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
-int rateIndex = 0;
-int segmentIndex = 0;
 
 
-int nameIndex = 0;
+unsigned char rateIndex = 0;
+unsigned char segmentIndex = 0;
+unsigned char nameIndex = 0;
 bool updateScreen = false;
 bool basCreateStatus_NameEntered;
 
-const char* convertedValue;
-unsigned int value = 0;
-unsigned char tempValue[5];
-bool nextOption = false;
-bool previousOption = false;
-
-int f_numberOfBasProf = 0;
 
 void PrintBasal_Manage();
 void LoadBanner(void);
@@ -70,6 +61,9 @@ void PrintBasCreateNotAllowed();
 void PrintCreateBasProf();
 void PrintMessage(char outString[32]);
 void PrintCreateBasProf_Idle(y_basal *p_profile);
+void PrintCreateBasProf_Confirm();
+
+void InputProfileToBasalProfile(y_basal *basProf);
 
 void UpdateScreen();
 
@@ -135,7 +129,7 @@ void PrintScreen(){
 		//ClearCreateBasProf_Idle(&p_inputProfile);
 		PrintCreateBasProf_Idle(&p_inputProfile); break;
 
-	case CreateBasProf_Confirm:
+	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(); break;
 	case CreateBasProf_Invalid:
 	case RemoveBasProf_Idle:PrintMessage("Remove Bas"); break;
 	case RemoveBasProf_Confirm:
@@ -546,7 +540,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = CreateBasProf_Idle;
 
-			if(basCreateStatus_NameEntered == false){
+			if(basCreateStatus_NameEntered == false){ // Editing the profile name.
 
 				/** Allow user to enter a profile name, temporarily stores it in p_inputProfile.**/
 				// Initialize the First letter of Profile Name to 'A'
@@ -582,46 +576,51 @@ void UpdateScreen(){
 					updateScreen = true;
 				}
 
-			} else {
+			} else { // Editing the rates and time periods
+
+				// Format of the profile here is different than when stored in the set of profiles. The segments array holds the number of segments that are part of
+				// a time period. Each of the time periods has a corresponding rate, which is stored in the p_inputProfile.Rate array.
+				// example: segments array holds {20, 15, 10, 3, 0, ...} each segment unit corresponds to 30min, so the time periods are
+				// {00:00-10:00, 10:00-17:30, 17:30-22:30, 22:30-24:00, ...}
 				if (M_upReq){
-					if (rateIndex == 0){
+					if (rateIndex == 0){ // One of the time periods is highlighted. Increment the selected time period if possible.
 						if (segments[segmentIndex+1] > 1){
 							segments[segmentIndex]++;
 							segments[segmentIndex+1]--;
 						}
-					} else {
+					} else { // One of the rates is highlighted. Increment the rate.
 						p_inputProfile.Rate[segmentIndex]++;
 					}
 					updateScreen = true;
 
 				} else if(M_downReq){
-					if (rateIndex == 0){
+					if (rateIndex == 0){ // Decrement the selected time period if possible.
 						if (segments[segmentIndex]>1){
 							segments[segmentIndex]--;
 							segments[segmentIndex+1]++;
 						}
-					} else {
+					} else { // Decrement the selected rate down to a lowest of 0.
 						if (p_inputProfile.Rate[segmentIndex] > 0){
 							p_inputProfile.Rate[segmentIndex]--;
 						}
 					}
 					updateScreen = true;
 
-				} else if(M_rightReq){ // Go to next character and initialize it to 'a'
-					if (rateIndex == 1){
+				} else if(M_rightReq){
+					if (rateIndex == 1){ // if rate is selected, go to the next time period if one exists.
 						if (segments[segmentIndex+1]>0){
 							segmentIndex++;
 							rateIndex = 0;
 						}
-					} else{
+					} else{ // if a time period is selected, select the rate that correponds to that time period.
 						rateIndex = 1;
 					}
 					updateScreen = true;
 
-				} else if (M_leftReq){ // Go to previous character (if possible) and remove last character.
-					if (rateIndex == 1){
+				} else if (M_leftReq){
+					if (rateIndex == 1){ // if a rate is selected, go to the corresponding time period
 						rateIndex = 0;
-					} else {
+					} else { // if the time period is selected, go back to the previous rate if there is one, otherwise go back to editing the name.
 						if (segmentIndex > 0){
 							segmentIndex--;
 							rateIndex = 1;
@@ -631,15 +630,10 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if (M_addReq){
-			//
-			//		if (segments[segmentIndex]>1){
-			//			segments[segmentIndex]--;
-			//			segmentIndex++
-			//			segments[segmentIndex] = 1;
-			//		}
-
-					;
+				} else if (M_selReq){
+					InputProfileToBasalProfile(&m_basProf);
+					M_basProf = true;
+					updateScreen = true;
 				}
 			}
 
@@ -730,7 +724,21 @@ void UpdateScreen(){
 	}
 }
 
+void InputProfileToBasalProfile(y_basal *basProf){
+	int segIndex = 0;
+	int i=0;
+	int count=0;
 
+	while (segments[segIndex]>0){
+		for(i=0; i<segments[segIndex];i++){
+			basProf->Rate[i+count] = p_inputProfile.Rate[segIndex];
+		}
+		count += segments[segIndex];
+		segIndex++;
+	}
+
+	strncpy(basProf->Name, p_inputProfile.Name, k_basalNameLength-1);
+}
 
 void ClearScreen(){
 	GrClearDisplay(&g_sContext); // Clears the screen
@@ -767,6 +775,17 @@ void PrintSettings(){
 	;
 }
 
+void PrintCreateBasProf_Confirm(){
+	GrStringDraw(&g_sContext, "Save Profile?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, m_basProf.Name , AUTO_STRING_LENGTH, 5, 23, OPAQUE_TEXT);
+
+	LoadLeftButton("BACK");
+	LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
 void ClearCreateBasProf_Idle(y_basal *p_profile){
 	GrStringDraw(&g_sContext, p_profile->Name, AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
 
@@ -789,8 +808,8 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 		segCount += segments[i];
 		hours = segCount/2;
 		halfs = segCount%2;
-		digits = UnsignedInt_To_ASCII(hours, buffer);
 
+		digits = UnsignedInt_To_ASCII(hours, buffer);
 		strncat(outString, buffer, digits);
 
 		if (halfs == 1)	strncat(outString, "30", 2);

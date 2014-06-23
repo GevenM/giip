@@ -40,7 +40,7 @@
 //
 //*****************************************************************************
 
-#include "grlib.h"
+#include "../grlib/grlib.h"
 #include "Sharp96x96utils.h"
 #include "Sharp96x96.h"
 #include "../driverlib/MSP430F5xx_6xx/driverlib.h"

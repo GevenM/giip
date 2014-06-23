@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "MonitoredVariables.h"
 
+
 bool M_menuReq;
 bool M_backReq;
 bool M_selReq;
@@ -24,8 +25,10 @@ bool M_basRemoveReq;
 bool M_bolCreateReq;
 bool M_bolRemoveReq;
 
-y_basal M_basProf;
+unsigned char M_basCreateResp;
 
+y_basal m_basProf;
+bool M_basProf;
 
 
 void UpdateMonitoredVariables(){
@@ -143,11 +146,8 @@ void InitMonitoredVariables(){
 	M_bolCreateReq = false;
 	M_bolRemoveReq = false;
 
-	strcpy(M_basProf.Name, "Profile 1");
+	M_basProf = false;
 
-	int i;
-	for (i = 0; i < k_segDay; i++){
-		M_basProf.Rate[i] = 0;
-	}
+	M_basCreateResp = 0;
 
 }

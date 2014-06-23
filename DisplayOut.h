@@ -1,3 +1,6 @@
+#ifndef DISPLAYOUT_H
+#define DISPLAYOUT_H
+
 #include "grlib.h"
 #include "LcdDriver/Sharp96x96.h"
 #include "driverlib.h"
@@ -5,6 +8,7 @@
 #include "hardware.h"
 #include "MonitoredVariables.h"
 #include "Shared.h"
+#include "BasalProfiles.h"
 
 extern void DisplayOut(void);
 extern void PrintScreen();
@@ -33,5 +37,5 @@ extern tRectangle myRectangleTopBan;
 extern bool updateScreen;
 
 
-
+#endif
 

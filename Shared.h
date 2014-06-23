@@ -160,15 +160,7 @@ extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
 
-#define k_segDay 48
 
-typedef char y_basalName[12];
-typedef int y_basalRate;
-
-typedef struct{
-	y_basalName Name;
-	y_basalRate Rate[k_segDay];
-} y_basal;
 
 
 

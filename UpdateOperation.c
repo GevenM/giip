@@ -1,5 +1,6 @@
 #include "DisplayOut.h"
 #include "UpdateOperation.h"
+#include "CreateBasalProfile.h"
 
 void UpdateOperation(){
 
@@ -21,6 +22,9 @@ void UpdateOperation(){
 			else ;
 			break;
 		case CreateBasProf:
+			if (BasalProfileCreationCompleted()){
+				c_operation = Idle;
+			}
 
 		case RemoveBasProf:
 

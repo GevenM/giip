@@ -1,6 +1,10 @@
+#ifndef MONITOREDVARIABLES_H
+#define MONITOREDVARIABLES_H
+
 #include "shared.h"
 #include "hardware.h"
 #include <string.h>
+#include "BasalProfiles.h"
 
 extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();
@@ -29,4 +33,9 @@ extern bool M_basRemoveReq;
 extern bool M_bolCreateReq;
 extern bool M_bolRemoveReq;
 
-extern y_basal M_BasProf;
+extern y_basal m_basProf;
+extern bool M_basProf;
+
+extern unsigned char M_basCreateResp;
+
+#endif

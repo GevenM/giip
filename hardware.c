@@ -140,11 +140,19 @@ void timerInit(){
 }
 
 void buttonInit(){
-	  P1DIR &= ~BIT4;
-	  P1DIR &= ~BIT3;
-	  P1DIR &= ~BIT2;
-	  P3DIR &= ~BIT7;
-	  P4DIR &= ~BIT3;
-	  P4DIR &= ~BIT0;
-	  P8DIR &= ~BIT2;
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P1, BIT4);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P1, BIT3);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P1, BIT2);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P3, BIT7);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P4, BIT3);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P4, BIT0);
+	GPIO_setAsInputPinWithPullUpresistor(GPIO_PORT_P8, BIT2);
+
+	//  P1DIR &= ~BIT4;
+	//  P1DIR &= ~BIT3;
+	//  P1DIR &= ~BIT2;
+	// P3DIR &= ~BIT7;
+	 // P4DIR &= ~BIT3;
+	 // P4DIR &= ~BIT0;
+	 // P8DIR &= ~BIT2;
 }
