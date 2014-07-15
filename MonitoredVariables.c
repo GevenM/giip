@@ -122,7 +122,15 @@ void UpdateMonitoredVariables(){
 			f_menuChoice == Bolus_Manage_Remove &&
 			BolusPresetExists();
 
-
+	if ( c_operation == CreateBasProf && ( c_basCreateStatus == e_opStatus_confirm || c_basCreateStatus == e_opStatus_confirm )){
+		if ( I_middleSelBtn ){
+			M_basCreateResp = ACCEPT;
+		} else if ( I_rightSelBtn ){
+			M_basCreateResp = RETRY;
+		} else if ( I_leftSelBtn ){
+			M_basCreateResp = CANCEL;
+		}
+	}
 }
 
 void InitMonitoredVariables(){

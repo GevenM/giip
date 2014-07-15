@@ -1,7 +1,13 @@
 #ifndef SHARED_FILE
 #define SHARED_FILE
 
+
+#define ACCEPT 1
+#define RETRY 2
+#define CANCEL 3
+
 #include <stdbool.h>
+
 
 typedef enum {
 	None,

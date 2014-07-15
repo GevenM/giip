@@ -1,8 +1,6 @@
 #include "CreateBasalProfile.h"
 
-#define ACCEPT 1
-#define RETRY 2
-#define CANCEL 3
+
 
 bool BasalProfileIsValid(y_basal *m_basProf);
 bool F_createBasalProfile;
@@ -81,9 +79,7 @@ bool BasalProfileCreationCompleted(){
 		F_createBasalProfile = false;
 		return true;
 	}
-	else if (!(F_createBasalProfile || M_basCreateResp == CANCEL)){
-		return false;
-	}
+
 	return false;
 }
 

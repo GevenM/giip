@@ -65,8 +65,10 @@ void main(void){
 		InputEvents();
 		UpdateMonitoredVariables();
 		DisplayOut();
-		UpdateOperation();
 		CreateBasalProfile();
+
+		UpdateOperation();
+
 
 
 
