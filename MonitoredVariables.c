@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include "MonitoredVariables.h"
 
-
 bool M_menuReq;
 bool M_backReq;
 bool M_selReq;
@@ -122,6 +121,8 @@ void UpdateMonitoredVariables(){
 			M_selReq &&
 			f_menuChoice == Bolus_Manage_Remove &&
 			BolusPresetExists();
+
+
 }
 
 void InitMonitoredVariables(){

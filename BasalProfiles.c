@@ -8,18 +8,25 @@
 #define FLASH_UNLOCK    FCTL3 = FWKEY; FCTL1 = FWKEY + WRT;
 #define FLASH_LOCK      FCTL1 = FWKEY; FCTL3 = FWKEY +  LOCK;
 
+
 // Allocates space on flash for the given variable
 #pragma DATA_SECTION(basalSet, ".mydata1");
 #pragma DATA_ALIGN(basalSet, 512);
 
 
-void loadProfileFromFlash(void);
-void saveProfileToFlash(void);
+void LoadProfilesFromFlash(void);
+void SaveProfilesToFlash(void);
 
 
 // Private variables that store the basal profiles
 y_basalSet basalSet;
 y_basalSet basalSetLocal;
+
+
+void InitBasalSet(){
+	basalSetLocal.numberOfBasalProfiles = 0;
+	SaveProfilesToFlash();
+}
 
 // Takes a profile and updates the name and rates.
 void CreateProfile(y_basal *me, char *Name, unsigned char Rate[]){
@@ -37,31 +44,28 @@ void ChangeProfileName(y_basal *me, char * Name){
 }
 
 // Add a basal profile to a set of basal profiles. Takes a set and a profile as inputs. Allocates memory for profiles.
-int AddProfileToSet(y_basalSet *setRoot, y_basal *profile){
-/*	y_basalSet* currentProfile;
-	currentProfile = setRoot;
+char AddProfileToSet(y_basal *profile){
+	LoadProfilesFromFlash();
 
-	// If the set is empty, add the profile to the root node. otherwise traverse the list of profiles and add onto the end.
-	if (currentProfile->Profile == 0){
-		currentProfile->Profile = malloc(sizeof (y_basal));
-		if (currentProfile->Profile ==0) return -1; //Unable to allocate memory
+	// Check if max number of profiles has been stored
+	if (basalSetLocal.numberOfBasalProfiles < k_maxNumberOfBasalProfiles){
 
-		CreateProfile(currentProfile->Profile, profile->Name, profile->Rate);
-	} else {
+		// increment number of profiles stored (and create variable to use as index)
+		char profileIndex = ++basalSetLocal.numberOfBasalProfiles;
 
-		while(currentProfile->Next != 0){
-			currentProfile = currentProfile->Next;
+		// Copy the name into the set
+		strncpy( basalSetLocal.Profile[profileIndex].Name, profile->Name, k_basalNameLength-1);
+
+		// Copy the rates into the set
+		int i;
+		for (i = 0; i < k_segDay ; i++){
+			basalSetLocal.Profile[profileIndex].Rate[i] = profile->Rate[i];
 		}
 
-		currentProfile->Next = malloc( sizeof( y_basalSet ));
-		if (currentProfile->Next == 0) return -1; //Unable to allocate memory
+		SaveProfilesToFlash();
+		return 1;
+	}
 
-		currentProfile->Next->Profile = malloc(sizeof (y_basal));
-		if (currentProfile->Next->Profile ==0) return -1; //Unable to allocate memory
-
-		CreateProfile(currentProfile->Next->Profile, profile->Name, profile->Rate);
-		currentProfile->Next->Next = 0;
-	}*/
 	return 0;
 }
 
@@ -73,7 +77,7 @@ int AddProfileToSet(y_basalSet *setRoot, y_basal *profile){
  *
  * @return none
  *************************************************************************/
-void saveProfilesToFlash(void)
+void SaveProfilesToFlash(void)
 {
   flashEraseSegment((unsigned long)&basalSet);
   FLASH_UNLOCK;
@@ -88,7 +92,7 @@ void saveProfilesToFlash(void)
  *
  * @return none
  *************************************************************************/
-void loadProfilesFromSettings(void)
+void LoadProfilesFromFlash(void)
 {
   basalSetLocal = basalSet;
 }

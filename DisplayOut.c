@@ -303,7 +303,14 @@ void UpdateScreen(){
 			}
 			break;
 
-		case Settings: break; //?
+		case Settings:
+			if (M_backReq){
+				c_menuScreen = Main;
+				f_menuChoice = Settings;
+			} else if (M_selReq){
+				InitBasalSet();
+			}
+			break;
 
 		case BasalBothActive:
 			if (M_backReq){
@@ -724,20 +731,26 @@ void UpdateScreen(){
 	}
 }
 
-void InputProfileToBasalProfile(y_basal *basProf){
-	int segIndex = 0;
-	int i=0;
-	int count=0;
 
-	while (segments[segIndex]>0){
-		for(i=0; i<segments[segIndex];i++){
-			basProf->Rate[i+count] = p_inputProfile.Rate[segIndex];
+// Converts the inputed profile using ranges to the format used to store in flash.
+// Format of the profile here is different than when stored in the set of profiles. The segments array holds the number of segments that are part of
+// a time period. Each of the time periods has a corresponding rate, which is stored in the p_inputProfile.Rate array.
+// example: segments array holds {20, 15, 10, 3, 0, ...} each segment unit corresponds to 30min, so the time periods are
+// {00:00-10:00, 10:00-17:30, 17:30-22:30, 22:30-24:00, ...}
+void InputProfileToBasalProfile( y_basal *basProf ){
+	int segIndex = 0;
+	int i = 0;
+	int count = 0;
+
+	while (segments[ segIndex ] > 0 && count < k_segDay){
+		for(i = 0; i < segments[ segIndex ]; i++){
+			basProf->Rate[ i + count ] = p_inputProfile.Rate[ segIndex ];
 		}
-		count += segments[segIndex];
+		count += segments[ segIndex ];
 		segIndex++;
 	}
 
-	strncpy(basProf->Name, p_inputProfile.Name, k_basalNameLength-1);
+	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
 }
 
 void ClearScreen(){
@@ -772,7 +785,9 @@ void PrintSchedule(){
 	;
 }
 void PrintSettings(){
-	;
+	LoadLeftButton("BACK");
+	GrStringDraw(&g_sContext, "Settings" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+	GrFlush(&g_sContext);
 }
 
 void PrintCreateBasProf_Confirm(){

@@ -71,7 +71,7 @@ MEMORY
     MYDATA2 					: origin = 0x4600, length = 0x0200
     MYDATA3 					: origin = 0x4800, length = 0x0200
     MYDATA4 					: origin = 0x4A00, length = 0x0200
-    FLASH                  		: origin = 0x4C00, length = 0x6380
+    FLASH                  		: origin = 0x4C00, length = 0xB380
 
     FLASH2                  : origin = 0x10000,length = 0x14400
     INT00                   : origin = 0xFF80, length = 0x0002

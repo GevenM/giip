@@ -9,4 +9,6 @@
 	<rts value="libc.a"/>
 	<createSlaveProjects value=""/>
 	<templateProperties value="id=MSP-EXP430F5529_Grlib_Example.projectspec.MSP-EXP430F5529_Grlib_Example,"/>
+	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
+	<isTargetManual value="false"/>
 </projectOptions>
