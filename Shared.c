@@ -4,6 +4,13 @@
 y_basal k_emptyBas = {"", {0}};
 y_basal f_activeBasal;
 
+//single rate increment bounds
+const y_insulinValue k_maxBasalBound = 10;
+const y_insulinValue k_minBasalBound = 0;
+
+//daily bound
+const y_insulinValue k_maxDailyInsulin = 100;
+
 e_operations c_operation = Idle;
 e_menus c_menuScreen = None;
 e_menus c_1_menuScreen = None;

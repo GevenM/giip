@@ -129,6 +129,7 @@ typedef enum {
 	e_bolStatus_manual,
 } e_bolStatus;
 
+typedef int y_insulinValue;
 
 extern e_menus c_menuScreen;
 extern e_menus c_1_menuScreen;
@@ -165,6 +166,9 @@ extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
 extern y_basal k_emptyBas;
+extern int k_maxBasalBound;
+extern int k_minBasalBound;
+extern int k_maxDailyInsulin;
 
 extern y_basal f_activeBasal;
 
