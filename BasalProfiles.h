@@ -2,7 +2,6 @@
 #define BASALPROFILES_H
 
 #include "Flash.h"
-#include "Shared.h"
 #include <stdbool.h>
 
 #define k_segDay 48

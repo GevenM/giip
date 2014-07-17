@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "BasalProfiles.h"
+#include "Shared.h"
 #include "msp430.h"
 
 
@@ -122,7 +123,7 @@ bool BasalProfileIsValid(y_basal *profile){
 
 	for ( i = 0 ; i < basalSetLocal.numberOfBasalProfiles ; i++ ) //cycle through the profiles currently in memory
 	{
-		if ( ProfileCompare(profile->Name, basalSetLocal.Profile[i].Name) ) //check name of new profile doesn't match names of other profiles
+		if ( ProfileCompare(profile, &basalSetLocal.Profile[i]) ) //check name of new profile doesn't match names of other profiles
 			return false;
 
 		for ( j = 0 ; j < k_segDay ; j++ ) //cycle through all segments or rates
