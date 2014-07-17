@@ -6,6 +6,7 @@
 #define RETRY 2
 #define CANCEL 3
 
+#define k_segDay 48
 
 #include <stdbool.h>
 #include "BasalProfiles.h"
@@ -131,6 +132,7 @@ typedef enum {
 } e_bolStatus;
 
 typedef int y_insulinValue;
+typedef unsigned char y_basalRate;
 
 extern e_menus c_menuScreen;
 extern e_menus c_1_menuScreen;
@@ -169,11 +171,11 @@ extern bool TemporaryBasalIsActive();
 extern y_basal k_emptyBas;
 
 extern y_basal f_activeBasal;
+extern y_tmpBasal f_activeTmpBasal;
 
 extern const y_insulinValue k_maxBasalBound;
 extern const y_insulinValue k_minBasalBound;
 extern const y_insulinValue k_maxDailyInsulin;
-
 
 #endif
 

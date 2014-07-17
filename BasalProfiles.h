@@ -3,19 +3,19 @@
 
 #include "Flash.h"
 #include <stdbool.h>
+#include "Shared.h"
 
-#define k_segDay 48
+
 #define k_basalNameLength 12
 #define k_maxNumberOfBasalProfiles 8  // at 48 segments and 12 name length, 8 profiles fit on one segment of flash
 
 
 typedef char y_basalName[k_basalNameLength+1];
-typedef unsigned char y_basalRate[k_segDay];
 
 
 typedef struct profile{
 	y_basalName Name;
-	y_basalRate Rate;
+	y_basalRate Rate[k_segDay];
 } y_basal;
 
 
