@@ -29,6 +29,7 @@ void LoadBanner(void);
 void LoadLeftButton(const char * text);
 void LoadMiddleButton(const char * text);
 void LoadRightButton(const char * text);
+void ClearRightButton();
 void LoadRates(y_basal *p_profile, int scollOffset);
 
 void ClearBasNoActive();
@@ -62,8 +63,10 @@ void PrintCreateBasProf();
 void PrintMessage(char outString[32]);
 void PrintCreateBasProf_Idle(y_basal *p_profile);
 void PrintCreateBasProf_Confirm();
-
+void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
+void PrintRemoveBasProf_Idle();
+void PrintRemoveBasProf_Confirm();
 
 void UpdateScreen();
 
@@ -125,40 +128,40 @@ void PrintScreen(){
 	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(); break;
 	case NoBolusPreset: PrintNoBolusPreset(); break;
 
-	case CreateBasProf_Idle:
-		//ClearCreateBasProf_Idle(&p_inputProfile);
-		PrintCreateBasProf_Idle(&p_inputProfile); break;
-
+	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
 	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(); break;
-	case CreateBasProf_Invalid:
-	case RemoveBasProf_Idle:PrintMessage("Remove Bas"); break;
-	case RemoveBasProf_Confirm:
-	case RemoveBasProf_Invalid:
+	case CreateBasProf_Invalid:PrintMessage("Invalid Create"); break;
+
+	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle(); break;
+	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(); break;
+	case RemoveBasProf_Invalid:PrintMessage("Invalid Rem"); break;
+
 	case StartBasProf_Idle:PrintMessage("Start Bas"); break;
-	case StartBasProf_Confirm:
-	case StartBasProf_Invalid:
+	case StartBasProf_Confirm:break;
+	case StartBasProf_Invalid:break;
+
 	case StopBasProf_All:PrintMessage("Stop Bas"); break;
 	case StartTmpBas_Idle:PrintMessage("Start Tmp"); break;
-	case StartTmpBas_Confirm:
-	case StartTmpBas_Invalid:
+	case StartTmpBas_Confirm:break;
+	case StartTmpBas_Invalid:break;
 	case StopTmpBas_All:PrintMessage("Stop Tmp"); break;
 	case CreateBolusPreset_Idle:PrintMessage("Create Bol"); break;
-	case CreateBolusPreset_Confirm:
-	case CreateBolusPreset_Invalid:
+	case CreateBolusPreset_Confirm:break;
+	case CreateBolusPreset_Invalid:break;
 	case RemoveBolusPreset_Idle:PrintMessage("Remove Bol"); break;
-	case RemoveBolusPreset_Confirm:
-	case RemoveBolusPreset_Invalid:
+	case RemoveBolusPreset_Confirm:break;
+	case RemoveBolusPreset_Invalid:break;
 	case StartBolus_Idle:PrintMessage("Start Bol"); break;
-	case StartBolus_Calculator:
-	case StartBolus_Preset:
-	case StartBolus_Manual:
-	case StartBolus_Confirm:
-	case StartBolus_Invalid:
+	case StartBolus_Calculator:break;
+	case StartBolus_Preset:break;
+	case StartBolus_Manual:break;
+	case StartBolus_Confirm:break;
+	case StartBolus_Invalid:break;
 	case CreateReminder_Idle:PrintMessage("Create Remind"); break;
-	case CreateReminder_Confirm:
-	case CreateReminder_Invalid:
+	case CreateReminder_Confirm:break;
+	case CreateReminder_Invalid:break;
 	case RemoveReminder_Idle:PrintMessage("Remove Remind"); break;
-	case RemoveReminder_Confirm:
+	case RemoveReminder_Confirm:break;
 
 
 
@@ -472,7 +475,7 @@ void UpdateScreen(){
 					break;
 				case Basal_Manage_Remove:
 					if(BasalProfileExists()){
-						;//BasRemoveReq
+						m_basRemSelected = 0;//BasRemoveReq
 					} else {
 						c_menuScreen = NoBasProf;
 					}
@@ -538,7 +541,8 @@ void UpdateScreen(){
 			}
 			break;
 
-		default: break;
+		default: c_menuScreen = None;
+			break;
 		}
 		break;
 
@@ -552,11 +556,12 @@ void UpdateScreen(){
 				/** Allow user to enter a profile name, temporarily stores it in p_inputProfile.**/
 				// Initialize the First letter of Profile Name to 'A'
 				if(nameIndex == 0 && p_inputProfile.Name[0] == 0) {
-					p_inputProfile.Name[nameIndex] = 65;
+					p_inputProfile.Name[0] = 65;
+					updateScreen = true;
 				}
 
 				if (M_upReq){ // Increment current character by one and wrap around the alphabet if needed.
-					if (nameIndex==0 && p_inputProfile.Name[nameIndex] == 90) p_inputProfile.Name[nameIndex] = 65; //ASCII 90 = Z, 65 = A
+					if (nameIndex==0 && p_inputProfile.Name[0] == 90) p_inputProfile.Name[0] = 65; //ASCII 90 = Z, 65 = A
 					else if (p_inputProfile.Name[nameIndex] == 122) p_inputProfile.Name[nameIndex] = 97; //ASCII 122 = z, 97 = a
 					else p_inputProfile.Name[nameIndex]++;
 					updateScreen = true;
@@ -641,19 +646,66 @@ void UpdateScreen(){
 					InputProfileToBasalProfile(&m_basProf);
 					M_basProf = true;
 					updateScreen = true;
+
+					// Reset variables used by this function
+					basCreateStatus_NameEntered = false;
+					segmentIndex = 0;
+					rateIndex = 0;
+					nameIndex = 0;
+
+					int i = 1;
+					segments[ 0 ] = k_segDay;
+					while (i < k_segDay && segments[ i ] != 0 ){
+						segments[ i ] = 0;
+						i++;
+					}
+					ClearInputProfile();
 				}
 			}
 
 			break;
 
-		case e_opStatus_confirm: c_menuScreen = CreateBasProf_Confirm; break;
+		case e_opStatus_confirm:
+			c_menuScreen = CreateBasProf_Confirm;
+
+		break;
 		case e_opStatus_invalid: c_menuScreen = CreateBasProf_Invalid; break;
 		}
 		break;
 
 	case RemoveBasProf:
 		switch (c_basRemStatus){
-		case e_opStatus_idle: c_menuScreen = RemoveBasProf_Idle; break;
+		case e_opStatus_idle:
+			c_menuScreen = RemoveBasProf_Idle;
+			if (M_downReq){
+				if(m_basRemSelected == GetNumberBasalProfiles() - 1 ){
+					m_basRemSelected = 0;
+					updateScreen = true;
+				} else {
+					m_basRemSelected++;
+					updateScreen = true;
+				}
+
+
+			} else if(M_upReq){
+				if(m_basRemSelected == 0 ){
+					m_basRemSelected = GetNumberBasalProfiles() - 1;
+					updateScreen = true;
+				} else {
+					m_basRemSelected--;
+					updateScreen = true;
+				}
+
+
+			} else if (M_selReq){
+				M_basRemSelected = true;
+				updateScreen = true;
+			}
+
+
+			break;
+
+
 		case e_opStatus_confirm: c_menuScreen = RemoveBasProf_Confirm; break;
 		case e_opStatus_invalid: c_menuScreen = RemoveBasProf_Invalid; break;
 		}
@@ -732,26 +784,7 @@ void UpdateScreen(){
 }
 
 
-// Converts the inputed profile using ranges to the format used to store in flash.
-// Format of the profile here is different than when stored in the set of profiles. The segments array holds the number of segments that are part of
-// a time period. Each of the time periods has a corresponding rate, which is stored in the p_inputProfile.Rate array.
-// example: segments array holds {20, 15, 10, 3, 0, ...} each segment unit corresponds to 30min, so the time periods are
-// {00:00-10:00, 10:00-17:30, 17:30-22:30, 22:30-24:00, ...}
-void InputProfileToBasalProfile( y_basal *basProf ){
-	int segIndex = 0;
-	int i = 0;
-	int count = 0;
 
-	while (segments[ segIndex ] > 0 && count < k_segDay){
-		for(i = 0; i < segments[ segIndex ]; i++){
-			basProf->Rate[ i + count ] = p_inputProfile.Rate[ segIndex ];
-		}
-		count += segments[ segIndex ];
-		segIndex++;
-	}
-
-	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
-}
 
 void ClearScreen(){
 	GrClearDisplay(&g_sContext); // Clears the screen
@@ -794,7 +827,7 @@ void PrintCreateBasProf_Confirm(){
 	GrStringDraw(&g_sContext, "Save Profile?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 	GrStringDraw(&g_sContext, m_basProf.Name , AUTO_STRING_LENGTH, 5, 23, OPAQUE_TEXT);
 
-	LoadLeftButton("BACK");
+	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
 	LoadRightButton("RETY");
 
@@ -882,6 +915,54 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 
 }
 
+void PrintRemoveBasProf_Confirm(){
+	y_basalName *Name;
+	Name = (y_basalName *) malloc( sizeof( y_basalName ));
+	GetProfileName( Name, m_basRemSelected );
+
+	GrStringDrawCentered(&g_sContext, "Remove Profile?" , AUTO_STRING_LENGTH, 46, 16, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, *Name , AUTO_STRING_LENGTH, 46, 23, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintRemoveBasProf_Idle(){
+	int numberOfProfiles;
+	numberOfProfiles = GetNumberBasalProfiles();
+
+	y_basalName *Name;
+	Name = (y_basalName *) malloc( sizeof( y_basalName ));
+
+	int i;
+	for ( i = 0; i < numberOfProfiles; i++ ){
+		GetProfileName( Name, i );
+		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
+	}
+	free(Name);
+
+	// highlight the selected profile
+    unsigned char text_start = 18;
+    GetProfileName( Name, m_basRemSelected );
+	text_start = 16 + 10 * m_basRemSelected;
+
+    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
+    GrStringDraw(&g_sContext, *Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+
+	__no_operation();
+
+	LoadLeftButton( "CANC" );
+	LoadMiddleButton( "SEL" );
+	GrFlush(&g_sContext);
+}
+
 void PrintCreateBasProf_Idle(y_basal *p_profile){
 	int cursorY, cursorX, cursorW, scrollOffset=0;
 
@@ -923,8 +1004,12 @@ void PrintCreateBasProf_Idle(y_basal *p_profile){
 	if (cursorY > 13&& cursorY-scrollOffset < 81)GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY-scrollOffset);
 	if (26-scrollOffset > 15 && 26-scrollOffset < 80)GrStringDraw(&g_sContext, p_profile->Name , AUTO_STRING_LENGTH, 5, 26-scrollOffset, OPAQUE_TEXT);
 
-	LoadLeftButton("BACK");
+	LoadLeftButton("CANC");
 	if (basCreateStatus_NameEntered == false) LoadRightButton("RATE");
+	else {
+		ClearRightButton();
+		LoadMiddleButton("OK");
+	}
 
 	GrFlush(&g_sContext);
 }
@@ -1048,6 +1133,14 @@ void LoadRightButton(const char * text){
 	GrContextForegroundSet(&g_sContext, ClrWhite);
 	GrContextBackgroundSet(&g_sContext, ClrBlack);
 	GrStringDrawCentered(&g_sContext, text, AUTO_STRING_LENGTH, 82, 88, TRANSPARENT_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+}
+
+void ClearRightButton(){
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrContextBackgroundSet(&g_sContext, ClrBlack);
+	GrRectFill(&g_sContext, &myRectangleBotRight);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 }
@@ -1361,394 +1454,34 @@ void PrintBasal_Manage(){
 }
 
 
-
-
-/*
-bool M_MenuReq(){
-	if (c_operation == Idle){
-		if (!(BIT3 & P1IN)) return true;
+void ClearInputProfile(){
+	int i;
+	for (i = 0; i < k_basalNameLength-1; i++){
+		p_inputProfile.Name[i] = 0;
 	}
-	return false;
-}
 
-enum e_operations GetMainMenuChoice(){
-	switch (mainMenuChoice){
-	case Basal: return Basal;
-	case Bolus: return MMBolus;
-	case Settings: return MMSettings;
-	case Schedule: return MMSchedule;
-	case ShutDown: return MMShutDown;
-	default: break;
-	}
-	return Error;
-}
-
-enum e_operations GetBasalActiveChoice(){
-	switch (BasalActiveChoice){
-	case Deactivate: return StopBasProf;
-	case ManageProfilesActive: return BasalProfilesMenu;
-	default: break;
-	}
-	return Error;
-}
-
-enum e_operations GetBasalInactiveChoice(){
-	switch (BasalInactiveChoice){
-	case Activate: return BasalActivateMenu;
-	case ManageProfilesInactive: return BasalProfilesMenu;
-	default: break;
-	}
-	return Error;
-}
-
-
-void DisplayBasalActive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    ClearBasalActive();
-
-    // Draw top and bottom banner and buttons
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Deactivate", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-
-
-    // Highlight selected item
-    switch (BasalActiveChoice) {
-    case Deactivate:
-        text_start = 18;
-        strcpy(outString, "Deactivate");
-        break;
-    case ManageProfilesActive:
-        text_start = 31;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
-
-void DisplayBasalInactive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    ClearBasalInactive();
-
-    // Draw top and bottom banner and buttons
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Activate", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-
-
-    // Highlight selected item
-    switch (BasalInactiveChoice) {
-    case Deactivate:
-        text_start = 18;
-        strcpy(outString, "Activate");
-        break;
-    case ManageProfilesInactive:
-        text_start = 31;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
-
-
-void SetLED1(){
-	P1OUT |= BIT0; // Set LED on P1.0
-}
-void ResetLED1(){
-	P1OUT &= ~BIT0; // reset P1.0
-}
-
-void PrintMMBasal(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, TRANSPARENT_TEXT);
-	GrFlush(&g_sContext);
-}
-
-
-
-void PrintMMSchedule(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-
-
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, TRANSPARENT_TEXT);
-	GrFlush(&g_sContext);
-}
-
-void PrintBasMenuActiveA(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Deactivate Basal", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-
-	GrFlush(&g_sContext);
-}
-void PrintBasMenuActiveB(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrStringDraw(&g_sContext, "Deactivate Basal", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
-
-void PrintBasMenuInactiveA(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Start Basal", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-	GrFlush(&g_sContext);
-}
-
-void PrintBasMenuInactiveB(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrStringDraw(&g_sContext, "Start Basal", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrFlush(&g_sContext);
-}
-
-void ClearBasalActive(){
-	GrStringDraw(&g_sContext, "Deactivate Basal", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-}
-
-void ClearBasalInactive(){
-	GrStringDraw(&g_sContext, "Activate", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-}
-
-void PrintMMSettings(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, TRANSPARENT_TEXT);
-	GrFlush(&g_sContext);
-}
-
-void PrintMMShutDown(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrFlush(&g_sContext);
-}
-
-void PrintMMBolus(){
-	LoadBanner();
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	LoadRightButton("");
-
-
-
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, TRANSPARENT_TEXT);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, TRANSPARENT_TEXT);
-	GrFlush(&g_sContext);
-}
-
-const char * convertToChar(unsigned int x){
-	unsigned char count = 0;
-	while(x>=10000){ // x may be 0..65535 here
-		count++;
-		x-=10000;
-	}
-	count += 0x30;
-	tempValue[0] = count;
-	count = 0;
-	while(x>=1000){ // at this point, x is 9999 at max
-		count++;
-		x-=1000;
-	}
-	count += 0x30;
-	tempValue[1] = count;
-	count=0;
-	while(x>=100){  // x is no more than 999 now
-		count++;
-		x-=100;
-	}
-	count += 0x30;
-	tempValue[2] = count;
-	count=0;
-
-	while(x>=10){ // and here, x cannot be more than 99
-		count++;
-		x-=10;
-	}
-	count += 0x30;
-	tempValue[3] = count;
-	tempValue[4] = x + 0x30;
-	return &tempValue;
-}
-
-bool UpButtonPressed(){
-	if (BIT0 & P4IN){
-		return false;
-	} else {
-		return true;
+	for(i = 0; i < k_segDay; i++){
+		p_inputProfile.Rate[ i ] = 0;
 	}
 }
 
-bool DownButtonPressed(){
-	if (BIT2 & P8IN){
-		return false;
-	} else {
-		return true;
-	}
-}
+// Converts the inputed profile using ranges to the format used to store in flash.
+// Format of the profile here is different than when stored in the set of profiles. The segments array holds the number of segments that are part of
+// a time period. Each of the time periods has a corresponding rate, which is stored in the p_inputProfile.Rate array.
+// example: segments array holds {20, 15, 10, 3, 0, ...} each segment unit corresponds to 30min, so the time periods are
+// {00:00-10:00, 10:00-17:30, 17:30-22:30, 22:30-24:00, ...}
+void InputProfileToBasalProfile( y_basal *basProf ){
+	int segIndex = 0;
+	int i = 0;
+	int count = 0;
 
-bool LeftButtonPressed(){
-	if (BIT3 & P4IN){
-		return false;
-	} else {
-		return true;
+	while (segments[ segIndex ] > 0 && count < k_segDay){
+		for(i = 0; i < segments[ segIndex ]; i++){
+			basProf->Rate[ i + count ] = p_inputProfile.Rate[ segIndex ];
+		}
+		count += segments[ segIndex ];
+		segIndex++;
 	}
-}
 
-bool RightButtonPressed(){
-	if (BIT7 & P3IN){
-		return false;
-	} else {
-		return true;
-	}
+	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
 }
-
-bool FirstButtonPressed(){
-	return i_leftSelBtn;
-	//if (BIT4 & P1IN){
-	//	return false;
-	//} else {
-	//	return true;
-	//}
-}
-
-bool SecondButtonPressed(){
-	if (BIT3 & P1IN){
-		return false;
-	} else {
-		return true;
-	}
-}
-
-bool ThirdButtonPressed(){
-	if (BIT2 & P1IN){
-		return false;
-	} else {
-		return true;
-	}
-}*/

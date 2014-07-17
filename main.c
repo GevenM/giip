@@ -21,6 +21,7 @@
 #include "DisplayOut.h"
 #include "UpdateOperation.h"
 #include "CreateBasalProfile.h"
+#include "RemoveBasalProfile.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -65,7 +66,9 @@ void main(void){
 		InputEvents();
 		UpdateMonitoredVariables();
 		DisplayOut();
+
 		CreateBasalProfile();
+		RemoveBasalProfile();
 
 		UpdateOperation();
 

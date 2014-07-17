@@ -1,5 +1,8 @@
 #include "Shared.h"
 
+
+y_basal k_emptyBas = {"", {0}};
+
 e_operations c_operation = Idle;
 e_menus c_menuScreen = None;
 e_menus c_1_menuScreen = None;
@@ -38,13 +41,7 @@ bool ScheduleExists(){
 	return false;
 }
 
-bool BasalProfileExists(){
-	return false;
-}
 
-bool BasalCreationAllowed(){
-	return true;
-}
 
 bool BolusPresetExists(){
 	return false;

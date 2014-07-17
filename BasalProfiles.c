@@ -48,10 +48,11 @@ char AddProfileToSet(y_basal *profile){
 	LoadProfilesFromFlash();
 
 	// Check if max number of profiles has been stored
-	if (basalSetLocal.numberOfBasalProfiles < k_maxNumberOfBasalProfiles){
+	if (BasalCreationAllowed()){
 
-		// increment number of profiles stored (and create variable to use as index)
-		char profileIndex = ++basalSetLocal.numberOfBasalProfiles;
+		// create an index variable for where to store the next profile and increment number of profiles.
+		char profileIndex = basalSetLocal.numberOfBasalProfiles;
+		basalSetLocal.numberOfBasalProfiles++;
 
 		// Copy the name into the set
 		strncpy( basalSetLocal.Profile[profileIndex].Name, profile->Name, k_basalNameLength-1);
@@ -70,13 +71,7 @@ char AddProfileToSet(y_basal *profile){
 }
 
 
-/**********************************************************************//**
- * @brief  Stores calibration and user-config data into flash segment
- *
- * @param  none
- *
- * @return none
- *************************************************************************/
+
 void SaveProfilesToFlash(void)
 {
   flashEraseSegment((unsigned long)&basalSet);
@@ -85,14 +80,74 @@ void SaveProfilesToFlash(void)
   FLASH_LOCK;
 }
 
-/**********************************************************************//**
- * @brief  Loads calibration and user-config data from flash segment.
- *
- * @param  none
- *
- * @return none
- *************************************************************************/
+
 void LoadProfilesFromFlash(void)
 {
   basalSetLocal = basalSet;
 }
+
+bool BasalCreationAllowed(){
+	LoadProfilesFromFlash();
+	if (basalSetLocal.numberOfBasalProfiles < k_maxNumberOfBasalProfiles){
+		return true;
+	}
+	return false;
+}
+
+bool BasalProfileExists(){
+	LoadProfilesFromFlash();
+	if (basalSetLocal.numberOfBasalProfiles > 0){
+		return true;
+	}
+	return false;
+}
+
+void GetProfileName(y_basalName *Name, int index){
+	LoadProfilesFromFlash();
+	strncpy( *Name, basalSetLocal.Profile[index].Name, k_basalNameLength-1 );
+}
+
+int GetNumberBasalProfiles(){
+	LoadProfilesFromFlash();
+	return basalSetLocal.numberOfBasalProfiles;
+}
+
+bool BasalProfileIsValid(y_basal *profile){
+	return true;
+}
+
+
+extern char RemoveProfileFromSet(unsigned char profileIndex){
+	LoadProfilesFromFlash();
+
+
+	if(profileIndex == basalSetLocal.numberOfBasalProfiles - 1){
+		basalSetLocal.numberOfBasalProfiles--;
+		SaveProfilesToFlash();
+		return 1;
+
+	} else if (profileIndex < basalSetLocal.numberOfBasalProfiles - 1 ){
+		int i;
+		for (i = profileIndex; i < basalSetLocal.numberOfBasalProfiles - 1 ; i++){
+			CopyProfile(&basalSetLocal.Profile[i + 1], &basalSetLocal.Profile[i]);
+		}
+		basalSetLocal.numberOfBasalProfiles--;
+		SaveProfilesToFlash();
+		return 1;
+
+	}
+	return 0;
+
+
+}
+
+void CopyProfile(y_basal *fromProfile, y_basal *toProfile){
+	int i;
+
+	strncpy( toProfile->Name, fromProfile->Name, k_basalNameLength-1 );
+
+	for (i=0 ; i < k_segDay ; i++){
+		toProfile->Rate[i] = fromProfile->Rate[i];
+	}
+}
+

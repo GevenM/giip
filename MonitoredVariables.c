@@ -26,8 +26,16 @@ bool M_bolRemoveReq;
 
 unsigned char M_basCreateResp;
 
+unsigned char m_basRemSelected;
+bool M_basRemSelected;
+unsigned char M_basRemResp;
+
 y_basal m_basProf;
 bool M_basProf;
+
+bool M_basActSelected;
+y_basal m_basActSelected;
+unsigned char M_basStartResp;
 
 
 void UpdateMonitoredVariables(){
@@ -122,7 +130,7 @@ void UpdateMonitoredVariables(){
 			f_menuChoice == Bolus_Manage_Remove &&
 			BolusPresetExists();
 
-	if ( c_operation == CreateBasProf && ( c_basCreateStatus == e_opStatus_confirm || c_basCreateStatus == e_opStatus_confirm )){
+	if ( c_operation == CreateBasProf ){
 		if ( I_middleSelBtn ){
 			M_basCreateResp = ACCEPT;
 		} else if ( I_rightSelBtn ){
@@ -131,6 +139,26 @@ void UpdateMonitoredVariables(){
 			M_basCreateResp = CANCEL;
 		}
 	}
+
+	if ( c_operation == RemoveBasProf ){
+		if ( I_middleSelBtn ){
+			M_basRemResp = ACCEPT;
+		} else if ( I_rightSelBtn ){
+			M_basRemResp = RETRY;
+		} else if ( I_leftSelBtn ){
+			M_basRemResp = CANCEL;
+		}
+	}
+	if ( c_operation == StartBasProf ){
+		if ( I_middleSelBtn ){
+			M_basStartResp = ACCEPT;
+		} else if ( I_rightSelBtn ){
+			M_basStartResp = RETRY;
+		} else if ( I_leftSelBtn ){
+			M_basStartResp = CANCEL;
+		}
+	}
+
 }
 
 void InitMonitoredVariables(){
@@ -156,7 +184,12 @@ void InitMonitoredVariables(){
 	M_bolRemoveReq = false;
 
 	M_basProf = false;
+	M_basRemSelected = false;
 
 	M_basCreateResp = 0;
+	M_basRemResp = 0;
+
+	M_basActSelected = false;
+	M_basStartResp = 0;
 
 }

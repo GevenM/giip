@@ -7,4 +7,5 @@
 
 extern void CreateBasalProfile();
 extern bool BasalProfileCreationCompleted();
+
 #endif

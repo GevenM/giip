@@ -7,7 +7,7 @@
 #define CANCEL 3
 
 #include <stdbool.h>
-
+#include "BasalProfiles.h"
 
 typedef enum {
 	None,
@@ -158,14 +158,13 @@ extern bool f_bolusInProgress;
 extern bool BolusInProgress();
 extern bool ScheduleCreationAllowed();
 extern bool ScheduleExists();
-extern bool BasalProfileExists();
-extern bool BasalCreationAllowed();
+
 extern bool BolusCreationAllowed();
 extern bool BolusPresetExists();
 extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
-
+extern y_basal k_emptyBas;
 
 
 
