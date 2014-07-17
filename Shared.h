@@ -132,7 +132,7 @@ typedef enum {
 } e_bolStatus;
 
 typedef int y_insulinValue;
-typedef unsigned char y_basalRate;
+
 
 extern e_menus c_menuScreen;
 extern e_menus c_1_menuScreen;

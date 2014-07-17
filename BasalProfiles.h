@@ -3,7 +3,7 @@
 
 #include "Flash.h"
 #include <stdbool.h>
-#include "Shared.h"
+
 
 
 #define k_basalNameLength 12
@@ -11,7 +11,7 @@
 
 
 typedef char y_basalName[k_basalNameLength+1];
-
+typedef unsigned char y_basalRate;
 
 typedef struct profile{
 	y_basalName Name;
