@@ -38,7 +38,7 @@ extern bool M_basProf;
 
 extern unsigned char M_basCreateResp;
 
-extern unsigned char m_basRemSelected;
+extern y_basal m_basRemSelected;
 extern bool M_basRemSelected;
 extern unsigned char M_basRemResp;
 

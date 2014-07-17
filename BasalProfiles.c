@@ -117,10 +117,10 @@ bool BasalProfileIsValid(y_basal *profile){
 }
 
 
-extern char RemoveProfileFromSet(unsigned char profileIndex){
+char RemoveProfileFromSet(y_basal *profile){
 	LoadProfilesFromFlash();
 
-
+/*
 	if(profileIndex == basalSetLocal.numberOfBasalProfiles - 1){
 		basalSetLocal.numberOfBasalProfiles--;
 		SaveProfilesToFlash();
@@ -135,7 +135,7 @@ extern char RemoveProfileFromSet(unsigned char profileIndex){
 		SaveProfilesToFlash();
 		return 1;
 
-	}
+	}*/
 	return 0;
 
 
@@ -151,3 +151,26 @@ void CopyProfile(y_basal *fromProfile, y_basal *toProfile){
 	}
 }
 
+
+
+bool BasalProfileIsActive(y_basal *profile){
+	return false;
+}
+
+extern int GetProfileIndex( y_basal * profile){
+	LoadProfilesFromFlash();
+
+	int i = 0;
+	while (strcmp(profile->Name, basalSetLocal.Profile[i].Name) && i < k_maxNumberOfBasalProfiles){
+		i++;
+	}
+
+	if (i == k_maxNumberOfBasalProfiles) return -1;
+
+	return i;
+}
+
+void LoadProfile( y_basal *profile, int index){
+	LoadProfilesFromFlash();
+	CopyProfile(&basalSetLocal.Profile[index], profile);
+}

@@ -26,7 +26,7 @@ bool M_bolRemoveReq;
 
 unsigned char M_basCreateResp;
 
-unsigned char m_basRemSelected;
+y_basal m_basRemSelected;
 bool M_basRemSelected;
 unsigned char M_basRemResp;
 

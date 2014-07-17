@@ -475,7 +475,7 @@ void UpdateScreen(){
 					break;
 				case Basal_Manage_Remove:
 					if(BasalProfileExists()){
-						m_basRemSelected = 0;//BasRemoveReq
+						CopyProfile( &k_emptyBas, &m_basRemSelected);//BasRemoveReq
 					} else {
 						c_menuScreen = NoBasProf;
 					}
@@ -677,22 +677,27 @@ void UpdateScreen(){
 		switch (c_basRemStatus){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveBasProf_Idle;
+			int profileIndex;
 			if (M_downReq){
-				if(m_basRemSelected == GetNumberBasalProfiles() - 1 ){
-					m_basRemSelected = 0;
+				profileIndex = GetProfileIndex( &m_basRemSelected );
+				if(profileIndex == GetNumberBasalProfiles() - 1 ){
+					LoadProfile( &m_basRemSelected, 0 );
 					updateScreen = true;
 				} else {
-					m_basRemSelected++;
+					profileIndex++;
+					LoadProfile( &m_basRemSelected, profileIndex );
 					updateScreen = true;
 				}
 
 
 			} else if(M_upReq){
-				if(m_basRemSelected == 0 ){
-					m_basRemSelected = GetNumberBasalProfiles() - 1;
+				profileIndex = GetProfileIndex( &m_basRemSelected );
+				if(profileIndex == 0 ){
+					LoadProfile( &m_basRemSelected, GetNumberBasalProfiles() - 1 );
 					updateScreen = true;
 				} else {
-					m_basRemSelected--;
+					profileIndex--;
+					LoadProfile( &m_basRemSelected, profileIndex );
 					updateScreen = true;
 				}
 
@@ -916,12 +921,9 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 }
 
 void PrintRemoveBasProf_Confirm(){
-	y_basalName *Name;
-	Name = (y_basalName *) malloc( sizeof( y_basalName ));
-	GetProfileName( Name, m_basRemSelected );
 
 	GrStringDrawCentered(&g_sContext, "Remove Profile?" , AUTO_STRING_LENGTH, 46, 16, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, *Name , AUTO_STRING_LENGTH, 46, 23, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, m_basRemSelected.Name , AUTO_STRING_LENGTH, 46, 23, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
@@ -946,12 +948,12 @@ void PrintRemoveBasProf_Idle(){
 
 	// highlight the selected profile
     unsigned char text_start = 18;
-    GetProfileName( Name, m_basRemSelected );
-	text_start = 16 + 10 * m_basRemSelected;
+    int index = GetProfileIndex( &m_basRemSelected );
+	text_start = 16 + 10 * index;
 
     GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
     GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, *Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+    GrStringDraw(&g_sContext, m_basRemSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 

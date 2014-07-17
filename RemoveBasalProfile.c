@@ -3,21 +3,18 @@
 
 
 bool F_removeBasalProfile; // from NL expression [Remove Basal Profile]
-unsigned char *p_basRemSelected; // Using index rather than whole profile, discuss?
+y_basal p_basRemSelected;
 
-bool ProfileIsActive(unsigned char profileIndex);
-
-unsigned char *p_basRemSelected;
 
 void RemoveBasalProfile(){
 	if (c_operation == RemoveBasProf){
 		switch(c_basRemStatus){
 		case e_opStatus_idle:
 			if (M_basRemSelected){
-				if(!ProfileIsActive(m_basRemSelected)){
+				if(!BasalProfileIsActive(&m_basRemSelected)){
 					c_basRemStatus = e_opStatus_confirm;
 					F_removeBasalProfile = false;
-					p_basRemSelected = &m_basRemSelected;
+					CopyProfile(&m_basRemSelected, &p_basRemSelected);
 				}
 				else {
 					c_basRemStatus = e_opStatus_invalid;
@@ -32,18 +29,18 @@ void RemoveBasalProfile(){
 			if (M_basRemResp == ACCEPT){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = true;
-				RemoveProfileFromSet(*p_basRemSelected);
-				*p_basRemSelected = 0;
+				RemoveProfileFromSet(&p_basRemSelected);
+				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else if( M_basRemResp == RETRY){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
-				*p_basRemSelected = 0;
+				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else if (M_basRemResp == CANCEL){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
-				*p_basRemSelected = 0;
+				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			}
 			break;
@@ -52,12 +49,12 @@ void RemoveBasalProfile(){
 			if(M_basRemResp == RETRY){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
-				*p_basRemSelected = 0;
+				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else if (M_basRemResp == CANCEL){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
-				*p_basRemSelected = 0;
+				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else {
 				F_removeBasalProfile = false;
@@ -68,7 +65,7 @@ void RemoveBasalProfile(){
 		}
 	} else {
 		F_removeBasalProfile = false;
-		*p_basRemSelected = 0;
+		CopyProfile(&k_emptyBas, &p_basRemSelected);
 	}
 }
 
@@ -82,7 +79,3 @@ bool BasalProfileRemovalCompleted(){
 }
 
 
-
-bool ProfileIsActive(unsigned char profileIndex){
-	return false;
-}
