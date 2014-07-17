@@ -32,8 +32,11 @@ extern bool BasalCreationAllowed();
 extern bool BasalProfileExists();
 extern void GetProfileName(y_basalName *Name, int index);
 extern int GetNumberBasalProfiles();
+
 extern bool BasalProfileIsValid(y_basal *profile);
+extern bool ActivateBasalProfileIsValid(y_basal *profile);
 extern bool BasalProfileIsActive(y_basal *profile);
+
 extern char AddProfileToSet(y_basal *profile);
 extern char RemoveProfileFromSet(y_basal *profile);
 extern void CopyProfile(y_basal *fromProfile, y_basal *toProfile);

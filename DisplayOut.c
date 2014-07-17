@@ -65,8 +65,14 @@ void PrintCreateBasProf_Idle(y_basal *p_profile);
 void PrintCreateBasProf_Confirm();
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
+
 void PrintRemoveBasProf_Idle();
 void PrintRemoveBasProf_Confirm();
+void PrintRemoveBasProf_Invalid();
+
+void PrintStartBasProf_Confirm();
+void PrintStartBasProf_Idle();
+void PrintStartBasProf_Invalid();
 
 void UpdateScreen();
 
@@ -136,9 +142,9 @@ void PrintScreen(){
 	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(); break;
 	case RemoveBasProf_Invalid:PrintMessage("Invalid Rem"); break;
 
-	case StartBasProf_Idle:PrintMessage("Start Bas"); break;
-	case StartBasProf_Confirm:break;
-	case StartBasProf_Invalid:break;
+	case StartBasProf_Idle:PrintStartBasProf_Idle(); break;
+	case StartBasProf_Confirm:PrintStartBasProf_Confirm(); break;
+	case StartBasProf_Invalid:PrintStartBasProf_Invalid(); break;
 
 	case StopBasProf_All:PrintMessage("Stop Bas"); break;
 	case StartTmpBas_Idle:PrintMessage("Start Tmp"); break;
@@ -366,7 +372,7 @@ void UpdateScreen(){
 				switch (f_menuChoice){
 				case Basal_StartProfile:
 					if(BasalProfileExists()){
-						; //?
+						LoadProfile( &m_basActSelected, 0 ); // Selects the first available profile.
 					} else {
 						c_menuScreen=NoBasProf;
 					}
@@ -400,7 +406,7 @@ void UpdateScreen(){
 				switch (f_menuChoice){
 				case Basal_StartProfile:
 					if(BasalProfileExists()){
-						;//?
+						LoadProfile( &m_basActSelected, 0 ); // Selects the first available profile.
 					} else {
 						c_menuScreen=NoBasProf;
 					}
@@ -718,7 +724,41 @@ void UpdateScreen(){
 
 	case StartBasProf:
 		switch (c_basStartStatus){
-		case e_opStatus_idle: c_menuScreen = StartBasProf_Idle; break;
+		case e_opStatus_idle:
+			c_menuScreen = StartBasProf_Idle;
+			int profileIndex;
+			if (M_downReq){
+				profileIndex = GetProfileIndex( &m_basActSelected );
+				if(profileIndex == GetNumberBasalProfiles() - 1 ){
+					LoadProfile( &m_basActSelected, 0 );
+					updateScreen = true;
+				} else {
+					profileIndex++;
+					LoadProfile( &m_basActSelected, profileIndex );
+					updateScreen = true;
+				}
+
+
+			} else if(M_upReq){
+				profileIndex = GetProfileIndex( &m_basActSelected );
+				if(profileIndex == 0 ){
+					LoadProfile( &m_basActSelected, GetNumberBasalProfiles() - 1 );
+					updateScreen = true;
+				} else {
+					profileIndex--;
+					LoadProfile( &m_basActSelected, profileIndex );
+					updateScreen = true;
+				}
+
+
+			} else if (M_selReq){
+				M_basActSelected = true;
+				updateScreen = true;
+			}
+
+
+			break;
+
 		case e_opStatus_confirm: c_menuScreen = StartBasProf_Confirm; break;
 		case e_opStatus_invalid: c_menuScreen = StartBasProf_Invalid; break;
 		}
@@ -929,6 +969,73 @@ void PrintRemoveBasProf_Confirm(){
 	LoadMiddleButton("OK");
 	LoadRightButton("RETY");
 
+	GrFlush(&g_sContext);
+}
+
+void PrintRemoveBasProf_Invalid(){
+
+	GrStringDrawCentered(&g_sContext, "Profile Active" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Cannot Remove" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	//LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBasProf_Confirm(){
+
+	GrStringDrawCentered(&g_sContext, "Start Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBasProf_Invalid(){
+
+	GrStringDrawCentered(&g_sContext, "Profile Invalid" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	//LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBasProf_Idle(){
+	int numberOfProfiles;
+	numberOfProfiles = GetNumberBasalProfiles();
+
+	y_basalName *Name;
+	Name = (y_basalName *) malloc( sizeof( y_basalName ));
+
+	int i;
+	for ( i = 0; i < numberOfProfiles; i++ ){
+		GetProfileName( Name, i );
+		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
+	}
+	free(Name);
+
+	// highlight the selected profile
+    unsigned char text_start = 18;
+    int index = GetProfileIndex( &m_basActSelected );
+	text_start = 16 + 10 * index;
+
+    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
+    GrStringDraw(&g_sContext, m_basActSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+	LoadLeftButton( "CANC" );
+	LoadMiddleButton( "SEL" );
 	GrFlush(&g_sContext);
 }
 

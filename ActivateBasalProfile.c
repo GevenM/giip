@@ -10,7 +10,7 @@ void ActivateBasalProfile(){
 		switch(c_basStartStatus){
 		case e_opStatus_idle:
 			if (M_basActSelected){
-				if (BasalProfileIsValid(&m_basActSelected)){
+				if (ActivateBasalProfileIsValid( &m_basActSelected )){
 					c_basStartStatus = e_opStatus_confirm;
 					F_startBasal = false;
 					CopyProfile(&m_basActSelected, &p_basActSelected);

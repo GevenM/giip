@@ -115,26 +115,24 @@ int GetNumberBasalProfiles(){
 
 bool BasalProfileIsValid(y_basal *profile){
 	LoadProfilesFromFlash();
-	int i, j;
-	y_insulinValue basalRateSum = 0;
 
 	if ( !strcmp(profile->Name, "")) //check name is not empty string
 		return false;
 
-	for ( i = 0 ; i < basalSetLocal.numberOfBasalProfiles ; i++ ) //cycle through the profiles currently in memory
-	{
+	int i;
+	for ( i = 0 ; i < basalSetLocal.numberOfBasalProfiles ; i++ ){ //cycle through the profiles currently in memory
 		if ( ProfileCompare(profile, &basalSetLocal.Profile[i]) ) //check name of new profile doesn't match names of other profiles
 			return false;
-
-		for ( j = 0 ; j < k_segDay ; j++ ) //cycle through all segments or rates
-		{
-			if ( profile->Rate[j] < k_minBasalBound || profile->Rate[j] > k_maxBasalBound) //each single rate is within allowable bounds
-				return false;
-
-			basalRateSum += basalSetLocal.Profile[i].Rate[j]; //sum all rates to compare to daily max
-		}
-
 	}
+
+	y_insulinValue basalRateSum = 0;
+	for ( i = 0 ; i < k_segDay ; i++ ){ //cycle through all segments or rates
+		if ( profile->Rate[i] < k_minBasalBound || profile->Rate[i] > k_maxBasalBound) //each single rate is within allowable bounds
+			return false;
+
+		basalRateSum += profile->Rate[i]; //sum all rates to compare to daily max
+	}
+
 
 	if (basalRateSum > k_maxDailyInsulin) //compare sum of rates to daily max
 		return false;
@@ -142,6 +140,25 @@ bool BasalProfileIsValid(y_basal *profile){
 		return true;
 }
 
+
+// implements Table 15
+bool ActivateBasalProfileIsValid(y_basal *profile){
+	int i;
+	y_insulinValue basalRateSum = 0;
+
+	for ( i = 0 ; i < k_segDay ; i++ ){ //cycle through all segments or rates
+		if ( profile->Rate[i] < k_minBasalBound || profile->Rate[i] > k_maxBasalBound) //each single rate is within allowable bounds
+			return false;
+
+		basalRateSum += profile->Rate[i]; //sum all rates to compare to daily max
+	}
+
+
+	if (basalRateSum > k_maxDailyInsulin) //compare sum of rates to daily max
+		return false;
+	else
+		return true;
+}
 
 char RemoveProfileFromSet(y_basal *profile){
 	LoadProfilesFromFlash();
