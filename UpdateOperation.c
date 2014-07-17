@@ -38,6 +38,9 @@ void UpdateOperation(){
 			}
 
 		case StopBasProf:
+			if (BasalProfileDeactivationCompleted()){
+				c_operation = Idle;
+			}
 
 		case StartTmpBas:
 

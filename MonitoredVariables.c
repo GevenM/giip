@@ -37,6 +37,8 @@ bool M_basActSelected;
 y_basal m_basActSelected;
 unsigned char M_basStartResp;
 
+bool M_basStopResp;
+
 
 void UpdateMonitoredVariables(){
 	M_backReq = I_leftSelBtn;
@@ -187,10 +189,12 @@ void InitMonitoredVariables(){
 	M_basProf = false;
 	M_basRemSelected = false;
 
-	M_basCreateResp = 0;
-	M_basRemResp = 0;
+	M_basCreateResp = NO_VALUE;
+	M_basRemResp = NO_VALUE;
 
 	M_basActSelected = false;
-	M_basStartResp = 0;
+	M_basStartResp = NO_VALUE;
+
+	M_basStopResp = NO_VALUE;
 
 }

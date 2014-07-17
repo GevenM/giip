@@ -1192,9 +1192,9 @@ void PrintCreateBasProf(){
 void PrintIdle(){
 	// Print basal status
 	if (TemporaryBasalIsActive()){
-		GrStringDrawCentered(&g_sContext, "Basal: " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
-	} else if(BasalIsActive()){
 		GrStringDrawCentered(&g_sContext, "Temp Basal: " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
+	} else if(BasalIsActive()){
+		GrStringDrawCentered(&g_sContext, "Basal: " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
 	} else {
 		GrStringDrawCentered(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
 	}

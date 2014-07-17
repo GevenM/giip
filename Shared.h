@@ -1,10 +1,11 @@
 #ifndef SHARED_FILE
 #define SHARED_FILE
 
-
+#define NO_VALUE 0
 #define ACCEPT 1
 #define RETRY 2
 #define CANCEL 3
+
 
 #include <stdbool.h>
 #include "BasalProfiles.h"

@@ -24,6 +24,7 @@
 #include "CreateBasalProfile.h"
 #include "RemoveBasalProfile.h"
 #include "ActivateBasalProfile.h"
+#include "DeactivateBasalProfile.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -73,6 +74,7 @@ void main(void){
 		CreateBasalProfile();
 		RemoveBasalProfile();
 		ActivateBasalProfile();
+		DeactivateBasalProfile();
 
 		UpdateOperation();
 
