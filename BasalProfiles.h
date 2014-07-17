@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 
-
+#define k_segDay 48
 #define k_basalNameLength 12
 #define k_maxNumberOfBasalProfiles 8  // at 48 segments and 12 name length, 8 profiles fit on one segment of flash
 

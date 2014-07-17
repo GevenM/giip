@@ -40,7 +40,7 @@ unsigned char M_basStartResp;
 bool M_basStopResp;
 
 bool M_tmpStartResp;
-y_tmpBasal m_tmpProf;
+y_tmpBasal m_tmpBas;
 bool M_tmpBas;
 
 void UpdateMonitoredVariables(){

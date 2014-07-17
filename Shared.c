@@ -2,8 +2,10 @@
 
 
 y_basal k_emptyBas = {"", {0}};
+y_tmpBasal k_emptyTmp = {0, 0};
+
 y_basal f_activeBasal;
-y_basal f_activeTmpBasal;
+y_tmpBasal f_activeTmpBasal;
 
 //single rate increment bounds
 const y_insulinValue k_maxBasalBound = 10;

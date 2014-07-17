@@ -3,6 +3,7 @@
 
 #include "Shared.h"
 #include "MonitoredVariables.h"
+#include "TemporaryBasal.h"
 
 extern void ActivateTemporaryBasal();
 extern bool TemporaryBasalActivationCompleted();

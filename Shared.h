@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include "BasalProfiles.h"
+#include "TemporaryBasal.h"
 
 typedef enum {
 	None,
@@ -169,6 +170,7 @@ extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
 extern y_basal k_emptyBas;
+extern y_tmpBasal k_emptyTmp;
 
 extern y_basal f_activeBasal;
 extern y_tmpBasal f_activeTmpBasal;

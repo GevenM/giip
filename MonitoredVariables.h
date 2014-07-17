@@ -5,6 +5,7 @@
 #include "hardware.h"
 #include <string.h>
 #include "BasalProfiles.h"
+#include "TemporaryBasal.h"
 
 extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();
@@ -49,7 +50,7 @@ extern unsigned char M_basStartResp;
 extern bool M_basStopResp;
 
 extern bool M_tmpStartResp;
-extern y_tmpBasal m_tmpProf;
+extern y_tmpBasal m_tmpBas;
 extern bool M_tmpBas;
 
 #endif
