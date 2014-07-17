@@ -166,13 +166,12 @@ extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
 extern y_basal k_emptyBas;
-extern int k_maxBasalBound;
-extern int k_minBasalBound;
-extern int k_maxDailyInsulin;
 
 extern y_basal f_activeBasal;
 
-
+extern const y_insulinValue k_maxBasalBound;
+extern const y_insulinValue k_minBasalBound;
+extern const y_insulinValue k_maxDailyInsulin;
 
 
 #endif
