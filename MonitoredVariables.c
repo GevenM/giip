@@ -149,6 +149,7 @@ void UpdateMonitoredVariables(){
 			M_basRemResp = CANCEL;
 		}
 	}
+
 	if ( c_operation == StartBasProf ){
 		if ( I_middleSelBtn ){
 			M_basStartResp = ACCEPT;

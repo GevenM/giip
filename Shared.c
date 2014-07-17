@@ -2,6 +2,7 @@
 
 
 y_basal k_emptyBas = {"", {0}};
+y_basal f_activeBasal;
 
 e_operations c_operation = Idle;
 e_menus c_menuScreen = None;
@@ -52,7 +53,7 @@ bool BolusCreationAllowed(){
 }
 
 bool BasalIsActive(){
-	return false;
+	return !( ProfileCompare( &f_activeBasal, &k_emptyBas ));
 }
 
 bool TemporaryBasalIsActive(){

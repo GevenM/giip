@@ -166,6 +166,7 @@ extern bool TemporaryBasalIsActive();
 
 extern y_basal k_emptyBas;
 
+extern y_basal f_activeBasal;
 
 
 

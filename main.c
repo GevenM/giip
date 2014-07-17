@@ -19,9 +19,11 @@
 #include "hardware.h" // File that contains information regarding hardware and its initializations
 #include "MonitoredVariables.h"
 #include "DisplayOut.h"
+
 #include "UpdateOperation.h"
 #include "CreateBasalProfile.h"
 #include "RemoveBasalProfile.h"
+#include "ActivateBasalProfile.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -65,10 +67,12 @@ void main(void){
 
 		InputEvents();
 		UpdateMonitoredVariables();
+
 		DisplayOut();
 
 		CreateBasalProfile();
 		RemoveBasalProfile();
+		ActivateBasalProfile();
 
 		UpdateOperation();
 

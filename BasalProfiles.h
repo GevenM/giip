@@ -39,5 +39,5 @@ extern char RemoveProfileFromSet(y_basal *profile);
 extern void CopyProfile(y_basal *fromProfile, y_basal *toProfile);
 extern int GetProfileIndex( y_basal * profile);
 extern void LoadProfile( y_basal *profile, int index);
-
+extern bool ProfileCompare(y_basal *profile1, y_basal *profile2);
 #endif

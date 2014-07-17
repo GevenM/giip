@@ -1,7 +1,7 @@
 #include "ActivateBasalProfile.h"
 
 y_basal p_basActSelected;
-bool F_startBasal;
+bool F_startBasal; // From NL expression [ Start Basal ]
 
 void StartBasalProfile(y_basal *profile);
 
@@ -67,5 +67,12 @@ void ActivateBasalProfile(){
 }
 
 void StartBasalProfile(y_basal *profile){
-	;
+	CopyProfile(profile, &f_activeBasal);
+}
+
+bool BasalProfileActivationCompleted(){
+	if ( F_startBasal || M_basStartResp == CANCEL ){
+		return true;
+	}
+	return false;
 }

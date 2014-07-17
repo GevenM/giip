@@ -475,7 +475,7 @@ void UpdateScreen(){
 					break;
 				case Basal_Manage_Remove:
 					if(BasalProfileExists()){
-						CopyProfile( &k_emptyBas, &m_basRemSelected);//BasRemoveReq
+						LoadProfile( &m_basRemSelected, 0 ); // Selects the first available profile.
 					} else {
 						c_menuScreen = NoBasProf;
 					}
@@ -830,7 +830,7 @@ void PrintSettings(){
 
 void PrintCreateBasProf_Confirm(){
 	GrStringDraw(&g_sContext, "Save Profile?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_basProf.Name , AUTO_STRING_LENGTH, 5, 23, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, m_basProf.Name , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
@@ -922,8 +922,8 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 
 void PrintRemoveBasProf_Confirm(){
 
-	GrStringDrawCentered(&g_sContext, "Remove Profile?" , AUTO_STRING_LENGTH, 46, 16, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, m_basRemSelected.Name , AUTO_STRING_LENGTH, 46, 23, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Remove Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, m_basRemSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
@@ -956,9 +956,6 @@ void PrintRemoveBasProf_Idle(){
     GrStringDraw(&g_sContext, m_basRemSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-
-	__no_operation();
 
 	LoadLeftButton( "CANC" );
 	LoadMiddleButton( "SEL" );
