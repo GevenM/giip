@@ -74,6 +74,8 @@ void PrintStartBasProf_Confirm();
 void PrintStartBasProf_Idle();
 void PrintStartBasProf_Invalid();
 
+void PrintStopBas_All();
+
 void UpdateScreen();
 
 int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
@@ -146,7 +148,8 @@ void PrintScreen(){
 	case StartBasProf_Confirm:PrintStartBasProf_Confirm(); break;
 	case StartBasProf_Invalid:PrintStartBasProf_Invalid(); break;
 
-	case StopBasProf_All:PrintMessage("Stop Bas"); break;
+	case StopBasProf_All:PrintStopBas_All(); break;
+
 	case StartTmpBas_Idle:PrintMessage("Start Tmp"); break;
 	case StartTmpBas_Confirm:break;
 	case StartTmpBas_Invalid:break;
@@ -1590,4 +1593,14 @@ void InputProfileToBasalProfile( y_basal *basProf ){
 	}
 
 	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
+}
+
+void PrintStopBas_All(){
+	GrStringDrawCentered(&g_sContext, "Stop Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, f_activeBasal.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+
+	GrFlush(&g_sContext);
 }

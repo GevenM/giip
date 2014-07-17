@@ -48,4 +48,7 @@ extern unsigned char M_basStartResp;
 
 extern bool M_basStopResp;
 
+extern bool M_tmpStartResp;
+
+
 #endif

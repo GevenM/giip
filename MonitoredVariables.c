@@ -38,7 +38,7 @@ y_basal m_basActSelected;
 unsigned char M_basStartResp;
 
 bool M_basStopResp;
-
+bool M_tmpStartResp;
 
 void UpdateMonitoredVariables(){
 	M_backReq = I_leftSelBtn;
@@ -133,33 +133,32 @@ void UpdateMonitoredVariables(){
 			BolusPresetExists();
 
 	if ( c_operation == CreateBasProf ){
-		if ( I_middleSelBtn ){
-			M_basCreateResp = ACCEPT;
-		} else if ( I_rightSelBtn ){
-			M_basCreateResp = RETRY;
-		} else if ( I_leftSelBtn ){
-			M_basCreateResp = CANCEL;
-		}
+		if ( I_middleSelBtn ) M_basCreateResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_basCreateResp = RETRY;
+		else if ( I_leftSelBtn ) M_basCreateResp = CANCEL;
 	}
 
 	if ( c_operation == RemoveBasProf ){
-		if ( I_middleSelBtn ){
-			M_basRemResp = ACCEPT;
-		} else if ( I_rightSelBtn ){
-			M_basRemResp = RETRY;
-		} else if ( I_leftSelBtn ){
-			M_basRemResp = CANCEL;
-		}
+		if ( I_middleSelBtn ) M_basRemResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_basRemResp = RETRY;
+		else if ( I_leftSelBtn ) M_basRemResp = CANCEL;
 	}
 
 	if ( c_operation == StartBasProf ){
-		if ( I_middleSelBtn ){
-			M_basStartResp = ACCEPT;
-		} else if ( I_rightSelBtn ){
-			M_basStartResp = RETRY;
-		} else if ( I_leftSelBtn ){
-			M_basStartResp = CANCEL;
-		}
+		if ( I_middleSelBtn ) M_basStartResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_basStartResp = RETRY;
+		else if ( I_leftSelBtn ) M_basStartResp = CANCEL;
+	}
+
+	if ( c_operation == StartTmpBas ){
+		if ( I_middleSelBtn ) M_tmpStartResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_tmpStartResp = RETRY;
+		else if ( I_leftSelBtn ) M_tmpStartResp = CANCEL;
+	}
+
+	if ( c_operation == StopBasProf ){
+		if ( I_middleSelBtn ) M_basStartResp = ACCEPT;
+		else if ( I_leftSelBtn ) M_basStartResp = CANCEL;
 	}
 
 }
@@ -196,5 +195,7 @@ void InitMonitoredVariables(){
 	M_basStartResp = NO_VALUE;
 
 	M_basStopResp = NO_VALUE;
+
+	M_tmpStartResp = NO_VALUE;
 
 }
