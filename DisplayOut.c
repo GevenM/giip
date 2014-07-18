@@ -1190,9 +1190,11 @@ void PrintCreateBasProf_Idle(y_basal *p_profile){
 	if (26-scrollOffset > 15 && 26-scrollOffset < 80)GrStringDraw(&g_sContext, p_profile->Name , AUTO_STRING_LENGTH, 5, 26-scrollOffset, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
-	if (basCreateStatus_NameEntered == false) LoadRightButton("RATE");
+	if (basCreateStatus_NameEntered == false){
+		LoadRightButton("RATE");
+		LoadMiddleButton("OK");
+	}
 	else {
-	//	ClearRightButton();
 		LoadRightButton("NAME");
 		LoadMiddleButton("OK");
 	}
