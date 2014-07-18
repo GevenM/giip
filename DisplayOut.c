@@ -1665,6 +1665,11 @@ void PrintStartTmpBas_Idle(){
 	int digits = 0;
 	int cursorY, cursorX, cursorW;
 
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrRectFill(&g_sContext, &myRectangleBotMid);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
 		if (tmpBasal_DurationEntered == false){
 			LoadLeftButton("CANC");
 			LoadRightButton("RATE");
@@ -1687,10 +1692,6 @@ void PrintStartTmpBas_Idle(){
 			else if (m_tmpBas.Rate > 9)
 				cursorW = 10;
 		}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
 
 	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 
