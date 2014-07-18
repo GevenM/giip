@@ -184,7 +184,9 @@ extern const y_insulinValue k_maxBolusBound;
 extern const y_insulinValue k_minBolusBound;
 
 extern const y_duration k_maxTmpDuration;
+extern const y_duration k_minTmpDuration;
 extern const y_tmpBasalRate k_maxTmpRate;
+extern const y_tmpBasalRate k_minTmpRate;
 
 #endif
 

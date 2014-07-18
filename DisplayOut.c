@@ -791,12 +791,12 @@ void UpdateScreen(){
 			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
 
 				if(M_upReq){ // increment numbers, roll over from 9->0
-					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration = 0;
+					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration = k_minTmpDuration;
 					else m_tmpBas.Duration++;
 					updateScreen = true;
 				}
 				else if(M_downReq) { // decrement numbers, roll over from 0->9
-					if(m_tmpBas.Duration == 0) m_tmpBas.Duration = k_maxTmpDuration;
+					if(m_tmpBas.Duration == k_minTmpDuration) m_tmpBas.Duration = k_maxTmpDuration;
 					else m_tmpBas.Duration--;
 					updateScreen = true;
 				}
@@ -808,12 +808,12 @@ void UpdateScreen(){
 			}
 			else {
 					if(M_upReq){ // increment numbers, roll over from 9->0
-						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = 0;
+						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
 						else m_tmpBas.Rate++;
 						updateScreen = true;
 					}
 					else if(M_downReq) { // decrement numbers, roll over from 0->9
-						if(m_tmpBas.Rate == 0) m_tmpBas.Rate = k_maxTmpRate;
+						if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
 						else m_tmpBas.Rate--;
 						updateScreen = true;
 					}
@@ -822,6 +822,7 @@ void UpdateScreen(){
 						updateScreen = true;
 					}
 					else if (M_selReq){ // hit next, duration is entered
+						tmpBasal_DurationEntered = false;
 						M_tmpBas = true;
 					}
 			}
@@ -1736,6 +1737,14 @@ void PrintStartTmpBas_Confirm(){
 }
 
 void PrintStartTmpBas_Invalid(){
-	PrintMessage("Invalid Temporary Basal");
+
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	GrStringDrawCentered(&g_sContext, "Temporary", AUTO_STRING_LENGTH, 47, 16, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 36, OPAQUE_TEXT);
+
 	GrFlush(&g_sContext);
 }

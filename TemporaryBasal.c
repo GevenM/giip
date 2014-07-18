@@ -11,7 +11,7 @@ void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
 
 bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
 
-	if ( profile->Rate < k_minBasalBound || profile->Rate > k_maxBasalBound) //each single rate is within allowable bounds
+	if ( profile->Rate < k_minTmpRate || profile->Rate > k_maxTmpRate) //each single rate is within allowable bounds
 			return false;
 
 	if (profile->Rate*profile->Duration > k_maxDailyInsulin) //compare sum of rates to daily max
