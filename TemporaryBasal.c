@@ -1,11 +1,8 @@
 #include "TemporaryBasal.h"
 
 void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
-	int i;
 
-	for (i=0 ; i < k_segDay ; i++){
-		toTmpBasal->Rate[i] = fromTmpBasal->Rate[i];
-	}
+	toTmpBasal->Rate = fromTmpBasal->Rate;
 
 	toTmpBasal->Duration = fromTmpBasal->Duration;
 

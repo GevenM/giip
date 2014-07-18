@@ -1685,14 +1685,16 @@ void PrintStartTmpBas_Idle(){
 	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
-	strncpy(outString, buffer, digits);
+	strcpy(outString, "Duration: ");
+	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, "Duration: "+m_tmpBas.Duration , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
-	strncpy(outString, buffer, digits);
+	strcpy(outString, "Rate:     ");
+	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, "Rate:     "+m_tmpBas.Rate , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
 
 	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
 
@@ -1708,14 +1710,16 @@ void PrintStartTmpBas_Confirm(){
 	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
-	strncpy(outString, buffer, digits);
+	strcpy(outString, "Duration: ");
+	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, "Duration: "+m_tmpBas.Duration , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
-	strncpy(outString, buffer, digits);
+	strcpy(outString, "Rate: ");
+	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, "Rate: "+m_basProf.Rate , AUTO_STRING_LENGTH, 5, 46, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 46, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
