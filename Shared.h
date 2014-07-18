@@ -6,11 +6,12 @@
 #define RETRY 2
 #define CANCEL 3
 
-#define k_segDay 48
+//#define k_segDay 48
 
 #include <stdbool.h>
 #include "BasalProfiles.h"
 #include "TemporaryBasal.h"
+#include "BolusPresets.h"
 
 typedef enum {
 	None,
@@ -107,8 +108,8 @@ typedef enum {
 	StopBasProf,
 	StartTmpBas,
 	StopTmpBas,
-	CreateBolusPreset,
-	RemoveBolusPreset,
+	CreateBolPre,
+	RemoveBolPre,
 	StartBolus,
 	CreateReminder,
 	RemoveReminder,
@@ -132,7 +133,7 @@ typedef enum {
 	e_bolStatus_manual,
 } e_bolStatus;
 
-typedef int y_insulinValue;
+
 
 
 extern e_menus c_menuScreen;
@@ -171,6 +172,7 @@ extern bool TemporaryBasalIsActive();
 
 extern y_basal k_emptyBas;
 extern y_tmpBasal k_emptyTmp;
+extern y_bolus k_emptyBol;
 
 extern y_basal f_activeBasal;
 extern y_tmpBasal f_activeTmpBasal;
@@ -178,6 +180,9 @@ extern y_tmpBasal f_activeTmpBasal;
 extern const y_insulinValue k_maxBasalBound;
 extern const y_insulinValue k_minBasalBound;
 extern const y_insulinValue k_maxDailyInsulin;
+
+extern const y_duration k_maxTmpDuration;
+extern const y_tmpBasalRate k_maxTmpRate;
 
 #endif
 

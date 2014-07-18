@@ -6,9 +6,6 @@
 #include "msp430.h"
 
 
-#define FLASH_UNLOCK    FCTL3 = FWKEY; FCTL1 = FWKEY + WRT;
-#define FLASH_LOCK      FCTL1 = FWKEY; FCTL3 = FWKEY +  LOCK;
-
 
 // Allocates space on flash for the given variable
 #pragma DATA_SECTION(basalSet, ".mydata1");
@@ -76,9 +73,10 @@ char AddProfileToSet(y_basal *profile){
 void SaveProfilesToFlash(void)
 {
   flashEraseSegment((unsigned long)&basalSet);
-  FLASH_UNLOCK;
+
+  UnlockFlash();
   basalSet = basalSetLocal;
-  FLASH_LOCK;
+  LockFlash();
 }
 
 

@@ -783,7 +783,7 @@ void UpdateScreen(){
 		c_menuScreen = StopTmpBas_All;
 		break;
 
-	case CreateBolusPreset:
+	case CreateBolPre:
 		switch (c_bolCreateStatus){
 		case e_opStatus_idle: c_menuScreen = CreateBolusPreset_Idle; break;
 		case e_opStatus_confirm: c_menuScreen = CreateBolusPreset_Confirm; break;
@@ -791,7 +791,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case RemoveBolusPreset:
+	case RemoveBolPre:
 		switch (c_bolRemStatus){
 		case e_opStatus_idle: c_menuScreen = RemoveBolusPreset_Idle; break;
 		case e_opStatus_confirm: c_menuScreen = RemoveBolusPreset_Confirm; break;

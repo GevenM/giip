@@ -39,6 +39,10 @@ unsigned char M_basStartResp;
 
 unsigned char M_basStopResp;
 
+unsigned char M_bolCreateResp;
+y_bolus m_bolus;
+bool M_bolus;
+
 bool M_tmpStartResp;
 y_tmpBasal m_tmpBas;
 bool M_tmpBas;
@@ -165,6 +169,11 @@ void UpdateMonitoredVariables(){
 		else M_basStopResp = NO_VALUE;
 	}
 
+	if ( c_operation == CreateBolPre ){
+		if ( I_middleSelBtn ) M_bolCreateResp = ACCEPT;
+		else if ( I_leftSelBtn ) M_bolCreateResp = CANCEL;
+		else M_bolCreateResp = NO_VALUE;
+	}
 }
 
 void InitMonitoredVariables(){
@@ -202,5 +211,8 @@ void InitMonitoredVariables(){
 
 	M_tmpStartResp = NO_VALUE;
 	M_tmpBas = false;
+
+	M_bolus = false;
+	M_bolCreateResp = NO_VALUE;
 
 }

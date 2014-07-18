@@ -3,6 +3,7 @@
 
 y_basal k_emptyBas = {"", {0}};
 y_tmpBasal k_emptyTmp = {0, 0};
+y_bolus k_emptyBol = {"", 0};
 
 y_basal f_activeBasal;
 y_tmpBasal f_activeTmpBasal;
@@ -10,6 +11,10 @@ y_tmpBasal f_activeTmpBasal;
 //single rate increment bounds
 const y_insulinValue k_maxBasalBound = 10;
 const y_insulinValue k_minBasalBound = 0;
+
+// Temporary basal constants
+const y_duration k_maxTmpDuration = 6;
+const y_tmpBasalRate k_maxTmpRate = 10;
 
 //daily bound
 const y_insulinValue k_maxDailyInsulin = 100;

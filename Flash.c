@@ -1,6 +1,7 @@
 #include "Flash.h"
 
-
+#define FLASH_UNLOCK    FCTL3 = FWKEY; FCTL1 = FWKEY + WRT;
+#define FLASH_LOCK      FCTL1 = FWKEY; FCTL3 = FWKEY +  LOCK;
 
 
 /**********************************************************************//**
@@ -25,4 +26,13 @@ void flashEraseSegment(unsigned long FarPtr)
   while (FCTL3 & BUSY );
   FCTL1 = FWKEY;
   FCTL3 = FWKEY +  LOCK;
+}
+
+
+void LockFlash(){
+	FLASH_LOCK;
+}
+
+void UnlockFlash(){
+	FLASH_UNLOCK;
 }

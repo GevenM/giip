@@ -5,5 +5,7 @@
 
 
 extern void flashEraseSegment(unsigned long FarPtr);
+extern void LockFlash();
+extern void UnlockFlash();
 
 #endif
