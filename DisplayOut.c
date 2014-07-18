@@ -792,12 +792,12 @@ void UpdateScreen(){
 			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
 
 				if(M_upReq){ // increment numbers, roll over from 9->0
-					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration == 0;
+					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration = 0;
 					else m_tmpBas.Duration++;
 					updateScreen = true;
 				}
 				else if(M_downReq) { // decrement numbers, roll over from 0->9
-					if(m_tmpBas.Duration == 0) m_tmpBas.Duration == k_maxTmpDuration;
+					if(m_tmpBas.Duration == 0) m_tmpBas.Duration = k_maxTmpDuration;
 					else m_tmpBas.Duration--;
 					updateScreen = true;
 				}
@@ -809,12 +809,12 @@ void UpdateScreen(){
 			}
 			else {
 					if(M_upReq){ // increment numbers, roll over from 9->0
-						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate == 0;
+						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = 0;
 						else m_tmpBas.Rate++;
 						updateScreen = true;
 					}
 					else if(M_downReq) { // decrement numbers, roll over from 0->9
-						if(m_tmpBas.Rate == 0) m_tmpBas.Rate == k_maxTmpRate;
+						if(m_tmpBas.Rate == 0) m_tmpBas.Rate = k_maxTmpRate;
 						else m_tmpBas.Rate--;
 						updateScreen = true;
 					}

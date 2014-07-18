@@ -36,29 +36,29 @@ void UpdateOperation(){
 			if (BasalProfileActivationCompleted()){
 				c_operation = Idle;
 			}
-
+			break;
 		case StopBasProf:
 			if (BasalProfileDeactivationCompleted()){
 				c_operation = Idle;
 			}
-
+			break;
 		case StartTmpBas:
 			if (TemporaryBasalActivationCompleted()){
 				c_operation = Idle;
 			}
-
+			break;
 		case StopTmpBas:
-
+			break;
 		case CreateBolPre:
-
+			break;
 		case RemoveBolPre:
-
+			break;
 		case StartBolus:
-
+			break;
 		case CreateReminder:
-
+			break;
 		case RemoveReminder:
-
+			break;
 		default: break;
 		}
 		break;

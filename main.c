@@ -25,6 +25,7 @@
 #include "RemoveBasalProfile.h"
 #include "ActivateBasalProfile.h"
 #include "DeactivateBasalProfile.h"
+#include "ActivateTemporaryBasal.h"
 
 void Delay(void);
 void SavePreviousInput();

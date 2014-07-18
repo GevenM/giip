@@ -7,6 +7,7 @@
 #include "RemoveBasalProfile.h"
 #include "ActivateBasalProfile.h"
 #include "DeactivateBasalProfile.h"
+#include "ActivateTemporaryBasal.h"
 
 extern void UpdateOperation();
 
