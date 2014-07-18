@@ -47,7 +47,7 @@ extern bool M_basActSelected;
 extern y_basal m_basActSelected;
 extern unsigned char M_basStartResp;
 
-extern bool M_basStopResp;
+extern unsigned char M_basStopResp;
 
 extern bool M_tmpStartResp;
 extern y_tmpBasal m_tmpBas;

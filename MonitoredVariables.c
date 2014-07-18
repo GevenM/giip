@@ -37,7 +37,7 @@ bool M_basActSelected;
 y_basal m_basActSelected;
 unsigned char M_basStartResp;
 
-bool M_basStopResp;
+unsigned char M_basStopResp;
 
 bool M_tmpStartResp;
 y_tmpBasal m_tmpBas;
@@ -160,8 +160,9 @@ void UpdateMonitoredVariables(){
 	}
 
 	if ( c_operation == StopBasProf ){
-		if ( I_middleSelBtn ) M_basStartResp = ACCEPT;
-		else if ( I_leftSelBtn ) M_basStartResp = CANCEL;
+		if ( I_middleSelBtn ) M_basStopResp = ACCEPT;
+		else if ( I_leftSelBtn ) M_basStopResp = CANCEL;
+		else M_basStopResp = NO_VALUE;
 	}
 
 }
