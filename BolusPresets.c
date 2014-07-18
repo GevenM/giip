@@ -154,3 +154,7 @@ bool BolusPresetCreationAllowed(){
 	return false;
 }
 
+bool BolusPresetIsActive(y_bolus *preset){
+	// check if the passed profile is the active profile
+	return !strcmp(preset->Name, f_activeBolus.Name);
+}

@@ -49,12 +49,16 @@ extern unsigned char M_basStartResp;
 
 extern unsigned char M_basStopResp;
 
-extern bool M_tmpStartResp;
+extern unsigned char M_tmpStartResp;
 extern y_tmpBasal m_tmpBas;
 extern bool M_tmpBas;
 
 extern unsigned char M_bolCreateResp;
 extern y_bolus m_bolus;
 extern bool M_bolus;
+
+extern unsigned char M_bolRemResp;
+extern y_bolus m_bolSelected;
+extern bool M_bolSelected;
 
 #endif

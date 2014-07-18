@@ -200,7 +200,8 @@ void CopyProfile(y_basal *fromProfile, y_basal *toProfile){
 
 
 bool BasalProfileIsActive(y_basal *profile){
-	return false;
+	// check if the passed profile is the active profile
+	return !strcmp(profile->Name, f_activeBasal.Name);
 }
 
 int GetProfileIndex( y_basal * profile){

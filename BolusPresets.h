@@ -28,4 +28,7 @@ extern int AddPresetToSet(y_bolus *preset);
 extern int RemovePresetFromSet(y_bolus *preset);
 
 extern bool BolusPresetCreationAllowed();
+
+extern bool BolusPresetIsActive(y_bolus *preset);
+
 #endif

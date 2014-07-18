@@ -43,7 +43,11 @@ unsigned char M_bolCreateResp;
 y_bolus m_bolus;
 bool M_bolus;
 
-bool M_tmpStartResp;
+unsigned char M_bolRemResp;
+y_bolus m_bolSelected;
+bool M_bolSelected;
+
+unsigned char M_tmpStartResp;
 y_tmpBasal m_tmpBas;
 bool M_tmpBas;
 
@@ -171,8 +175,16 @@ void UpdateMonitoredVariables(){
 
 	if ( c_operation == CreateBolPre ){
 		if ( I_middleSelBtn ) M_bolCreateResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_bolCreateResp = RETRY;
 		else if ( I_leftSelBtn ) M_bolCreateResp = CANCEL;
 		else M_bolCreateResp = NO_VALUE;
+	}
+
+	if ( c_operation == RemoveBolPre ){
+		if ( I_middleSelBtn ) M_bolRemResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_bolRemResp = RETRY;
+		else if ( I_leftSelBtn ) M_bolRemResp = CANCEL;
+		else M_bolRemResp = NO_VALUE;
 	}
 }
 
@@ -214,5 +226,8 @@ void InitMonitoredVariables(){
 
 	M_bolus = false;
 	M_bolCreateResp = NO_VALUE;
+
+	M_bolSelected = false;
+	M_bolRemResp = NO_VALUE;
 
 }

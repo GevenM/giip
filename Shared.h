@@ -157,9 +157,6 @@ extern e_opStatus c_remindRemStatus;
 
 extern e_bolStatus c_bolStartStatus;
 
-extern bool f_basalIsActive;
-extern bool f_temporaryBasalIsActive;
-extern bool f_bolusInProgress;
 
 extern bool BolusInProgress();
 extern bool ScheduleCreationAllowed();
@@ -176,6 +173,7 @@ extern y_bolus k_emptyBol;
 
 extern y_basal f_activeBasal;
 extern y_tmpBasal f_activeTmpBasal;
+extern y_bolus f_activeBolus;
 
 extern const y_insulinValue k_maxBasalBound;
 extern const y_insulinValue k_minBasalBound;

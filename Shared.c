@@ -5,8 +5,9 @@ y_basal k_emptyBas = {"", {0}};
 y_tmpBasal k_emptyTmp = {0, 0};
 y_bolus k_emptyBol = {"", 0};
 
-y_basal f_activeBasal;
-y_tmpBasal f_activeTmpBasal;
+y_basal f_activeBasal = {"", {0}};
+y_tmpBasal f_activeTmpBasal = {0, 0};
+y_bolus f_activeBolus = {"", 0};
 
 //single rate increment bounds
 const y_insulinValue k_maxBasalBound = 10;
