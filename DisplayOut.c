@@ -1695,6 +1695,7 @@ void PrintStartTmpBas_Idle(){
 	int cursorY, cursorX, cursorW;
 
 		if (tmpBasal_DurationEntered == false){
+			LoadRightButton("RATE");
 			cursorY = 35;
 			cursorX = 65;
 
@@ -1704,6 +1705,7 @@ void PrintStartTmpBas_Idle(){
 				cursorW = 10;
 		}
 		else {
+			LoadRightButton("DUR");
 			cursorY = 45;
 			cursorX = 65;
 			if(m_tmpBas.Rate <= 9)
@@ -1734,7 +1736,6 @@ void PrintStartTmpBas_Idle(){
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("DONE");
-	LoadRightButton("RATE");
 
 	GrFlush(&g_sContext);
 
