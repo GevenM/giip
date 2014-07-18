@@ -1665,7 +1665,9 @@ void PrintStartTmpBas_Idle(){
 	int digits = 0;
 	int cursorY, cursorX, cursorW;
 
-	if (tmpBasal_DurationEntered == false){
+		if (tmpBasal_DurationEntered == false){
+			LoadLeftButton("CANC");
+			LoadRightButton("RATE");
 			cursorY = 34;
 			cursorX = 65;
 
@@ -1673,7 +1675,11 @@ void PrintStartTmpBas_Idle(){
 				cursorW = 4;
 			else if (m_tmpBas.Duration > 9)
 				cursorW = 10;
-		} else {
+		}
+		else {
+			LoadLeftButton("CANC");
+			LoadMiddleButton("OK");
+			LoadRightButton("DUR");
 			cursorY = 44;
 			cursorX = 65;
 			if(m_tmpBas.Rate <= 9)
@@ -1703,6 +1709,7 @@ void PrintStartTmpBas_Idle(){
 	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
 
 	GrFlush(&g_sContext);
+
 }
 
 void PrintStartTmpBas_Confirm(){
@@ -1747,4 +1754,7 @@ void PrintStartTmpBas_Invalid(){
 	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 36, OPAQUE_TEXT);
 
 	GrFlush(&g_sContext);
+
+	LoadLeftButton("CANC");
+	LoadRightButton("RETY");
 }
