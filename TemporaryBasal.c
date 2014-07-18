@@ -19,3 +19,12 @@ bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
 	else
 		return true;
 }
+
+
+bool TmpBasalCompare(y_tmpBasal *profile1, y_tmpBasal *profile2){
+	// if the names match, the profiles are the same.
+	if( profile1->Rate == profile2->Rate && profile1->Duration == profile2->Duration ){
+		return true;
+	}
+	return false;
+}

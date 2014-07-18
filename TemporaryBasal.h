@@ -15,5 +15,6 @@ typedef struct tmpBasal{
 
 extern void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal);
 extern bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile);
+extern bool TmpBasalCompare(y_tmpBasal *profile1, y_tmpBasal *profile2);
 
 #endif

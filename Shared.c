@@ -78,5 +78,5 @@ bool BasalIsActive(){
 }
 
 bool TemporaryBasalIsActive(){
-	return false;
+	return !( TmpBasalCompare( &f_activeTmpBasal, &k_emptyTmp ));
 }
