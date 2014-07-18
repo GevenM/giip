@@ -1,9 +1,7 @@
 #ifndef BOLUSPRESETS_H
 #define BOLUSPRESETS_H
 
-#include "Flash.h"
 #include <stdbool.h>
-
 
 #define k_bolusNameLength 12
 #define k_maxNumberOfBolusPresets 8
@@ -18,10 +16,16 @@ typedef struct bolPreset{
 
 typedef struct y_bolusSet{
 	y_bolus Preset[k_maxNumberOfBolusPresets];
-	char NumberOfBolusProfiles;
+	char NumberOfBolusPresets;
 } y_bolusSet;
 
 extern void CopyBolusPreset(y_bolus *fromPreset, y_bolus *toPreset);
 extern bool EnteredBolusIsValid(y_bolus *preset);
+extern bool PresetCompare( y_bolus *preset1, y_bolus *preset2 );
+extern int GetPresetIndex( y_bolus * preset);
 
+extern int AddPresetToSet(y_bolus *preset);
+extern int RemovePresetFromSet(y_bolus *preset);
+
+extern bool BolusPresetCreationAllowed();
 #endif

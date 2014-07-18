@@ -42,7 +42,7 @@ void ChangeProfileName(y_basal *me, char * Name){
 }
 
 // Add a basal profile to a set of basal profiles. Takes a set and a profile as inputs. Allocates memory for profiles.
-char AddProfileToSet(y_basal *profile){
+int AddProfileToSet(y_basal *profile){
 	LoadProfilesFromFlash();
 
 	// Check if max number of profiles has been stored
@@ -65,7 +65,7 @@ char AddProfileToSet(y_basal *profile){
 		return 1;
 	}
 
-	return 0;
+	return -1;
 }
 
 
@@ -158,16 +158,22 @@ bool ActivateBasalProfileIsValid(y_basal *profile){
 		return true;
 }
 
-char RemoveProfileFromSet(y_basal *profile){
+int RemoveProfileFromSet(y_basal *profile){
 	LoadProfilesFromFlash();
-	int profileIndex = GetProfileIndex(profile);
 
+	// Create index to hold the location of profile to remove
+	int profileIndex = GetProfileIndex(profile);
+	if (profileIndex == -1) return -1; //not in set
+
+	// If the profile to remove is the last one, simply decrement the number of profiles
 	if(profileIndex == basalSetLocal.numberOfBasalProfiles - 1){
 		basalSetLocal.numberOfBasalProfiles--;
 		SaveProfilesToFlash();
 		return 1;
+	}
 
-	} else if (profileIndex < basalSetLocal.numberOfBasalProfiles - 1 ){
+	// If it's a profile that is not the last, move all the profiles after the one to remove up one place.
+	if (profileIndex < basalSetLocal.numberOfBasalProfiles - 1 ){
 		int i;
 		for (i = profileIndex; i < basalSetLocal.numberOfBasalProfiles - 1 ; i++){
 			CopyProfile(&basalSetLocal.Profile[i + 1], &basalSetLocal.Profile[i]);
@@ -175,12 +181,11 @@ char RemoveProfileFromSet(y_basal *profile){
 		basalSetLocal.numberOfBasalProfiles--;
 		SaveProfilesToFlash();
 		return 1;
-
 	}
-	return 0;
 
-
+	return -1;
 }
+
 
 void CopyProfile(y_basal *fromProfile, y_basal *toProfile){
 	int i;

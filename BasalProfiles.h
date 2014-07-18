@@ -37,8 +37,8 @@ extern bool BasalProfileIsValid(y_basal *profile);
 extern bool ActivateBasalProfileIsValid(y_basal *profile);
 extern bool BasalProfileIsActive(y_basal *profile);
 
-extern char AddProfileToSet(y_basal *profile);
-extern char RemoveProfileFromSet(y_basal *profile);
+extern int AddProfileToSet(y_basal *profile);
+extern int RemoveProfileFromSet(y_basal *profile);
 extern void CopyProfile(y_basal *fromProfile, y_basal *toProfile);
 extern int GetProfileIndex( y_basal * profile);
 extern void LoadProfile( y_basal *profile, int index);

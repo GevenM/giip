@@ -90,5 +90,5 @@ bool BolusPresetCreationCompleted(){
 }
 
 void SaveBolusPreset (y_bolus *preset){
-	;
+	AddPresetToSet(preset);
 }
