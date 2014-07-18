@@ -16,8 +16,8 @@ const y_insulinValue k_maxBolusBound = 10;
 const y_insulinValue k_minBolusBound = 0;
 
 // Temporary basal constants
-const y_duration k_maxTmpDuration = 6;
-const y_tmpBasalRate k_maxTmpRate = 10;
+const y_duration k_maxTmpDuration = 24;
+const y_tmpBasalRate k_maxTmpRate = 24;
 
 //daily bound
 const y_insulinValue k_maxDailyInsulin = 100;

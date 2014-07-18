@@ -784,7 +784,6 @@ void UpdateScreen(){
 
 	case StartTmpBas:
 
-
 		switch (c_tmpStartStatus){
 		case e_opStatus_idle:
 			c_menuScreen = StartTmpBas_Idle;
@@ -1666,21 +1665,25 @@ void PrintStartTmpBas_Idle(){
 	int cursorY, cursorX, cursorW;
 
 	if (tmpBasal_DurationEntered == false){
-			cursorY = 46;
-			cursorX = 46;
+			cursorY = 34;
+			cursorX = 65;
 
 			if (m_tmpBas.Duration <= 9)
 				cursorW = 4;
 			else if (m_tmpBas.Duration > 9)
-				cursorW = 9;
+				cursorW = 10;
 		} else {
-			cursorY = 60;
-			cursorX = 46;
+			cursorY = 44;
+			cursorX = 65;
 			if(m_tmpBas.Rate <= 9)
 				cursorW = 4;
 			else if (m_tmpBas.Rate > 9)
-				cursorW = 9;
+				cursorW = 10;
 		}
+
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
 
 	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 
@@ -1698,13 +1701,17 @@ void PrintStartTmpBas_Idle(){
 
 	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
 
-
+	GrFlush(&g_sContext);
 }
 
 void PrintStartTmpBas_Confirm(){
 	char buffer[10] = "";
 	char outString[32] = "";
 	int digits = 0;
+
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
 
 	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 16, OPAQUE_TEXT);
 	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
@@ -1730,4 +1737,5 @@ void PrintStartTmpBas_Confirm(){
 
 void PrintStartTmpBas_Invalid(){
 	PrintMessage("Invalid Temporary Basal");
+	GrFlush(&g_sContext);
 }
