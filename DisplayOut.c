@@ -157,7 +157,7 @@ void PrintScreen(){
 
 	case StartTmpBas_Idle:PrintStartTmpBas_Idle(); break;
 	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(); break;
-	case StartTmpBas_Invalid:PrintStartTmpBas_Idle(); break;
+	case StartTmpBas_Invalid:PrintStartTmpBas_Invalid(); break;
 
 	case StopTmpBas_All:PrintMessage("Stop Tmp"); break;
 
@@ -826,27 +826,31 @@ void UpdateScreen(){
 					tmpBasal_DurationEntered = true;
 					updateScreen = true;
 				}
+				else if (M_selReq){ // hit next, duration is entered
+					tmpBasal_DurationEntered = false;
+					M_tmpBas = true;
+				}
 
 			}
 			else {
-					if(M_upReq){ // increment numbers, roll over from 9->0
-						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
-						else m_tmpBas.Rate++;
-						updateScreen = true;
-					}
-					else if(M_downReq) { // decrement numbers, roll over from 0->9
-						if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
-						else m_tmpBas.Rate--;
-						updateScreen = true;
-					}
-					else if(M_nextReq){
-						tmpBasal_DurationEntered = false;
-						updateScreen = true;
-					}
-					else if (M_selReq){ // hit next, duration is entered
-						tmpBasal_DurationEntered = false;
-						M_tmpBas = true;
-					}
+				if(M_upReq){ // increment numbers, roll over from 9->0
+					if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
+					else m_tmpBas.Rate++;
+					updateScreen = true;
+				}
+				else if(M_downReq) { // decrement numbers, roll over from 0->9
+					if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
+					else m_tmpBas.Rate--;
+					updateScreen = true;
+				}
+				else if(M_nextReq){
+					tmpBasal_DurationEntered = false;
+					updateScreen = true;
+				}
+				else if (M_selReq){ // hit next, duration is entered
+					tmpBasal_DurationEntered = false;
+					M_tmpBas = true;
+				}
 			}
 		break;
 
@@ -1690,15 +1694,8 @@ void PrintStartTmpBas_Idle(){
 	int digits = 0;
 	int cursorY, cursorX, cursorW;
 
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrRectFill(&g_sContext, &myRectangleBotMid);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
 		if (tmpBasal_DurationEntered == false){
-			LoadLeftButton("CANC");
-			LoadRightButton("RATE");
-			cursorY = 34;
+			cursorY = 35;
 			cursorX = 65;
 
 			if (m_tmpBas.Duration <= 9)
@@ -1707,10 +1704,7 @@ void PrintStartTmpBas_Idle(){
 				cursorW = 10;
 		}
 		else {
-			LoadLeftButton("CANC");
-			LoadMiddleButton("OK");
-			LoadRightButton("DUR");
-			cursorY = 44;
+			cursorY = 45;
 			cursorX = 65;
 			if(m_tmpBas.Rate <= 9)
 				cursorW = 4;
@@ -1718,21 +1712,29 @@ void PrintStartTmpBas_Idle(){
 				cursorW = 10;
 		}
 
-	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 17, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 27, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
 	strcpy(outString, "Rate:     ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
 
 	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("DONE");
+	LoadRightButton("RATE");
 
 	GrFlush(&g_sContext);
 
@@ -1747,20 +1749,20 @@ void PrintStartTmpBas_Confirm(){
 	GrRectFill(&g_sContext, &myRectangleScreen);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 
-	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 16, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 17, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 27, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
 	strcpy(outString, "Rate: ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 46, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 47, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");
@@ -1775,12 +1777,12 @@ void PrintStartTmpBas_Invalid(){
 	GrRectFill(&g_sContext, &myRectangleScreen);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 
-	GrStringDrawCentered(&g_sContext, "Temporary", AUTO_STRING_LENGTH, 47, 16, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Basal", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 36, OPAQUE_TEXT);
-
-	GrFlush(&g_sContext);
+	GrStringDrawCentered(&g_sContext, "Temporary", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
 }
