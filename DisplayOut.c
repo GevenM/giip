@@ -383,6 +383,7 @@ void UpdateScreen(){
 				case Basal_StartProfile:
 					if(BasalProfileExists()){
 						LoadProfile( &m_basActSelected, 0 ); // Selects the first available profile.
+						basCreateStatus_NameEntered = false;
 					} else {
 						c_menuScreen=NoBasProf;
 					}
@@ -419,6 +420,7 @@ void UpdateScreen(){
 				case Basal_StartProfile:
 					if(BasalProfileExists()){
 						LoadProfile( &m_basActSelected, 0 ); // Selects the first available profile.
+						basCreateStatus_NameEntered = false;
 					} else {
 						c_menuScreen=NoBasProf;
 					}
@@ -606,6 +608,24 @@ void UpdateScreen(){
 				} else if (M_nextReq){
 					basCreateStatus_NameEntered = true;
 					updateScreen = true;
+				} else if (M_selReq){
+					InputProfileToBasalProfile(&m_basProf);
+					M_basProf = true;
+					updateScreen = true;
+
+					// Reset variables used by this function
+					basCreateStatus_NameEntered = false;
+					segmentIndex = 0;
+					rateIndex = 0;
+					nameIndex = 0;
+
+					int i = 1;
+					segments[ 0 ] = k_segDay;
+					while (i < k_segDay && segments[ i ] != 0 ){
+						segments[ i ] = 0;
+						i++;
+					}
+					ClearInputProfile();
 				}
 
 			} else { // Editing the rates and time periods
@@ -656,10 +676,12 @@ void UpdateScreen(){
 						if (segmentIndex > 0){
 							segmentIndex--;
 							rateIndex = 1;
-						} else {
-							basCreateStatus_NameEntered = false;
 						}
+						updateScreen = true;
 					}
+
+				} else if (M_nextReq){
+					basCreateStatus_NameEntered = false;
 					updateScreen = true;
 
 				} else if (M_selReq){
@@ -1170,7 +1192,8 @@ void PrintCreateBasProf_Idle(y_basal *p_profile){
 	LoadLeftButton("CANC");
 	if (basCreateStatus_NameEntered == false) LoadRightButton("RATE");
 	else {
-		ClearRightButton();
+	//	ClearRightButton();
+		LoadRightButton("NAME");
 		LoadMiddleButton("OK");
 	}
 
