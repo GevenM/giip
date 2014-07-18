@@ -75,6 +75,7 @@ void main(void){
 		RemoveBasalProfile();
 		ActivateBasalProfile();
 		DeactivateBasalProfile();
+		ActivateTemporaryBasal();
 
 		UpdateOperation();
 

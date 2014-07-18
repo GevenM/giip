@@ -13,6 +13,7 @@ typedef struct tmpBasal{
 	y_duration Duration;
 } y_tmpBasal;
 
-extern void CopyTmpBasal(y_tmpBasal *tmpBasal1, y_tmpBasal *tmpBasal2);
+extern void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal);
+extern bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile);
 
 #endif

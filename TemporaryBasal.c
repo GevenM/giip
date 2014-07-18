@@ -1,5 +1,23 @@
 #include "TemporaryBasal.h"
 
-void CopyTmpBasal(y_tmpBasal *tmpBasal1, y_tmpBasal *tmpBasal2){
-	;
+void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
+	int i;
+
+	for (i=0 ; i < k_segDay ; i++){
+		toTmpBasal->Rate[i] = fromTmpBasal->Rate[i];
+	}
+
+	toTmpBasal->Duration = fromTmpBasal->Duration;
+
+}
+
+bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
+
+	if ( profile->Rate < k_minBasalBound || profile->Rate > k_maxBasalBound) //each single rate is within allowable bounds
+			return false;
+
+	if (profile->Rate*profile->Duration > k_maxDailyInsulin) //compare sum of rates to daily max
+		return false;
+	else
+		return true;
 }

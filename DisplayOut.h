@@ -9,6 +9,7 @@
 #include "MonitoredVariables.h"
 #include "Shared.h"
 #include "BasalProfiles.h"
+#include "TemporaryBasal.h"
 
 extern void DisplayOut(void);
 extern void PrintScreen();

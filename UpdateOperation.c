@@ -43,6 +43,9 @@ void UpdateOperation(){
 			}
 
 		case StartTmpBas:
+			if (TemporaryBasalActivationCompleted()){
+				c_operation = Idle;
+			}
 
 		case StopTmpBas:
 

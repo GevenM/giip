@@ -15,13 +15,14 @@ uint8_t g_delayCounter = 0;
 y_basal p_inputProfile;
 unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
-
+y_tmpBasal p_inputTmpBasal;
 
 unsigned char rateIndex = 0;
 unsigned char segmentIndex = 0;
 unsigned char nameIndex = 0;
 bool updateScreen = false;
-bool basCreateStatus_NameEntered;
+bool basCreateStatus_NameEntered = false;
+bool tmpBasal_DurationEntered = false;
 
 
 void PrintBasal_Manage();
@@ -70,9 +71,13 @@ void PrintRemoveBasProf_Idle();
 void PrintRemoveBasProf_Confirm();
 void PrintRemoveBasProf_Invalid();
 
-void PrintStartBasProf_Confirm();
 void PrintStartBasProf_Idle();
+void PrintStartBasProf_Confirm();
 void PrintStartBasProf_Invalid();
+
+void PrintStartTmpBas_Idle();
+void PrintStartTmpBas_Confirm();
+void PrintStartTmpBas_Invalid();
 
 void PrintStopBas_All();
 
@@ -150,10 +155,12 @@ void PrintScreen(){
 
 	case StopBasProf_All:PrintStopBas_All(); break;
 
-	case StartTmpBas_Idle:PrintMessage("Start Tmp"); break;
-	case StartTmpBas_Confirm:break;
-	case StartTmpBas_Invalid:break;
+	case StartTmpBas_Idle:PrintStartTmpBas_Idle(); break;
+	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(); break;
+	case StartTmpBas_Invalid:PrintStartTmpBas_Idle(); break;
+
 	case StopTmpBas_All:PrintMessage("Stop Tmp"); break;
+
 	case CreateBolusPreset_Idle:PrintMessage("Create Bol"); break;
 	case CreateBolusPreset_Confirm:break;
 	case CreateBolusPreset_Invalid:break;
@@ -380,7 +387,9 @@ void UpdateScreen(){
 						c_menuScreen=NoBasProf;
 					}
 					break;
-				case Basal_StartTmp: break;
+				case Basal_StartTmp:
+					CopyTmpBasal(&k_emptyTmp, &m_tmpBas);
+					break;
 				case Basal_Manage: f_menuChoice = Basal_Manage_Create;break;
 				default: break;
 				}
@@ -442,7 +451,9 @@ void UpdateScreen(){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_StopProfile: break;
-				case Basal_StopTmp: break;
+				case Basal_StartTmp:
+					CopyTmpBasal(&k_emptyTmp, &m_tmpBas);
+					break;
 				case Basal_Manage: f_menuChoice = Basal_Manage_Create;break;
 				default: break;
 				}
@@ -772,8 +783,51 @@ void UpdateScreen(){
 		break;
 
 	case StartTmpBas:
+
+
 		switch (c_tmpStartStatus){
-		case e_opStatus_idle: c_menuScreen = StartTmpBas_Idle; break;
+		case e_opStatus_idle:
+			c_menuScreen = StartTmpBas_Idle;
+
+			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
+
+				if(M_upReq){ // increment numbers, roll over from 9->0
+					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration == 0;
+					else m_tmpBas.Duration++;
+					updateScreen = true;
+				}
+				else if(M_downReq) { // decrement numbers, roll over from 0->9
+					if(m_tmpBas.Duration == 0) m_tmpBas.Duration == k_maxTmpDuration;
+					else m_tmpBas.Duration--;
+					updateScreen = true;
+				}
+				else if (M_nextReq){ // hit next, duration is entered
+					tmpBasal_DurationEntered = true;
+					updateScreen = true;
+				}
+
+			}
+			else {
+					if(M_upReq){ // increment numbers, roll over from 9->0
+						if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate == 0;
+						else m_tmpBas.Rate++;
+						updateScreen = true;
+					}
+					else if(M_downReq) { // decrement numbers, roll over from 0->9
+						if(m_tmpBas.Rate == 0) m_tmpBas.Rate == k_maxTmpRate;
+						else m_tmpBas.Rate--;
+						updateScreen = true;
+					}
+					else if(M_nextReq){
+						tmpBasal_DurationEntered = false;
+						updateScreen = true;
+					}
+					else if (M_selReq){ // hit next, duration is entered
+						M_tmpBas = true;
+					}
+			}
+		break;
+
 		case e_opStatus_confirm: c_menuScreen = StartTmpBas_Confirm; break;
 		case e_opStatus_invalid: c_menuScreen = StartTmpBas_Invalid; break;
 		}
@@ -1603,4 +1657,73 @@ void PrintStopBas_All(){
 	LoadMiddleButton("OK");
 
 	GrFlush(&g_sContext);
+}
+
+void PrintStartTmpBas_Idle(){
+	char buffer[10] = "";
+	char outString[32] = "";
+	int digits = 0;
+	int cursorY, cursorX, cursorW;
+
+	if (tmpBasal_DurationEntered == false){
+			cursorY = 46;
+			cursorX = 46;
+
+			if (m_tmpBas.Duration <= 9)
+				cursorW = 4;
+			else if (m_tmpBas.Duration > 9)
+				cursorW = 9;
+		} else {
+			cursorY = 60;
+			cursorX = 46;
+			if(m_tmpBas.Rate <= 9)
+				cursorW = 4;
+			else if (m_tmpBas.Rate > 9)
+				cursorW = 9;
+		}
+
+	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
+	strncpy(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Duration: "+m_tmpBas.Duration , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
+
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
+	strncpy(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Rate:     "+m_tmpBas.Rate , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+
+	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+
+}
+
+void PrintStartTmpBas_Confirm(){
+	char buffer[10] = "";
+	char outString[32] = "";
+	int digits = 0;
+
+	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 16, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 26, OPAQUE_TEXT);
+
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
+	strncpy(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Duration: "+m_tmpBas.Duration , AUTO_STRING_LENGTH, 5, 36, OPAQUE_TEXT);
+
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
+	strncpy(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Rate: "+m_basProf.Rate , AUTO_STRING_LENGTH, 5, 46, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartTmpBas_Invalid(){
+	PrintMessage("Invalid Temporary Basal");
 }

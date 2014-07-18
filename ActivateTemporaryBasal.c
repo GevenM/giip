@@ -3,7 +3,6 @@
 bool F_activateTemporaryBasal;
 y_tmpBasal p_tmpBas;
 
-bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile);
 void StartTemporaryBasal(y_tmpBasal *profile);
 
 
@@ -75,18 +74,6 @@ void ActivateTemporaryBasal(){
 		F_activateTemporaryBasal = false;
 		CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
 	}
-}
-
-bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
-
-	if ( profile->Rate < k_minBasalBound || profile->Rate > k_maxBasalBound) //each single rate is within allowable bounds
-			return false;
-
-
-	if (profile->Rate*profile->Duration > k_maxDailyInsulin) //compare sum of rates to daily max
-		return false;
-	else
-		return true;
 }
 
 void StartTemporaryBasal(y_tmpBasal *profile){
