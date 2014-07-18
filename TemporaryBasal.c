@@ -1,4 +1,5 @@
 #include "TemporaryBasal.h"
+#include "Shared.h"
 
 void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
 

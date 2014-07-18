@@ -2,7 +2,6 @@
 #define TEMPORARYBASAL_H
 
 #include "Flash.h"
-#include "Shared.h"
 #include <stdbool.h>
 
 
