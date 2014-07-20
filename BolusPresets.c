@@ -18,6 +18,12 @@ y_bolusSet bolusSetLocal;
 void LoadPresetsFromFlash(void);
 void SavePresetsToFlash(void);
 
+
+void InitBolusSet(){
+	bolusSetLocal.NumberOfBolusPresets = 0;
+	SavePresetsToFlash();
+}
+
 void CopyBolusPreset(y_bolus *fromPreset, y_bolus *toPreset){
 
 	// Copy the name from one profile to the other
@@ -158,3 +164,29 @@ bool BolusPresetIsActive(y_bolus *preset){
 	// check if the passed profile is the active profile
 	return !strcmp(preset->Name, f_activeBolus.Name);
 }
+
+bool BolusPresetExists(){
+	LoadPresetsFromFlash();
+
+	if( bolusSetLocal.NumberOfBolusPresets > 0 )
+		return true;
+
+	return false;
+}
+
+int GetNumberOfBolusPresets (){
+	LoadPresetsFromFlash();
+
+	return bolusSetLocal.NumberOfBolusPresets;
+}
+
+void GetPresetName(y_bolusName *name, int index){
+	LoadPresetsFromFlash();
+	strncpy( *name, bolusSetLocal.Preset[index].Name, k_bolusNameLength-1 );
+}
+
+void LoadPreset( y_bolus *preset, int index){
+	LoadPresetsFromFlash();
+	CopyBolusPreset(&bolusSetLocal.Preset[index], preset);
+}
+

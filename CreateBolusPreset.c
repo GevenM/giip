@@ -15,23 +15,18 @@ void CreateBolusPreset(){
 	if (c_operation == CreateBolPre){
 		switch(c_bolCreateStatus){
 		case e_opStatus_idle:
-			if (M_bolCreateResp == CANCEL){
-				F_createBolusPreset = false;
-				CopyBolusPreset(&k_emptyBol, &p_bolus);
-			} else {
-				if(M_bolus){
-					if (EnteredBolusIsValid(&m_bolus)){
-						c_bolCreateStatus = e_opStatus_confirm;
-						CopyBolusPreset(&m_bolus, &p_bolus);
-						F_createBolusPreset = false;
-					} else {
-						c_bolCreateStatus = e_opStatus_invalid;
-						F_createBolusPreset = false;
-					}
-				}
-				else {
+			if(M_bolus){
+				if (EnteredBolusIsValid(&m_bolus)){
+					c_bolCreateStatus = e_opStatus_confirm;
+					CopyBolusPreset(&m_bolus, &p_bolus);
+					F_createBolusPreset = false;
+				} else {
+					c_bolCreateStatus = e_opStatus_invalid;
 					F_createBolusPreset = false;
 				}
+			}
+			else {
+				F_createBolusPreset = false;
 			}
 			break;
 

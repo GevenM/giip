@@ -7,4 +7,5 @@
 
 extern void RemoveBasalProfile();
 extern bool BasalProfileRemovalCompleted();
+
 #endif

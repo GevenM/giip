@@ -26,6 +26,8 @@
 #include "ActivateBasalProfile.h"
 #include "DeactivateBasalProfile.h"
 #include "ActivateTemporaryBasal.h"
+#include "CreateBolusPreset.h"
+#include "RemoveBolusPreset.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -72,11 +74,14 @@ void main(void){
 
 		DisplayOut();
 
+		// Call Function Table functions
 		CreateBasalProfile();
 		RemoveBasalProfile();
 		ActivateBasalProfile();
 		DeactivateBasalProfile();
 		ActivateTemporaryBasal();
+		CreateBolusPreset();
+		RemoveBolusPreset();
 
 		UpdateOperation();
 

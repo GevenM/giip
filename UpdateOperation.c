@@ -1,6 +1,15 @@
 
 #include "UpdateOperation.h"
 
+#include "Shared.h"
+#include "DisplayOut.h"
+#include "CreateBasalProfile.h"
+#include "RemoveBasalProfile.h"
+#include "ActivateBasalProfile.h"
+#include "DeactivateBasalProfile.h"
+#include "ActivateTemporaryBasal.h"
+#include "CreateBolusPreset.h"
+#include "RemoveBolusPreset.h"
 
 void UpdateOperation(){
 
@@ -47,12 +56,18 @@ void UpdateOperation(){
 				c_operation = Idle;
 			}
 			break;
+
 		case StopTmpBas:
 			break;
+
 		case CreateBolPre:
+			if ( BolusPresetCreationCompleted() ) c_operation = Idle;
 			break;
+
 		case RemoveBolPre:
+			if ( BolusPresetRemovalCompleted() ) c_operation = Idle;
 			break;
+
 		case StartBolus:
 			break;
 		case CreateReminder:

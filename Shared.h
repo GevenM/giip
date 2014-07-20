@@ -162,8 +162,8 @@ extern bool BolusInProgress();
 extern bool ScheduleCreationAllowed();
 extern bool ScheduleExists();
 
-extern bool BolusCreationAllowed();
-extern bool BolusPresetExists();
+
+
 extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 

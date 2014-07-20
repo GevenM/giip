@@ -65,13 +65,6 @@ bool ScheduleExists(){
 
 
 
-bool BolusPresetExists(){
-	return false;
-}
-
-bool BolusCreationAllowed(){
-	return false;
-}
 
 bool BasalIsActive(){
 	return !( ProfileCompare( &f_activeBasal, &k_emptyBas ));

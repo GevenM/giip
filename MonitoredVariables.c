@@ -134,7 +134,7 @@ void UpdateMonitoredVariables(){
 			c_menuScreen == Bolus_Manage &&
 			M_selReq &&
 			f_menuChoice == Bolus_Manage_Create &&
-			BolusCreationAllowed();
+			BolusPresetCreationAllowed();
 
 	M_bolRemoveReq =
 			c_operation == Idle &&
