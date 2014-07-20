@@ -1,6 +1,6 @@
 #include "DisplayOut.h"
 #include <string.h>
-
+#include "ActivateBolus.h"
 
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
@@ -16,6 +16,7 @@ y_basal p_inputProfile;
 unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
 y_tmpBasal p_inputTmpBasal;
+unsigned char p_selectedMethod = 0;
 
 unsigned char rateIndex = 0;
 unsigned char segmentIndex = 0;
@@ -24,6 +25,7 @@ bool updateScreen = false;
 bool basCreateStatus_NameEntered = false;
 bool tmpBasal_DurationEntered = false;
 bool bolCreateStatus_NameEntered = false;
+bool bolStartCalc_CarbsEntered = false;
 
 void PrintBasal_Manage();
 void LoadBanner(void);
@@ -86,6 +88,13 @@ void PrintCreateBolusPreset_Invalid();
 void PrintRemoveBolusPreset_Idle();
 void PrintRemoveBolusPreset_Confirm();
 void PrintRemoveBolusPreset_Invalid();
+
+void PrintStartBolus_Idle();
+void PrintStartBolus_Calculator();
+void PrintStartBolus_Preset();
+void PrintStartBolus_Manual();
+void PrintStartBolus_Confirm();
+void PrintStartBolus_Invalid();
 
 void PrintStopBas_All();
 
@@ -177,12 +186,13 @@ void PrintScreen(){
 	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm(); break;
 	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid(); break;
 
-	case StartBolus_Idle:PrintMessage("Start Bol"); break;
-	case StartBolus_Calculator:break;
-	case StartBolus_Preset:break;
-	case StartBolus_Manual:break;
-	case StartBolus_Confirm:break;
-	case StartBolus_Invalid:break;
+	case StartBolus_Idle:PrintStartBolus_Idle(); break;
+	case StartBolus_Calculator:PrintStartBolus_Calculator(); break;
+	case StartBolus_Preset: PrintStartBolus_Preset(); break;
+	case StartBolus_Manual: PrintStartBolus_Manual(); break;
+	case StartBolus_Confirm: PrintStartBolus_Confirm(); break;
+	case StartBolus_Invalid: PrintStartBolus_Invalid(); break;
+
 	case CreateReminder_Idle:PrintMessage("Create Remind"); break;
 	case CreateReminder_Confirm:break;
 	case CreateReminder_Invalid:break;
@@ -283,10 +293,14 @@ void UpdateScreen(){
 			} else if (M_selReq){
 				switch (f_menuChoice){
 				case Bolus_Start:
-					if(BolusInProgress()){
+					if(BolusIsActive()){
 						c_menuScreen = BolusAlreadyActive;
 					} else{
-						;//
+						p_selectedMethod = CALCULATOR;
+						m_bloodGlucose = 0;
+						m_carbs = 0;
+						CopyBolusPreset( &k_emptyBol, &m_bolSelected );
+						CopyBolusPreset( &k_emptyBol, &m_bolus );
 					}
 					break;
 				case Bolus_Manage:
@@ -861,7 +875,6 @@ void UpdateScreen(){
 		break;
 
 	case StartTmpBas:
-
 		switch (c_tmpStartStatus){
 		case e_opStatus_idle:
 			c_menuScreen = StartTmpBas_Idle;
@@ -1031,22 +1044,151 @@ void UpdateScreen(){
 				M_bolSelected = true;
 				updateScreen = true;
 			}
-
-
 			break;
+
 		case e_opStatus_confirm: c_menuScreen = RemoveBolusPreset_Confirm; break;
 		case e_opStatus_invalid: c_menuScreen = RemoveBolusPreset_Invalid; break;
 		}
 		break;
 
-	case StartBolus:
+	case StartBol:
 		switch (c_bolStartStatus){
-		case e_bolStatus_idle: c_menuScreen = StartBolus_Idle; break;
+		case e_bolStatus_idle:
+			c_menuScreen = StartBolus_Idle;
+
+			if (M_upReq){
+				switch( p_selectedMethod ){
+				case CALCULATOR: p_selectedMethod = MANUAL; break;
+				case MANUAL: p_selectedMethod = PRESET; break;
+				case PRESET: p_selectedMethod = CALCULATOR; break;
+				}
+				updateScreen = true;
+
+			} else if( M_downReq ){
+				switch( p_selectedMethod){
+				case CALCULATOR: p_selectedMethod = PRESET; break;
+				case MANUAL: p_selectedMethod = CALCULATOR; break;
+				case PRESET: p_selectedMethod = MANUAL; break;
+				}
+				updateScreen = true;
+
+			} else if ( M_selReq ){
+				M_selectedMethod = p_selectedMethod;
+				if (p_selectedMethod == PRESET) LoadPreset( &m_bolSelected, 0 ); // selects first preset.
+				else if (p_selectedMethod == MANUAL ) {
+					CopyBolusPreset( &k_emptyBol, &m_bolus );
+					strncpy( m_bolus.Name, "*Manual", 7);
+				}
+				updateScreen = true;
+			}
+			break;
+
 		case e_bolStatus_confirm: c_menuScreen = StartBolus_Confirm; break;
 		case e_bolStatus_invalid: c_menuScreen = StartBolus_Invalid; break;
-		case e_bolStatus_preset: c_menuScreen = StartBolus_Preset; break;
-		case e_bolStatus_calculator: c_menuScreen = StartBolus_Calculator; break;
-		case e_bolStatus_manual: c_menuScreen = StartBolus_Manual; break;
+		case e_bolStatus_preset:
+			c_menuScreen = StartBolus_Preset;
+
+			if( BolusPresetExists() ){
+				int presetIndex;
+				if (M_downReq){
+					presetIndex = GetPresetIndex( &m_bolSelected );
+					if(presetIndex == GetNumberOfBolusPresets() - 1 ){
+						LoadPreset( &m_bolSelected, 0 );
+						updateScreen = true;
+					} else {
+						presetIndex++;
+						LoadPreset( &m_bolSelected, presetIndex );
+						updateScreen = true;
+					}
+
+
+				} else if(M_upReq){
+					presetIndex = GetPresetIndex( &m_bolSelected );
+					if(presetIndex == 0 ){
+						LoadPreset( &m_bolSelected, GetNumberOfBolusPresets() - 1 );
+						updateScreen = true;
+					} else {
+						presetIndex--;
+						LoadPreset( &m_bolSelected, presetIndex );
+						updateScreen = true;
+					}
+
+
+				} else if (M_selReq){
+					M_bolSelected = true;
+					updateScreen = true;
+				}
+			}
+			break;
+
+		case e_bolStatus_calculator:
+			c_menuScreen = StartBolus_Calculator;
+
+			if(bolStartCalc_CarbsEntered == false){
+				if(M_upReq){
+					m_carbs++;
+					updateScreen = true;
+				}
+				else if(M_downReq) {
+					if( m_carbs > 0 ){
+						m_carbs--;
+						updateScreen = true;
+					}
+				}
+				else if (M_rightReq){
+					bolStartCalc_CarbsEntered = true;
+					updateScreen = true;
+				}
+				else if (M_selReq){
+					bolStartCalc_CarbsEntered = false;
+					M_carbs = true;
+					M_bloodGlucose = true;
+				}
+			}
+			else {
+				if(M_upReq){
+					m_bloodGlucose++;
+					updateScreen = true;
+				}
+				else if(M_downReq) {
+					if( m_bloodGlucose > 0 ){
+						m_bloodGlucose--;
+						updateScreen = true;
+					}
+				}
+				else if (M_leftReq){
+					bolStartCalc_CarbsEntered = false;
+					updateScreen = true;
+				}
+				else if (M_selReq){
+					bolStartCalc_CarbsEntered = false;
+					M_carbs = true;
+					M_bloodGlucose = true;
+				}
+			}
+			break;
+
+		case e_bolStatus_manual:
+			c_menuScreen = StartBolus_Manual;
+
+			if( M_upReq ){
+				m_bolus.Amount++;
+				updateScreen = true;
+
+			} else if( M_downReq ) {
+				if( m_bolus.Amount > 0 ){
+					m_bolus.Amount--;
+					updateScreen = true;
+				}
+			}
+			else if ( M_selReq ){
+				M_bolus = true;
+			}
+
+			break;
+
+		default: break;
+
 		}
 		break;
 
@@ -1536,7 +1678,7 @@ void PrintIdle(){
 	}
 
 	// Print bolus status
-	if(BolusInProgress())
+	if(BolusIsActive())
 		GrStringDrawCentered(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 48, 40, OPAQUE_TEXT);
 	else {
 		GrStringDrawCentered(&g_sContext, "No Bolus" , AUTO_STRING_LENGTH, 48, 40, OPAQUE_TEXT);
@@ -2186,13 +2328,233 @@ void PrintRemoveBolusPreset_Confirm(){
 }
 
 void PrintRemoveBolusPreset_Invalid(){
+	GrStringDrawCentered(&g_sContext, "Selected", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "is Active", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Idle(){
+	char outString[32];
+	unsigned char text_start = 18;
+
+
+	// Draw top and bottom banner and buttons
+	LoadLeftButton("CANC");
+	LoadMiddleButton("SEL");
+	//LoadRightButton("");
+
+
+	// Menu options
+	GrStringDraw(&g_sContext, "Calculator", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Preset", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Manual", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
+
+	// Highlight selected item
+	switch ( p_selectedMethod ) {
+	case CALCULATOR:
+		text_start = 18;
+		strcpy(outString, "Calculator");
+		break;
+	case PRESET:
+		text_start = 31;
+		strcpy(outString, "Preset");
+		break;
+	case MANUAL:
+		text_start = 44;
+		strcpy(outString, "Manual");
+		break;
+
+	default: break;
+	}
+
+	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+	GrContextBackgroundSet(&g_sContext, ClrBlack);  //ClrWhite      this affects the text color in the highlight
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Calculator(){
+	// Clear previous entries from screen
 	GrContextForegroundSet(&g_sContext, ClrWhite);
 	GrRectFill(&g_sContext, &myRectangleScreen);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 
-	GrStringDrawCentered(&g_sContext, "Selected", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "is Active", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
+	// Print header
+	GrStringDrawCentered(&g_sContext, "Use < > arrows", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "to select input", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
+
+	// Draw carbs header and user entered carbs
+	char buffer[10] = "";
+	char outString[32] = "";
+	int digitsCarb = 0;
+	digitsCarb = UnsignedInt_To_ASCII(m_carbs, buffer);
+	strcpy(outString, "Carb: ");
+	strncat(outString, buffer, digitsCarb);
+	strncat(outString, " g", 2);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 45, OPAQUE_TEXT);
+
+
+	// Draw glucose header and user entered glucose
+	int digitsGluc = 0;
+	digitsGluc = UnsignedInt_To_ASCII(m_bloodGlucose, buffer);
+	strcpy(outString, "BG: ");
+	strncat(outString, buffer, digitsGluc);
+	strncat(outString, " mmol/L", 7);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 58, OPAQUE_TEXT);
+
+	// Draw Cursor
+	int cursorY, cursorX, cursorW;
+	if (bolStartCalc_CarbsEntered == false){
+		cursorY = 53; // y location
+		cursorW = digitsCarb * 5;; // width
+		cursorX = 41; // x location is under last entered letter
+	}
+	else {
+		cursorY = 66;
+		cursorX = 29;
+		cursorW = digitsGluc * 5;
+	}
+	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+	// Draw Buttons
+	LoadLeftButton("CANC");
+	LoadMiddleButton("DONE");
+	LoadRightButton("RETY");
+
+
+	// Flush to screen
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Preset(){
+	if( BolusPresetExists() ){
+		int numberOfPresets = GetNumberOfBolusPresets();
+
+		// Get names of saved presets and draw them
+		y_bolusName *Name;
+		Name = (y_bolusName *) malloc( sizeof( y_bolusName ));
+
+		int i;
+		for ( i = 0; i < numberOfPresets; i++ ){
+			GetPresetName( Name, i );
+			GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
+		}
+		free(Name);
+
+		// highlight the selected profile
+		unsigned char text_start = 18;
+		int index = GetPresetIndex( &m_bolSelected );
+		text_start = 16 + 10 * index;
+
+		GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+		GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
+		GrStringDraw(&g_sContext, m_bolSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+		GrContextForegroundSet(&g_sContext, ClrBlack);
+		GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+		LoadMiddleButton( "SEL" );
+
+	} else {
+		GrStringDrawCentered(&g_sContext, "No Presets", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
+		GrStringDrawCentered(&g_sContext, "Available", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
+	}
+
+	LoadLeftButton( "CANC" );
+	LoadRightButton( "RETY" );
+
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Manual(){
+	// Clear previous entries from screen
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	// Draw Header
+	GrStringDrawCentered(&g_sContext, "Enter Bolus", AUTO_STRING_LENGTH, 47, 21, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Amount", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
+
+
+	// Draw  header and user entered amount
+	char buffer[10] = "";
+	char outString[32] = "";
+	int digits = 0;
+	digits = UnsignedInt_To_ASCII(m_bolus.Amount, buffer);
+
+	strcpy(outString, "Amount: ");
+	strncat(outString, buffer, digits);
+	strncat(outString, " IU", 3);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 45, OPAQUE_TEXT);
+
+
+	// Draw Cursor
+	int cursorY, cursorX, cursorW;
+	cursorY = 53; // y location
+	cursorW = digits * 5;; // width
+	cursorX = 53; // x location is under last entered letter
+	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+	// Draw Buttons
+	LoadLeftButton("CANC");
+	LoadMiddleButton("DONE");
+	LoadRightButton("RETY");
+
+
+	// Flush to screen
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Confirm(){
+	// Draw Header
+	GrStringDrawCentered(&g_sContext, "Activate Bolus?", AUTO_STRING_LENGTH, 47, 21, OPAQUE_TEXT);
+
+	// Get names of saved presets and draw them
+	y_bolus *bolus;
+	bolus = (y_bolus *) malloc( sizeof( y_bolus ));
+
+	// Get the bolus to activate
+	BolusToActivate( bolus );
+
+	// Draw bolus name
+	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, bolus->Name, AUTO_STRING_LENGTH, 15, 47, OPAQUE_TEXT);
+
+	// Draw bolus amount
+	char buffer[10] = "";
+	char outString[32] = "";
+	int digits = 0;
+	digits = UnsignedInt_To_ASCII(bolus->Amount, buffer);
+
+	strcpy(outString, "Amount: ");
+	strncat(outString, buffer, digits);
+	strncat(outString, " IU", 3);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 60, OPAQUE_TEXT);
+
+	free( bolus );
+
+	// Draw Buttons
+	LoadLeftButton("CANC");
+	LoadMiddleButton("DONE");
+	LoadRightButton("RETY");
+
+
+	// Flush to screen
+	GrFlush(&g_sContext);
+}
+
+void PrintStartBolus_Invalid(){
+	GrStringDrawCentered(&g_sContext, "Provided", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Bolus is", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadRightButton("RETY");

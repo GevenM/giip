@@ -6,6 +6,8 @@
 #define k_bolusNameLength 12
 #define k_maxNumberOfBolusPresets 8
 
+typedef int y_carbs;
+typedef int y_glucose;
 typedef int y_insulinValue;
 typedef char y_bolusName[k_bolusNameLength+1];
 
@@ -33,9 +35,13 @@ extern bool BolusPresetCreationAllowed();
 
 extern bool BolusPresetIsActive(y_bolus *preset);
 extern bool BolusPresetExists();
+extern bool BolusIsActive();
 
 extern void GetPresetName(y_bolusName *name, int index);
 void LoadPreset( y_bolus *preset, int index);
 
+extern void CalculateBolus( y_bolus *bolus, y_glucose glucose, y_carbs carbs );
+extern bool CalculatedBolusIsValid( y_glucose glucose, y_carbs carbs );
+extern bool BolusIsValid( y_bolus *bolus );
 
 #endif

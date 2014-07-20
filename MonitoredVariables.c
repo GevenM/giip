@@ -51,6 +51,14 @@ unsigned char M_tmpStartResp;
 y_tmpBasal m_tmpBas;
 bool M_tmpBas;
 
+unsigned char M_bolStartResp;
+y_glucose m_bloodGlucose;
+y_carbs m_carbs;
+bool M_bloodGlucose;
+bool M_carbs;
+unsigned char M_selectedMethod;
+
+
 void UpdateMonitoredVariables(){
 	M_backReq = I_leftSelBtn;
 	M_selReq = I_middleSelBtn;
@@ -74,7 +82,7 @@ void UpdateMonitoredVariables(){
 			c_menuScreen == Bolus &&
 			M_selReq &&
 			f_menuChoice == Bolus_Start &&
-			!BolusInProgress();
+			!BolusIsActive();
 
 	M_reminderCreateReq =
 			c_operation == Idle &&
@@ -186,6 +194,13 @@ void UpdateMonitoredVariables(){
 		else if ( I_leftSelBtn ) M_bolRemResp = CANCEL;
 		else M_bolRemResp = NO_VALUE;
 	}
+
+	if ( c_operation == StartBol ){
+		if ( I_middleSelBtn ) M_bolStartResp = ACCEPT;
+		else if ( I_rightSelBtn ) M_bolStartResp = RETRY;
+		else if ( I_leftSelBtn ) M_bolStartResp = CANCEL;
+		else M_bolStartResp = NO_VALUE;
+	}
 }
 
 void InitMonitoredVariables(){
@@ -229,5 +244,10 @@ void InitMonitoredVariables(){
 
 	M_bolSelected = false;
 	M_bolRemResp = NO_VALUE;
+
+	M_bolStartResp = NO_VALUE;
+	M_selectedMethod = NO_VALUE;
+	M_carbs = false;
+	M_bloodGlucose = false;
 
 }

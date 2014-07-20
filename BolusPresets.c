@@ -3,7 +3,7 @@
 
 #include "BolusPresets.h"
 #include "Shared.h"
-
+#include "stdlib.h"
 #include "flash.h"
 
 
@@ -18,6 +18,15 @@ y_bolusSet bolusSetLocal;
 void LoadPresetsFromFlash(void);
 void SavePresetsToFlash(void);
 
+bool BolusIsActive(){
+	// Bolus is active if f_activeBolus is not the same as the empty bolus.
+	if ( !strcmp( k_emptyBol.Name, f_activeBolus.Name)){
+		if (k_emptyBol.Amount == f_activeBolus.Amount){
+			return false;
+		}
+	}
+	return true;
+}
 
 void InitBolusSet(){
 	bolusSetLocal.NumberOfBolusPresets = 0;
@@ -27,7 +36,7 @@ void InitBolusSet(){
 void CopyBolusPreset(y_bolus *fromPreset, y_bolus *toPreset){
 
 	// Copy the name from one profile to the other
-	strncpy( toPreset->Name, fromPreset->Name, k_bolusNameLength-1 );
+	strncpy( toPreset->Name, fromPreset->Name, k_bolusNameLength );
 
 	// Copy the Amount
 	toPreset->Amount = fromPreset->Amount;
@@ -48,12 +57,8 @@ bool EnteredBolusIsValid(y_bolus *preset){
 			return false;
 	}
 
-	// Check that the amount is within allowable bounds
-	if ( preset->Amount < k_minBolusBound || preset->Amount > k_maxBolusBound ){
-		return false;
-	}
-
-	return true;
+	// check that it's within bounds and other criteria
+	return BolusIsValid( preset );
 }
 
 bool PresetCompare( y_bolus *preset1, y_bolus *preset2 ){
@@ -94,7 +99,7 @@ int AddPresetToSet(y_bolus *preset){
 		bolusSetLocal.NumberOfBolusPresets++;
 
 		// Copy the name into the set
-		strncpy( bolusSetLocal.Preset[presetIndex].Name, preset->Name, k_bolusNameLength-1);
+		strncpy( bolusSetLocal.Preset[presetIndex].Name, preset->Name, k_bolusNameLength);
 
 		// Copy the Amount into the set
 		bolusSetLocal.Preset[ presetIndex ].Amount = preset->Amount;
@@ -182,11 +187,48 @@ int GetNumberOfBolusPresets (){
 
 void GetPresetName(y_bolusName *name, int index){
 	LoadPresetsFromFlash();
-	strncpy( *name, bolusSetLocal.Preset[index].Name, k_bolusNameLength-1 );
+	strncpy( *name, bolusSetLocal.Preset[index].Name, k_bolusNameLength );
 }
 
 void LoadPreset( y_bolus *preset, int index){
 	LoadPresetsFromFlash();
 	CopyBolusPreset(&bolusSetLocal.Preset[index], preset);
+}
+
+void CalculateBolus( y_bolus *bolus, y_glucose glucose, y_carbs carbs ){
+	strncpy( bolus->Name, "*Calculated", k_bolusNameLength );
+	bolus->Amount = 0; //Need to do calculation here.
+
+}
+
+bool CalculatedBolusIsValid( y_glucose glucose, y_carbs carbs ){
+	bool valid;
+
+	// Calculate bolus from given blood glucose and carbs
+	y_bolus *bolus;
+	bolus = (y_bolus *) malloc( sizeof( y_bolus ));
+
+	CalculateBolus( bolus, glucose, carbs );
+
+	// Determine whether bolus based on calculation is valid
+	valid = BolusIsValid( bolus );
+
+	free( bolus );
+
+	return valid;
+
+}
+
+bool BolusIsValid( y_bolus *bolus ){
+
+	// Check that the amount is within allowable bounds
+	if ( bolus->Amount < k_minBolusBound || bolus->Amount > k_maxBolusBound ){
+		return false;
+	}
+	if ( bolus->Amount > k_maxDailyInsulin ){
+		return false;
+	}
+
+	return true;
 }
 

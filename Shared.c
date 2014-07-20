@@ -51,10 +51,6 @@ bool f_temporaryBasalIsActive = false;
 bool f_bolusInProgress = false;
 
 
-bool BolusInProgress(){
-	return f_bolusInProgress;
-}
-
 bool ScheduleCreationAllowed(){
 	return true;
 }

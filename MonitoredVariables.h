@@ -61,4 +61,12 @@ extern unsigned char M_bolRemResp;
 extern y_bolus m_bolSelected;
 extern bool M_bolSelected;
 
+extern unsigned char M_bolStartResp;
+extern y_glucose m_bloodGlucose;
+extern y_carbs m_carbs;
+extern bool M_bloodGlucose;
+extern bool M_carbs;
+extern unsigned char M_selectedMethod;
+
+
 #endif

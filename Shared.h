@@ -2,9 +2,14 @@
 #define SHARED_FILE
 
 #define NO_VALUE 0
+
 #define ACCEPT 1
 #define RETRY 2
 #define CANCEL 3
+
+#define CALCULATOR 4
+#define PRESET 5
+#define MANUAL 6
 
 //#define k_segDay 48
 
@@ -110,7 +115,7 @@ typedef enum {
 	StopTmpBas,
 	CreateBolPre,
 	RemoveBolPre,
-	StartBolus,
+	StartBol,
 	CreateReminder,
 	RemoveReminder,
 } e_operations;
@@ -158,7 +163,6 @@ extern e_opStatus c_remindRemStatus;
 extern e_bolStatus c_bolStartStatus;
 
 
-extern bool BolusInProgress();
 extern bool ScheduleCreationAllowed();
 extern bool ScheduleExists();
 

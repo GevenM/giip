@@ -28,6 +28,7 @@
 #include "ActivateTemporaryBasal.h"
 #include "CreateBolusPreset.h"
 #include "RemoveBolusPreset.h"
+#include "ActivateBolus.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -82,6 +83,7 @@ void main(void){
 		ActivateTemporaryBasal();
 		CreateBolusPreset();
 		RemoveBolusPreset();
+		ActivateBolus();
 
 		UpdateOperation();
 
