@@ -1,6 +1,8 @@
 #include "DisplayOut.h"
 #include <string.h>
 #include "ActivateBolus.h"
+#include "RTC.h"
+
 
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
@@ -17,6 +19,17 @@ unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
 y_tmpBasal p_inputTmpBasal;
 unsigned char p_selectedMethod = 0;
+
+Calendar p_calendar;
+unsigned char p_calendarIndex;
+#define SEC		2
+#define MIN		1
+#define HR		0
+#define MON		4
+#define DOM		3
+#define YEAR_1	5
+#define YEAR_2	6
+
 
 unsigned char rateIndex = 0;
 unsigned char segmentIndex = 0;
@@ -97,6 +110,8 @@ void PrintStartBolus_Confirm();
 void PrintStartBolus_Invalid();
 
 void PrintStopBas_All();
+
+void PrintSettings_DateTime();
 
 void UpdateScreen();
 
@@ -199,6 +214,7 @@ void PrintScreen(){
 	case RemoveReminder_Idle:PrintMessage("Remove Remind"); break;
 	case RemoveReminder_Confirm:break;
 
+	case Settings_DateTime: PrintSettings_DateTime(); break;
 
 
 	default: PrintError(); break;
@@ -265,7 +281,7 @@ void UpdateScreen(){
 
 				case Settings:
 					c_menuScreen = Settings;
-					//f_menuChoice = Settings_1;
+					f_menuChoice = Settings_ClearFlash;
 					break;
 
 				case ShutDown: break; // Shouldn't  need to do anything as this produces M_pwrReq.
@@ -392,12 +408,34 @@ void UpdateScreen(){
 			break;
 
 		case Settings:
-			if (M_backReq){
+			if( M_downReq ){
+				switch( f_menuChoice ){
+				case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
+				case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
+				}
+			} else if ( M_upReq ){
+				switch( f_menuChoice ){
+					case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
+					case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
+				}
+			} else if (M_backReq){
 				c_menuScreen = Main;
 				f_menuChoice = Settings;
+
 			} else if (M_selReq){
-				InitBasalSet();
-				InitBolusSet();
+				switch( f_menuChoice ){
+				case Settings_ClearFlash:
+					InitBasalSet();
+					InitBolusSet();
+					break;
+
+				case Settings_DateTime:
+					p_calendar = GetCurrentCalendar();
+					p_calendarIndex = 0;
+					c_menuScreen = f_menuChoice;
+					break;
+				}
+
 			}
 			break;
 
@@ -630,6 +668,109 @@ void UpdateScreen(){
 			if (M_backReq){
 				c_menuScreen = Bolus;
 				f_menuChoice = Bolus_Start;
+			}
+			break;
+
+		case Settings_DateTime:
+			if ( M_upReq ){
+				switch ( p_calendarIndex ){
+				int value;
+				case SEC:
+					value = BCDtoInt( p_calendar.Seconds );
+					value = (value + 1 ) % 60;
+					p_calendar.Seconds = IntToBCD( value );
+					break;
+				case MIN:
+					value = BCDtoInt( p_calendar.Minutes );
+					value = (value + 1 ) % 60;
+					p_calendar.Minutes = IntToBCD( value );
+					break;
+				case HR:
+					value = BCDtoInt( p_calendar.Hours );
+					value = (value + 1 ) % 24;
+					p_calendar.Hours = IntToBCD( value );
+					break;
+				case MON:
+					value = BCDtoInt( p_calendar.Month );
+					value = (value + 1 ) % 12;
+					p_calendar.Month = IntToBCD( value );
+					break;
+				case DOM:
+					value = BCDtoInt( p_calendar.DayOfMonth );
+					if (value < 31 ) value++;
+					else value = 1;
+					p_calendar.DayOfMonth = IntToBCD( value );
+					break;
+				case YEAR_1:
+					value = BCDtoInt( p_calendar.Year >> 8 );
+					value = (value + 1 ) % 100;
+					p_calendar.Year = (p_calendar.Year & 0x00FF) | (IntToBCD( value ) << 8);
+					break;
+				case YEAR_2:
+					value = BCDtoInt( p_calendar.Year & 0x00FF );
+					value = (value + 1 ) % 100;
+					p_calendar.Year = ( p_calendar.Year & 0xFF00) | IntToBCD( value );
+					break;
+				}
+				updateScreen = true;
+
+			} else if ( M_downReq ){
+				switch ( p_calendarIndex ){
+				int value;
+				case SEC:
+					value = BCDtoInt( p_calendar.Seconds );
+					value = (value + 59 ) % 60;
+					p_calendar.Seconds = IntToBCD( value );
+					break;
+				case MIN:
+					value = BCDtoInt( p_calendar.Minutes );
+					value = (value + 59 ) % 60;
+					p_calendar.Minutes = IntToBCD( value );
+					break;
+				case HR:
+					value = BCDtoInt( p_calendar.Hours );
+					value = (value + 23 ) % 24;
+					p_calendar.Hours = IntToBCD( value );
+					break;
+				case MON:
+					value = BCDtoInt( p_calendar.Month );
+					value = (value + 11 ) % 12;
+					p_calendar.Month = IntToBCD( value );
+					break;
+				case DOM:
+					value = BCDtoInt( p_calendar.DayOfMonth );
+					if (value > 1 ) value--;
+					else value = 31;
+					p_calendar.DayOfMonth = IntToBCD( value );
+					break;
+				case YEAR_1:
+					value = BCDtoInt( p_calendar.Year >> 8 );
+					value = (value + 99 ) % 100;
+					p_calendar.Year = (p_calendar.Year & 0x00FF) | (IntToBCD( value ) << 8);
+					break;
+				case YEAR_2:
+					value = BCDtoInt( p_calendar.Year & 0x00FF );
+					value = (value + 99 ) % 100;
+					p_calendar.Year = ( p_calendar.Year & 0xFF00) | IntToBCD( value );
+					break;
+				}
+				updateScreen = true;
+
+			} else if ( M_rightReq ) {
+				p_calendarIndex = (p_calendarIndex + 1) % (YEAR_2 + 1);
+				updateScreen = true;
+
+			} else if ( M_leftReq ) {
+				if (p_calendarIndex == 0 ) p_calendarIndex = YEAR_2;
+				else p_calendarIndex--;
+				updateScreen = true;
+
+			} else if ( M_backReq ) {
+				c_menuScreen = Settings;
+				f_menuChoice = Settings_DateTime;
+
+			} else if ( M_selReq ) {
+				SetCalendar( p_calendar );
 			}
 			break;
 
@@ -1337,9 +1478,41 @@ void PrintRemindCreateNotAllowed(){
 void PrintSchedule(){
 	;
 }
+
 void PrintSettings(){
+	char outString[32] = "";
+	unsigned char text_start = 18;
+
+	// Draw top and bottom banner and buttons
 	LoadLeftButton("BACK");
-	GrStringDraw(&g_sContext, "Settings" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+	LoadMiddleButton("SEL");
+	//LoadRightButton("");
+
+
+	// Menu options
+	GrStringDraw(&g_sContext, "Clear Flash", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Edit Calendar", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+
+
+	// Highlight selected item
+	switch (f_menuChoice) {
+	case Settings_ClearFlash:
+		text_start = 18;
+		strcpy(outString, "Clear Flash");
+		break;
+	case Settings_DateTime:
+		text_start = 31;
+		strcpy(outString, "Edit Calendar");
+		break;
+	default: break;
+	}
+
+	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
 	GrFlush(&g_sContext);
 }
 
@@ -1668,20 +1841,47 @@ void PrintCreateBasProf(){
 
 
 void PrintIdle(){
+	char outString[32] = "";
+
+
 	// Print basal status
 	if (TemporaryBasalIsActive()){
-		GrStringDrawCentered(&g_sContext, "Temp Basal: " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
+		UnsignedInt_To_ASCII(f_activeTmpBasal.Rate, outString);
+		strncat(outString, " IU/hr", 6);
+
+		GrStringDraw(&g_sContext, "Temporary Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
+
 	} else if(BasalIsActive()){
-		GrStringDrawCentered(&g_sContext, "Basal: " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
+		int currentHour = GetCurrentHour();
+		currentHour = BCDtoInt( currentHour );
+
+		int currentMin = GetCurrentMin();
+		currentMin = BCDtoInt( currentMin );
+
+		int currentSegment = ( k_segDay / 24 ) * currentHour;
+		currentSegment = currentSegment + ( currentMin / (60/(k_segDay/24)));
+
+		UnsignedInt_To_ASCII(f_activeBasal.Rate[ currentSegment ], outString);
+		strncat(outString, " IU/hr", 6);
+
+		GrStringDraw(&g_sContext, "Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
+
 	} else {
-		GrStringDrawCentered(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
 	}
 
 	// Print bolus status
-	if(BolusIsActive())
-		GrStringDrawCentered(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 48, 40, OPAQUE_TEXT);
-	else {
-		GrStringDrawCentered(&g_sContext, "No Bolus" , AUTO_STRING_LENGTH, 48, 40, OPAQUE_TEXT);
+	if(BolusIsActive()){
+		UnsignedInt_To_ASCII(f_activeBolus.Amount, outString);
+		strncat(outString, " IU Remain", 10);
+
+		GrStringDraw(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
+
+	} else {
+		GrStringDraw(&g_sContext, "No Bolus" , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
 	}
 	//LoadBanner();
 	// Load bottom buttons
@@ -1729,17 +1929,49 @@ void ClearRightButton(){
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 }
 
+
 void LoadBanner(void){
+
+	int hour = GetCurrentHour();
+	int min = GetCurrentMin();
+	int sec = GetCurrentSec();
+
+	int digits = 0;
+	char buffer[10] = "";
+    char outString[10] = "";
+
+    // Get Hours
+	digits = UnsignedInt_To_ASCII( hour >> 4, buffer ); // Read upper half of byte by bitshifting four places
+	strncpy(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( hour & 0xF, buffer ); // Read lower half of byte by overwriting the upper half with 0s
+	strncat(outString, buffer, digits);
+	strncat(outString, ":", 1);
+
+	// Get Minutes
+	digits = UnsignedInt_To_ASCII( min >> 4, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( min & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	//strncat(outString, ":", 1);
+
+	// Get Seconds
+	//digits = UnsignedInt_To_ASCII( sec >> 4, buffer );
+	//strncat(outString, buffer, digits);
+	//digits = UnsignedInt_To_ASCII( sec & 0xF, buffer );
+	//strncat(outString, buffer, digits);
+
+
 	// Draw top banner
 	GrRectFill(&g_sContext, &myRectangleTopBan);
 	GrContextForegroundSet(&g_sContext, ClrWhite);
 	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, "hh:mm", AUTO_STRING_LENGTH, 80 , 7, TRANSPARENT_TEXT);
-	GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
-	GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
+	GrStringDrawCentered(&g_sContext, outString, AUTO_STRING_LENGTH, 75 , 7, TRANSPARENT_TEXT);
+	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
+	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 }
+
 
 
 
@@ -2115,6 +2347,7 @@ void PrintStartTmpBas_Idle(){
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
+
 
 	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 27, OPAQUE_TEXT);
 
@@ -2558,6 +2791,103 @@ void PrintStartBolus_Invalid(){
 
 	LoadLeftButton("CANC");
 	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void  PrintSettings_DateTime(){
+	// Clear previous entries from screen
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	int digits = 0, domDigits = 0;
+	char buffer[10] = "";
+	char outString[32] = "";
+
+	/* DRAW TIME */
+	strcpy( outString, "Time: " );
+
+	// Get Hours
+	digits = UnsignedInt_To_ASCII( p_calendar.Hours >> 4, buffer ); // Read upper half of byte by bitshifting four places
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Hours & 0xF, buffer ); // Read lower half of byte by overwriting the upper half with 0s
+	strncat(outString, buffer, digits);
+	strncat(outString, ":", 1);
+
+	// Get Minutes
+	digits = UnsignedInt_To_ASCII( p_calendar.Minutes >> 4, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Minutes & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	strncat(outString, ":", 1);
+
+	// Get Seconds
+	digits = UnsignedInt_To_ASCII( p_calendar.Seconds >> 4, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Seconds & 0xF, buffer );
+	strncat(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5 , 40, TRANSPARENT_TEXT);
+
+
+	/* DRAW DATE */
+	strcpy( outString, "Dt: " );
+
+	// Get Day of month
+	domDigits = UnsignedInt_To_ASCII( BCDtoInt( p_calendar.DayOfMonth ), buffer ); // Read upper half of byte by bitshifting four places
+	strncat(outString, buffer, domDigits);
+
+	// Get Month
+	switch ( BCDtoInt( p_calendar.Month ) ){
+	case 1: strncat(outString, " Jan ", 5); break;
+	case 2: strncat(outString, " Feb ", 5); break;
+	case 3: strncat(outString, " Mar ", 5); break;
+	case 4: strncat(outString, " Apr ", 5); break;
+	case 5: strncat(outString, " May ", 5); break;
+	case 6: strncat(outString, " Jun ", 5); break;
+	case 7: strncat(outString, " Jul ", 5); break;
+	case 8: strncat(outString, " Aug ", 5); break;
+	case 9: strncat(outString, " Sep ", 5); break;
+	case 10: strncat(outString, " Oct ", 5); break;
+	case 11:strncat(outString, " Nov ", 5); break;
+	case 12:strncat(outString, " Dec ", 5); break;
+	default: break;
+	}
+
+	// Get Year
+	digits = UnsignedInt_To_ASCII( p_calendar.Year >> 12, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Year >> 8 & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Year >> 4 & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_calendar.Year & 0xF, buffer );
+	strncat(outString, buffer, digits);
+
+
+
+	/* Draw Cursor */
+	int cursorY, cursorX, cursorW;
+	switch ( p_calendarIndex ){
+	case SEC: 		cursorX = 77; 					cursorY = 48; cursorW = 10;					break;
+	case MIN: 		cursorX = 59;				 	cursorY = 48; cursorW = 10;					break;
+	case HR: 		cursorX = 41; 					cursorY = 48; cursorW = 10;					break;
+	case MON:		cursorX = 35 + (domDigits * 6); cursorY = 63; cursorW = 16;					break;
+	case DOM:		cursorX = 29; 					cursorY = 63; cursorW = (domDigits * 5);	break;
+	case YEAR_1:	cursorX = 59 + (domDigits * 6); cursorY = 63; cursorW = 10;					break;
+	case YEAR_2:	cursorX = 71 + (domDigits * 6); cursorY = 63; cursorW = 10;					break;
+	}
+
+	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5 , 55, TRANSPARENT_TEXT);
+
+	GrStringDrawCentered(&g_sContext, "Edit Calendar", AUTO_STRING_LENGTH, 46 , 27, TRANSPARENT_TEXT);
+
+	LoadLeftButton("BACK");
+	LoadMiddleButton("SET");
 
 	GrFlush(&g_sContext);
 }

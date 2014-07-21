@@ -29,6 +29,7 @@
 #include "CreateBolusPreset.h"
 #include "RemoveBolusPreset.h"
 #include "ActivateBolus.h"
+#include "RTC.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -39,18 +40,26 @@ void InputEvents();
 #include "BasalProfiles.h"
 #include "Flash.h"
 
+
+
 void main(void){
+
+
 
     // Stop WDT
     WDT_A_hold(WDT_A_BASE);
 
     // Basic GPIO initialization
     boardInit();
-    timerInit();
-    //ledInit();
+    //timerInit();
+    ledInit();
     buttonInit();
 
     clockInit(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
+
+    InitRTC();
+
+
 
 
     // Set up the LCD
@@ -110,12 +119,6 @@ void main(void){
 
 
 
-
-void Delay(void){
-	__delay_cycles(SYSTEM_CLOCK_SPEED*4);
-}
-
-
 //Convert the input variables from buttons to discrete events by performing rising edge detection.
 void InputEvents(){
 	I_leftSelBtn = i_leftSelBtn & !i_1_leftSelBtn;
@@ -139,3 +142,6 @@ void InputEvents(){
 	I_downDirBtn = i_downDirBtn & !i_1_downDirBtn;
 	i_1_downDirBtn=i_downDirBtn;
 }
+
+
+

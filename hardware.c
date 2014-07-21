@@ -119,7 +119,8 @@ void boardInit(){
 }
 
 void ledInit(){
-	P1DIR |= BIT0;  // P1.0 set as output
+    //Set P1.0 to output direction
+    GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN0 );
 }
 
 void timerInit(){

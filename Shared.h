@@ -93,6 +93,9 @@ typedef enum {
 
 	RemoveReminder_Idle,
 	RemoveReminder_Confirm,
+
+	Settings_ClearFlash,
+	Settings_DateTime,
 } e_menus;
 
 
