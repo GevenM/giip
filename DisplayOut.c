@@ -2,7 +2,7 @@
 #include <string.h>
 #include "ActivateBolus.h"
 #include "RTC.h"
-
+#include "InsulinOutputCalculator.h"
 
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
@@ -1998,6 +1998,28 @@ void LoadBanner(void){
 	GrContextForegroundSet(&g_sContext, ClrWhite);
 	GrContextBackgroundSet(&g_sContext, ClrBlack);
 	GrStringDrawCentered(&g_sContext, outString, AUTO_STRING_LENGTH, 75 , 7, TRANSPARENT_TEXT);
+	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
+	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+
+
+
+
+	// Get basal and bolus rate
+	strcpy(outString, "");
+	digits = UnsignedInt_To_ASCII( f_basalOut, buffer );
+	strncat(outString, buffer, digits);
+	strncat(outString, "/", 1);
+	digits = UnsignedInt_To_ASCII( f_bolusOut, buffer );
+	strncat(outString, buffer, digits);
+	//strncat(outString, ":", 1);
+
+	// Draw top banner
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrContextBackgroundSet(&g_sContext, ClrBlack);
+	GrStringDrawCentered(&g_sContext, outString, AUTO_STRING_LENGTH, 20 , 7, TRANSPARENT_TEXT);
 	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
 	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
 	GrContextForegroundSet(&g_sContext, ClrBlack);

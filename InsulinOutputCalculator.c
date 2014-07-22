@@ -65,5 +65,8 @@ void InsulinOutputCalculator(){
 		f_basalOut = 0;
 		f_bolusOut = 0;
 	}
+
+
+	f_activeBolus.Amount -= f_bolusOut;
 }
 

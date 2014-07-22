@@ -1,6 +1,9 @@
 
 #include "RTC.h"
 
+#include "InsulinOutputCalculator.h" // dependency should be removed
+
+
 Calendar p_currentTime;
 
 void InitRTC(){
@@ -113,6 +116,7 @@ void RTC_A_ISR(void)
 			GPIO_toggleOutputOnPin(
 					GPIO_PORT_P1,
 					GPIO_PIN0);
+			InsulinOutputCalculator();
 			break;
 
 	case 4:         //RTCEVIFG
