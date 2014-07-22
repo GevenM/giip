@@ -1,5 +1,8 @@
 #include "DeactivateBasalProfile.h"
 
+#include "Shared.h"
+#include "MonitoredVariables.h"
+#include "BasalProfiles.h"
 
 bool F_stopBasal; // From NL expression [ Start Basal ]
 

@@ -53,6 +53,8 @@ extern unsigned char M_tmpStartResp;
 extern y_tmpBasal m_tmpBas;
 extern bool M_tmpBas;
 
+extern unsigned char M_tmpStopResp;
+
 extern unsigned char M_bolCreateResp;
 extern y_bolus m_bolus;
 extern bool M_bolus;

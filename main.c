@@ -26,6 +26,7 @@
 #include "ActivateBasalProfile.h"
 #include "DeactivateBasalProfile.h"
 #include "ActivateTemporaryBasal.h"
+#include "DeactivateTemporaryBasal.h"
 #include "CreateBolusPreset.h"
 #include "RemoveBolusPreset.h"
 #include "ActivateBolus.h"
@@ -93,6 +94,7 @@ void main(void){
 		ActivateBasalProfile();
 		DeactivateBasalProfile();
 		ActivateTemporaryBasal();
+		DeactivateTemporaryBasal();
 		CreateBolusPreset();
 		RemoveBolusPreset();
 		ActivateBolus();

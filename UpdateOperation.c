@@ -8,12 +8,13 @@
 #include "ActivateBasalProfile.h"
 #include "DeactivateBasalProfile.h"
 #include "ActivateTemporaryBasal.h"
+#include "DeactivateTemporaryBasal.h"
 #include "CreateBolusPreset.h"
 #include "RemoveBolusPreset.h"
 #include "ActivateBolus.h"
 
-void UpdateOperation(){
 
+void UpdateOperation(){
 	switch (c_pwrStatus){
 	case Ready:
 		switch(c_operation){
@@ -32,33 +33,27 @@ void UpdateOperation(){
 			else ;
 			break;
 		case CreateBasProf:
-			if (BasalProfileCreationCompleted()){
-				c_operation = Idle;
-			}
+			if (BasalProfileCreationCompleted()) c_operation = Idle;
 			break;
+
 		case RemoveBasProf:
-			if (BasalProfileRemovalCompleted()){
-				c_operation = Idle;
-			}
+			if (BasalProfileRemovalCompleted()) c_operation = Idle;
 			break;
 
 		case StartBasProf:
-			if (BasalProfileActivationCompleted()){
-				c_operation = Idle;
-			}
+			if (BasalProfileActivationCompleted()) c_operation = Idle;
 			break;
+
 		case StopBasProf:
-			if (BasalProfileDeactivationCompleted()){
-				c_operation = Idle;
-			}
+			if (BasalProfileDeactivationCompleted()) c_operation = Idle;
 			break;
+
 		case StartTmpBas:
-			if (TemporaryBasalActivationCompleted()){
-				c_operation = Idle;
-			}
+			if (TemporaryBasalActivationCompleted()) c_operation = Idle;
 			break;
 
 		case StopTmpBas:
+			if ( TemporaryBasalDeactivationCompleted() ) c_operation = Idle;
 			break;
 
 		case CreateBolPre:
@@ -72,6 +67,7 @@ void UpdateOperation(){
 		case StartBol:
 			if ( BolusActivationCompleted() ) c_operation = Idle;
 			break;
+
 		case CreateReminder:
 			break;
 		case RemoveReminder:

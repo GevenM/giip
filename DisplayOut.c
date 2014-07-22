@@ -90,9 +90,13 @@ void PrintStartBasProf_Idle();
 void PrintStartBasProf_Confirm();
 void PrintStartBasProf_Invalid();
 
+void PrintStopBas_All();
+
 void PrintStartTmpBas_Idle();
 void PrintStartTmpBas_Confirm();
 void PrintStartTmpBas_Invalid();
+
+void PrintStopTmpBas_All();
 
 void PrintCreateBolusPreset_Idle();
 void PrintCreateBolusPreset_Confirm();
@@ -108,8 +112,6 @@ void PrintStartBolus_Preset();
 void PrintStartBolus_Manual();
 void PrintStartBolus_Confirm();
 void PrintStartBolus_Invalid();
-
-void PrintStopBas_All();
 
 void PrintSettings_DateTime();
 void PrintSettings_DateTime_NotAllowed();
@@ -192,7 +194,7 @@ void PrintScreen(){
 	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(); break;
 	case StartTmpBas_Invalid:PrintStartTmpBas_Invalid(); break;
 
-	case StopTmpBas_All:PrintMessage("Stop Tmp"); break;
+	case StopTmpBas_All:PrintStopTmpBas_All(); break;
 
 	case CreateBolusPreset_Idle:PrintCreateBolusPreset_Idle(); break;
 	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm(); break;
@@ -2324,6 +2326,17 @@ void PrintStopBas_All(){
 	GrFlush(&g_sContext);
 }
 
+void PrintStopTmpBas_All(){
+	GrStringDrawCentered(&g_sContext, "Stop" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Temporary" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal?" , AUTO_STRING_LENGTH, 46, 40, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+
+	GrFlush(&g_sContext);
+}
+
 void PrintStartTmpBas_Idle(){
 	char buffer[10] = "";
 	char outString[32] = "";
@@ -2332,7 +2345,7 @@ void PrintStartTmpBas_Idle(){
 
 		if (tmpBasal_DurationEntered == false){
 			LoadRightButton("RATE");
-			cursorY = 35;
+			cursorY = 38;
 			cursorX = 65;
 
 			if (m_tmpBas.Duration <= 9)
@@ -2342,7 +2355,7 @@ void PrintStartTmpBas_Idle(){
 		}
 		else {
 			LoadRightButton("DUR");
-			cursorY = 45;
+			cursorY = 48;
 			cursorX = 65;
 			if(m_tmpBas.Rate <= 9)
 				cursorW = 4;
@@ -2354,20 +2367,20 @@ void PrintStartTmpBas_Idle(){
 	GrRectFill(&g_sContext, &myRectangleScreen);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 
-	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 17, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 20, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 27, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 30, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
 	strcpy(outString, "Rate:     ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT);
 
 	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
 
@@ -2387,20 +2400,20 @@ void PrintStartTmpBas_Confirm(){
 	GrRectFill(&g_sContext, &myRectangleScreen);
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 
-	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 17, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 27, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 19, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 29, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 39, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
 	strcpy(outString, "Rate: ");
 	strncat(outString, buffer, digits);
 
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 47, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 49, OPAQUE_TEXT);
 
 	LoadLeftButton("CANC");
 	LoadMiddleButton("OK");

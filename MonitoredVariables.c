@@ -51,6 +51,8 @@ unsigned char M_tmpStartResp;
 y_tmpBasal m_tmpBas;
 bool M_tmpBas;
 
+unsigned char M_tmpStopResp;
+
 unsigned char M_bolStartResp;
 y_glucose m_bloodGlucose;
 y_carbs m_carbs;
@@ -181,6 +183,12 @@ void UpdateMonitoredVariables(){
 		else M_basStopResp = NO_VALUE;
 	}
 
+	if ( c_operation == StopTmpBas ){
+		if ( I_middleSelBtn ) M_tmpStopResp = ACCEPT;
+		else if ( I_leftSelBtn ) M_tmpStopResp = CANCEL;
+		else M_tmpStopResp = NO_VALUE;
+	}
+
 	if ( c_operation == CreateBolPre ){
 		if ( I_middleSelBtn ) M_bolCreateResp = ACCEPT;
 		else if ( I_rightSelBtn ) M_bolCreateResp = RETRY;
@@ -238,6 +246,8 @@ void InitMonitoredVariables(){
 
 	M_tmpStartResp = NO_VALUE;
 	M_tmpBas = false;
+
+	M_tmpStopResp = NO_VALUE;
 
 	M_bolus = false;
 	M_bolCreateResp = NO_VALUE;
