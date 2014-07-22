@@ -77,6 +77,9 @@ void main(void){
   	c_pwrStatus = Ready;
   	PrintScreen();
 
+  	int prevMin;
+
+
 	while(1){
 
 		InputEvents();
@@ -104,12 +107,17 @@ void main(void){
 			PrintScreen();
 			c_1_menuScreen = c_menuScreen;
 			f_1_menuChoice = f_menuChoice;
-		} else if (f_menuChoice != f_1_menuChoice || updateScreen){
+
+		} else if (f_menuChoice != f_1_menuChoice || updateScreen ){
 			PrintScreen();
 			f_1_menuChoice = f_menuChoice;
 			updateScreen = false;
-		}
 
+		} else if ( prevMin != GetCurrentMin() ){
+			PrintScreen();
+			prevMin = GetCurrentMin(); // Update screen when minute rolls over
+
+		}
 		__no_operation();
 
 		InitMonitoredVariables();

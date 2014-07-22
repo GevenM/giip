@@ -771,6 +771,7 @@ void UpdateScreen(){
 
 			} else if ( M_selReq ) {
 				SetCalendar( p_calendar );
+				updateScreen = true;
 			}
 			break;
 

@@ -1,8 +1,6 @@
 
 #include "driverlib.h"
 
-#include "DisplayOut.h" //needed to update the screen with interrupt
-
 Calendar p_currentTime;
 
 void InitRTC(){
@@ -67,25 +65,22 @@ Calendar GetCurrentCalendar(){
 }
 
 int GetCurrentHour(){
-    p_currentTime = RTC_A_getCalendarTime(RTC_A_BASE);
-
+	p_currentTime = GetCurrentCalendar();
     return p_currentTime.Hours;
 }
 
 int GetCurrentMin(){
-    p_currentTime = RTC_A_getCalendarTime(RTC_A_BASE);
-
+	p_currentTime =  GetCurrentCalendar();
     return p_currentTime.Minutes;
 
 }
 
 int GetCurrentSec(){
-    p_currentTime = RTC_A_getCalendarTime(RTC_A_BASE);
-
+    p_currentTime = GetCurrentCalendar();
     return p_currentTime.Seconds;
 }
 
-int BCDtoInt( int bcd ){
+uint8_t BCDtoInt( uint8_t bcd ){
 	char low, high;
 
 	high = ( bcd >> 4 );
@@ -94,7 +89,7 @@ int BCDtoInt( int bcd ){
 	return high * 10 + low;
 }
 
-int IntToBCD( int val ){
+uint8_t IntToBCD( uint8_t val ){
 	return ((val / 10) << 4) | (val % 10);
 }
 
@@ -118,12 +113,11 @@ void RTC_A_ISR(void)
 			GPIO_toggleOutputOnPin(
 					GPIO_PORT_P1,
 					GPIO_PIN0);
-            updateScreen = true;
-
 			break;
+
 	case 4:         //RTCEVIFG
 			//Interrupts every minute
-			__no_operation();
+		 	 p_currentTime = RTC_A_getCalendarTime(RTC_A_BASE);
 
 			//Read out New Time a Minute Later BREAKPOINT HERE
 			//newTime = RTC_A_getCalendarTime(RTC_A_BASE);
