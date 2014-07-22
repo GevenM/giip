@@ -6,7 +6,7 @@
 
 
 typedef unsigned char y_tmpBasalRate;
-typedef unsigned char y_duration;
+typedef unsigned int y_duration;
 
 typedef struct tmpBasal{
 	y_tmpBasalRate Rate;

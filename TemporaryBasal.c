@@ -14,7 +14,7 @@ bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
 	if ( profile->Rate < k_minTmpRate || profile->Rate > k_maxTmpRate) //each single rate is within allowable bounds
 			return false;
 
-	if (profile->Rate*profile->Duration > k_maxDailyInsulin) //compare sum of rates to daily max
+	if (profile->Rate*(profile->Duration/60) > k_maxDailyInsulin) //compare sum of rates to daily max
 		return false;
 	else
 		return true;

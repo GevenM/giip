@@ -103,6 +103,10 @@ void main(void){
 
 
 
+		// If temporary basal is active we need to check how much is left. Decrement the duration every minute.
+		if( TemporaryBasalIsActive() ){
+			f_activeTmpBasal.Duration = f_activeTmpBasal.Duration - ( GetCurrentMin() - prevMin );
+		}
 
 		if(c_menuScreen != c_1_menuScreen){
 			ClearScreen();
@@ -117,9 +121,9 @@ void main(void){
 
 		} else if ( prevMin != GetCurrentMin() ){
 			PrintScreen();
-			prevMin = GetCurrentMin(); // Update screen when minute rolls over
-
 		}
+		prevMin = GetCurrentMin(); // Update minute roll over
+
 		__no_operation();
 
 		InitMonitoredVariables();

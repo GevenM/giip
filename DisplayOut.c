@@ -1036,14 +1036,14 @@ void UpdateScreen(){
 
 			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
 
-				if(M_upReq){ // increment numbers, roll over from 9->0
+				if(M_upReq){
 					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration = k_minTmpDuration;
-					else m_tmpBas.Duration++;
+					else m_tmpBas.Duration = m_tmpBas.Duration + 60;
 					updateScreen = true;
 				}
-				else if(M_downReq) { // decrement numbers, roll over from 0->9
+				else if(M_downReq) { // decrement numbers
 					if(m_tmpBas.Duration == k_minTmpDuration) m_tmpBas.Duration = k_maxTmpDuration;
-					else m_tmpBas.Duration--;
+					else m_tmpBas.Duration = m_tmpBas.Duration - 60;
 					updateScreen = true;
 				}
 				else if (M_nextReq){ // hit next, duration is entered
@@ -1057,12 +1057,12 @@ void UpdateScreen(){
 
 			}
 			else {
-				if(M_upReq){ // increment numbers, roll over from 9->0
+				if(M_upReq){ // increment numbers
 					if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
 					else m_tmpBas.Rate++;
 					updateScreen = true;
 				}
-				else if(M_downReq) { // decrement numbers, roll over from 0->9
+				else if(M_downReq) { // decrement numbers
 					if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
 					else m_tmpBas.Rate--;
 					updateScreen = true;
@@ -1855,8 +1855,9 @@ void PrintCreateBasProf(){
 
 
 void PrintIdle(){
+	char buffer[10] = "";
 	char outString[32] = "";
-
+	int digits;
 
 	// Print basal status
 	if (TemporaryBasalIsActive()){
@@ -1865,6 +1866,23 @@ void PrintIdle(){
 
 		GrStringDraw(&g_sContext, "Temporary Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
 		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
+
+		// Draw duration in hours and minutes
+		// get hours
+		memset(outString, 0, sizeof(outString));
+		digits = UnsignedInt_To_ASCII(f_activeTmpBasal.Duration / 60, buffer);
+		strncpy(outString, buffer, digits);
+		strncat(outString, ":", 1);
+
+		// get minutes
+		digits = UnsignedInt_To_ASCII(f_activeTmpBasal.Duration % 60, buffer);
+		if (digits == 1) strncat(outString, "0", 1);
+		strncat(outString, buffer, digits);
+
+		strncat(outString, " remain", 7);
+
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
+
 
 	} else if(BasalIsActive()){
 		int currentHour = GetCurrentHour();
@@ -2348,9 +2366,9 @@ void PrintStartTmpBas_Idle(){
 			cursorY = 38;
 			cursorX = 65;
 
-			if (m_tmpBas.Duration <= 9)
+			if (m_tmpBas.Duration / 60 <= 9)
 				cursorW = 4;
-			else if (m_tmpBas.Duration > 9)
+			else if (m_tmpBas.Duration / 60 > 9)
 				cursorW = 10;
 		}
 		else {
@@ -2369,7 +2387,7 @@ void PrintStartTmpBas_Idle(){
 
 	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 20, OPAQUE_TEXT);
 
-	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration / 60, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
@@ -2403,7 +2421,7 @@ void PrintStartTmpBas_Confirm(){
 	GrStringDrawCentered(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 47, 19, OPAQUE_TEXT);
 	GrStringDrawCentered(&g_sContext, "Basal?", AUTO_STRING_LENGTH, 47, 29, OPAQUE_TEXT);
 
-	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration, buffer);
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Duration / 60, buffer);
 	strcpy(outString, "Duration: ");
 	strncat(outString, buffer, digits);
 
