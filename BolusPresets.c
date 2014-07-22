@@ -195,27 +195,18 @@ void LoadPreset( y_bolus *preset, int index){
 	CopyBolusPreset(&bolusSetLocal.Preset[index], preset);
 }
 
-void CalculateBolus( y_bolus *bolus, y_glucose glucose, y_carbs carbs ){
-	strncpy( bolus->Name, "*Calculated", k_bolusNameLength );
-	bolus->Amount = 0; //Need to do calculation here.
+y_bolus CalculateBolus( y_glucose glucose, y_carbs carbs ){
+	y_bolus bolus;
 
+	strncpy( bolus.Name, "*Calculated", k_bolusNameLength );
+	bolus.Amount = 0; //Need to do calculation here.
+
+	return bolus;
 }
 
-bool CalculatedBolusIsValid( y_glucose glucose, y_carbs carbs ){
-	bool valid;
+bool CalculatedBolusIsValid( y_bolus bolus ){
 
-	// Calculate bolus from given blood glucose and carbs
-	y_bolus *bolus;
-	bolus = (y_bolus *) malloc( sizeof( y_bolus ));
-
-	CalculateBolus( bolus, glucose, carbs );
-
-	// Determine whether bolus based on calculation is valid
-	valid = BolusIsValid( bolus );
-
-	free( bolus );
-
-	return valid;
+	return EnteredBolusIsValid( &bolus );
 
 }
 

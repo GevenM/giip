@@ -31,10 +31,10 @@ void ActivateBolus(){
 
 		case e_bolStatus_calculator:
 			if ( M_bloodGlucose && M_carbs ) {
-				if ( CalculatedBolusIsValid( m_bloodGlucose, m_carbs ) ){
+				if ( CalculatedBolusIsValid( CalculateBolus( m_bloodGlucose, m_carbs ))){
 					c_bolStartStatus = e_bolStatus_confirm;
 					F_startBolus = false;
-					CalculateBolus( &p_interBol, m_bloodGlucose, m_carbs ); // calculates bolus and puts it into p_interBol
+					p_interBol = CalculateBolus( m_bloodGlucose, m_carbs ); // calculates bolus and puts it into p_interBol
 				} else {
 					c_bolStartStatus = e_bolStatus_invalid;
 					F_startBolus = false;

@@ -40,8 +40,8 @@ extern bool BolusIsActive();
 extern void GetPresetName(y_bolusName *name, int index);
 void LoadPreset( y_bolus *preset, int index);
 
-extern void CalculateBolus( y_bolus *bolus, y_glucose glucose, y_carbs carbs );
-extern bool CalculatedBolusIsValid( y_glucose glucose, y_carbs carbs );
+extern y_bolus CalculateBolus( y_glucose glucose, y_carbs carbs );
+extern bool CalculatedBolusIsValid( y_bolus bolus );
 extern bool BolusIsValid( y_bolus *bolus );
 
 #endif
