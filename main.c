@@ -14,7 +14,8 @@
 #include "grlib.h"
 #include "LcdDriver/Sharp96x96.h"
 #include "driverlib.h"
-#include "stdint.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #include "hardware.h" // File that contains information regarding hardware and its initializations
 #include "MonitoredVariables.h"
@@ -40,7 +41,6 @@ void InputEvents();
 
 #include "BasalProfiles.h"
 #include "Flash.h"
-
 
 
 void main(void){
@@ -108,6 +108,8 @@ void main(void){
 			f_activeTmpBasal.Duration = f_activeTmpBasal.Duration - ( GetCurrentMin() - prevMin );
 		}
 
+
+
 		if(c_menuScreen != c_1_menuScreen){
 			ClearScreen();
 			PrintScreen();
@@ -156,6 +158,4 @@ void InputEvents(){
 	I_downDirBtn = i_downDirBtn & !i_1_downDirBtn;
 	i_1_downDirBtn=i_downDirBtn;
 }
-
-
 

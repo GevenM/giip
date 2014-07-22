@@ -6,9 +6,9 @@
 #define k_bolusNameLength 12
 #define k_maxNumberOfBolusPresets 8
 
-typedef int y_carbs;
-typedef int y_glucose;
-typedef int y_insulinValue;
+typedef unsigned int y_carbs;
+typedef unsigned int y_glucose;
+typedef unsigned long y_insulinValue;
 typedef char y_bolusName[k_bolusNameLength+1];
 
 typedef struct bolPreset{

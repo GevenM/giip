@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 
-typedef unsigned char y_tmpBasalRate;
+typedef unsigned int y_tmpBasalRate;
 typedef unsigned int y_duration;
 
 typedef struct tmpBasal{

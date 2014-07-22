@@ -866,7 +866,7 @@ void UpdateScreen(){
 							segments[segmentIndex+1]--;
 						}
 					} else { // One of the rates is highlighted. Increment the rate.
-						p_inputProfile.Rate[segmentIndex]++;
+						p_inputProfile.Rate[segmentIndex] += 3600;
 					}
 					updateScreen = true;
 
@@ -877,8 +877,8 @@ void UpdateScreen(){
 							segments[segmentIndex+1]++;
 						}
 					} else { // Decrement the selected rate down to a lowest of 0.
-						if (p_inputProfile.Rate[segmentIndex] > 0){
-							p_inputProfile.Rate[segmentIndex]--;
+						if (p_inputProfile.Rate[segmentIndex] >= 3600){
+							p_inputProfile.Rate[segmentIndex] -= 3600;
 						}
 					}
 					updateScreen = true;
@@ -1059,12 +1059,12 @@ void UpdateScreen(){
 			else {
 				if(M_upReq){ // increment numbers
 					if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
-					else m_tmpBas.Rate++;
+					else m_tmpBas.Rate += 3600;
 					updateScreen = true;
 				}
 				else if(M_downReq) { // decrement numbers
 					if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
-					else m_tmpBas.Rate--;
+					else m_tmpBas.Rate -= 3600;
 					updateScreen = true;
 				}
 				else if(M_nextReq){
@@ -1140,12 +1140,12 @@ void UpdateScreen(){
 			} else { // Editing Amount
 
 				if ( M_upReq ){
-					m_bolus.Amount++;
+					m_bolus.Amount += 3600;
 					updateScreen = true;
 
 				} else if( M_downReq ){
-					if (m_bolus.Amount > 0){
-						m_bolus.Amount--;
+					if (m_bolus.Amount >= 3600){
+						m_bolus.Amount -= 3600;
 						updateScreen = true;
 					}
 
@@ -1327,12 +1327,12 @@ void UpdateScreen(){
 			c_menuScreen = StartBolus_Manual;
 
 			if( M_upReq ){
-				m_bolus.Amount++;
+				m_bolus.Amount += 3600;
 				updateScreen = true;
 
 			} else if( M_downReq ) {
-				if( m_bolus.Amount > 0 ){
-					m_bolus.Amount--;
+				if( m_bolus.Amount >= 3600 ){
+					m_bolus.Amount -= 3600;
 					updateScreen = true;
 				}
 			}
@@ -1572,7 +1572,7 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 
 		if (digits == 1) strncat(outString, " ", 1);
 
-		rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i], rateBuffer);
+		rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i] / 3600, rateBuffer);
 		strncat(outString, "|", 1);
 		strncat(outString, rateBuffer, rateDigs);
 
@@ -1614,7 +1614,7 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 
 	if (digits == 1) strncat(outString, " ", 1);
 
-	rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i], rateBuffer);
+	rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i] / 3600, rateBuffer);
 	strncat(outString, "|", 1);
 	strncat(outString, rateBuffer, rateDigs);
 
@@ -1861,7 +1861,7 @@ void PrintIdle(){
 
 	// Print basal status
 	if (TemporaryBasalIsActive()){
-		UnsignedInt_To_ASCII(f_activeTmpBasal.Rate, outString);
+		UnsignedInt_To_ASCII(f_activeTmpBasal.Rate / 3600, outString);
 		strncat(outString, " IU/hr", 6);
 
 		GrStringDraw(&g_sContext, "Temporary Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
@@ -1894,7 +1894,7 @@ void PrintIdle(){
 		int currentSegment = ( k_segDay / 24 ) * currentHour;
 		currentSegment = currentSegment + ( currentMin / (60/(k_segDay/24)));
 
-		UnsignedInt_To_ASCII(f_activeBasal.Rate[ currentSegment ], outString);
+		UnsignedInt_To_ASCII(f_activeBasal.Rate[ currentSegment ] / 3600, outString);
 		strncat(outString, " IU/hr", 6);
 
 		GrStringDraw(&g_sContext, "Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
@@ -1906,7 +1906,7 @@ void PrintIdle(){
 
 	// Print bolus status
 	if(BolusIsActive()){
-		UnsignedInt_To_ASCII(f_activeBolus.Amount, outString);
+		UnsignedInt_To_ASCII(f_activeBolus.Amount / 3600, outString);
 		strncat(outString, " IU Remain", 10);
 
 		GrStringDraw(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
@@ -2375,9 +2375,9 @@ void PrintStartTmpBas_Idle(){
 			LoadRightButton("DUR");
 			cursorY = 48;
 			cursorX = 65;
-			if(m_tmpBas.Rate <= 9)
+			if(m_tmpBas.Rate / 3600 <= 9)
 				cursorW = 4;
-			else if (m_tmpBas.Rate > 9)
+			else if (m_tmpBas.Rate / 3600 > 9)
 				cursorW = 10;
 		}
 
@@ -2394,7 +2394,7 @@ void PrintStartTmpBas_Idle(){
 
 	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 30, OPAQUE_TEXT);
 
-	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate / 3600, buffer);
 	strcpy(outString, "Rate:     ");
 	strncat(outString, buffer, digits);
 
@@ -2427,7 +2427,7 @@ void PrintStartTmpBas_Confirm(){
 
 	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 39, OPAQUE_TEXT);
 
-	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate, buffer);
+	digits = UnsignedInt_To_ASCII(m_tmpBas.Rate / 3600, buffer);
 	strcpy(outString, "Rate: ");
 	strncat(outString, buffer, digits);
 
@@ -2471,7 +2471,7 @@ void PrintCreateBolusPreset_Idle(){
 	char buffer[10] = "";
 	char outString[32] = "";
 	int digits = 0;
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount, buffer);
+	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
 	strcpy(outString, "Amount: ");
 	strncat(outString, buffer, digits);
 	strncat(outString, " IU", 3);
@@ -2517,7 +2517,7 @@ void PrintCreateBolusPreset_Confirm(){
 	GrStringDraw(&g_sContext, m_bolus.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
 
 
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount, buffer);
+	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
 	strcpy(outString, "Amount: ");
 	strncat(outString, buffer, digits);
 	strncat(outString, " IU", 3);
@@ -2764,7 +2764,7 @@ void PrintStartBolus_Manual(){
 	char buffer[10] = "";
 	char outString[32] = "";
 	int digits = 0;
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount, buffer);
+	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
 
 	strcpy(outString, "Amount: ");
 	strncat(outString, buffer, digits);
@@ -2808,7 +2808,7 @@ void PrintStartBolus_Confirm(){
 	char buffer[10] = "";
 	char outString[32] = "";
 	int digits = 0;
-	digits = UnsignedInt_To_ASCII(bolus->Amount, buffer);
+	digits = UnsignedInt_To_ASCII(bolus->Amount / 3600, buffer);
 
 	strcpy(outString, "Amount: ");
 	strncat(outString, buffer, digits);

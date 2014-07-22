@@ -11,6 +11,10 @@
 #define PRESET 5
 #define MANUAL 6
 
+
+#define k_maxOutputRate 10 // maximum output rate in IU/hr.
+#define k_secPerHour 	3600
+
 //#define k_segDay 48
 
 #include <stdbool.h>

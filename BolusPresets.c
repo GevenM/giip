@@ -199,7 +199,7 @@ y_bolus CalculateBolus( y_glucose glucose, y_carbs carbs ){
 	y_bolus bolus;
 
 	strncpy( bolus.Name, "*Calculated", k_bolusNameLength );
-	bolus.Amount = 0; //Need to do calculation here.
+	bolus.Amount = 3600; //Need to do calculation here.
 
 	return bolus;
 }
