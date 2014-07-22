@@ -96,6 +96,7 @@ typedef enum {
 
 	Settings_ClearFlash,
 	Settings_DateTime,
+	Settings_DateTime_NotAllowed
 } e_menus;
 
 

@@ -204,6 +204,11 @@ bool BasalProfileIsActive(y_basal *profile){
 	return !strcmp(profile->Name, f_activeBasal.Name);
 }
 
+bool BasalIsActive(){
+	return !( ProfileCompare( &f_activeBasal, &k_emptyBas ));
+}
+
+
 int GetProfileIndex( y_basal * profile){
 	LoadProfilesFromFlash();
 

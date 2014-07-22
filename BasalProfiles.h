@@ -36,6 +36,7 @@ extern int GetNumberBasalProfiles();
 extern bool BasalProfileIsValid(y_basal *profile);
 extern bool ActivateBasalProfileIsValid(y_basal *profile);
 extern bool BasalProfileIsActive(y_basal *profile);
+extern bool BasalIsActive();
 
 extern int AddProfileToSet(y_basal *profile);
 extern int RemoveProfileFromSet(y_basal *profile);

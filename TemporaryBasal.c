@@ -28,3 +28,8 @@ bool TmpBasalCompare(y_tmpBasal *profile1, y_tmpBasal *profile2){
 	}
 	return false;
 }
+
+
+bool TemporaryBasalIsActive(){
+	return !( TmpBasalCompare( &f_activeTmpBasal, &k_emptyTmp ));
+}

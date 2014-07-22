@@ -112,6 +112,7 @@ void PrintStartBolus_Invalid();
 void PrintStopBas_All();
 
 void PrintSettings_DateTime();
+void PrintSettings_DateTime_NotAllowed();
 
 void UpdateScreen();
 
@@ -215,6 +216,7 @@ void PrintScreen(){
 	case RemoveReminder_Confirm:break;
 
 	case Settings_DateTime: PrintSettings_DateTime(); break;
+	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(); break;
 
 
 	default: PrintError(); break;
@@ -430,9 +432,13 @@ void UpdateScreen(){
 					break;
 
 				case Settings_DateTime:
-					p_calendar = GetCurrentCalendar();
-					p_calendarIndex = 0;
-					c_menuScreen = f_menuChoice;
+					if (BasalIsActive() || BolusIsActive() || TemporaryBasalIsActive())
+						c_menuScreen = Settings_DateTime_NotAllowed;
+					else {
+						p_calendar = GetCurrentCalendar();
+						p_calendarIndex = 0;
+						c_menuScreen = f_menuChoice;
+					}
 					break;
 				}
 
@@ -772,6 +778,11 @@ void UpdateScreen(){
 			} else if ( M_selReq ) {
 				SetCalendar( p_calendar );
 				updateScreen = true;
+			}
+			break;
+		case Settings_DateTime_NotAllowed:
+			if ( M_selReq ){
+				c_menuScreen = Settings;
 			}
 			break;
 
@@ -2891,4 +2902,17 @@ void  PrintSettings_DateTime(){
 	LoadMiddleButton("SET");
 
 	GrFlush(&g_sContext);
+}
+
+void PrintSettings_DateTime_NotAllowed(){
+	GrStringDrawCentered(&g_sContext, "Cannot edit", AUTO_STRING_LENGTH, 47, 27, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "while insulin", AUTO_STRING_LENGTH, 47, 38, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "delivery is", AUTO_STRING_LENGTH, 47, 49, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "in progress", AUTO_STRING_LENGTH, 47, 60, OPAQUE_TEXT);
+
+	LoadMiddleButton("OK");
+
+
+	GrFlush(&g_sContext);
+
 }

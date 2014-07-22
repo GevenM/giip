@@ -62,10 +62,6 @@ bool ScheduleExists(){
 
 
 
-bool BasalIsActive(){
-	return !( ProfileCompare( &f_activeBasal, &k_emptyBas ));
-}
 
-bool TemporaryBasalIsActive(){
-	return !( TmpBasalCompare( &f_activeTmpBasal, &k_emptyTmp ));
-}
+
+
