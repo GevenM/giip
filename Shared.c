@@ -25,6 +25,10 @@ const y_tmpBasalRate k_minTmpRate = 3600;
 //daily bound
 const y_insulinValue k_maxDailyInsulin = 360000;
 
+const y_basalRate k_maxOutputRate = 36000;  // maximum output rate in *3600 IU/hr.
+const unsigned int k_secPerHour = 3600;
+
+
 e_operations c_operation = Idle;
 e_menus c_menuScreen = None;
 e_menus c_1_menuScreen = None;

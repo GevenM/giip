@@ -5,7 +5,7 @@
 #include "Shared.h"
 #include "msp430.h"
 
-
+#include "RTC.h"
 
 // Allocates space on flash for the given variable
 #pragma DATA_SECTION(basalSet, ".mydata1");
@@ -233,4 +233,18 @@ bool ProfileCompare(y_basal *profile1, y_basal *profile2){
 		return true;
 	}
 	return false;
+}
+
+
+int GetCurrentTimeSegment (){
+	int currentHour = GetCurrentHour();
+	currentHour = BCDtoInt( currentHour );
+
+	int currentMin = GetCurrentMin();
+	currentMin = BCDtoInt( currentMin );
+
+	int currentSegment = ( k_segDay / 24 ) * currentHour;
+	currentSegment = currentSegment + ( currentMin / (60/(k_segDay/24)));
+
+	return currentSegment;
 }

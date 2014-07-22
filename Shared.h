@@ -12,8 +12,7 @@
 #define MANUAL 6
 
 
-#define k_maxOutputRate 10 // maximum output rate in IU/hr.
-#define k_secPerHour 	3600
+
 
 //#define k_segDay 48
 
@@ -197,6 +196,9 @@ extern const y_duration k_maxTmpDuration;
 extern const y_duration k_minTmpDuration;
 extern const y_tmpBasalRate k_maxTmpRate;
 extern const y_tmpBasalRate k_minTmpRate;
+
+extern const y_basalRate k_maxOutputRate;  // maximum output rate in *3600 IU/hr.
+extern const unsigned int k_secPerHour;
 
 #endif
 
