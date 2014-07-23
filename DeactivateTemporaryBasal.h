@@ -5,5 +5,6 @@
 
 extern void DeactivateTemporaryBasal();
 extern bool TemporaryBasalDeactivationCompleted();
+extern void StopTemporaryBasal();
 
 #endif

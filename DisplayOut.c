@@ -1879,7 +1879,7 @@ void PrintIdle(){
 		if (digits == 1) strncat(outString, "0", 1);
 		strncat(outString, buffer, digits);
 
-		strncat(outString, " remain", 7);
+		strncat(outString, " Remain", 7);
 
 		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
 

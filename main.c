@@ -103,9 +103,20 @@ void main(void){
 
 
 
-		// If temporary basal is active we need to check how much is left. Decrement the duration every minute.
+		// If temporary basal is active we need to check how much is left. Decrement the duration every minute. If the duration is 0, stop the temp basal
 		if( TemporaryBasalIsActive() ){
-			f_activeTmpBasal.Duration = f_activeTmpBasal.Duration - ( GetCurrentMin() - prevMin );
+			if ( prevMin != GetCurrentMin() ) f_activeTmpBasal.Duration = f_activeTmpBasal.Duration - 1;
+			if ( f_activeTmpBasal.Duration == 0 ) StopTemporaryBasal();
+			prevMin = GetCurrentMin(); // Update minute roll over
+			updateScreen = true;
+		}
+
+		// If bolus is active, we need to stop the bolus when all has been delivered.
+		if ( BolusIsActive() ){
+			if ( f_activeBolus.Amount == 0 ) {
+				CopyBolusPreset( &k_emptyBol, &f_activeBolus);
+				updateScreen = true;
+			}
 		}
 
 
@@ -121,10 +132,8 @@ void main(void){
 			f_1_menuChoice = f_menuChoice;
 			updateScreen = false;
 
-		} else if ( prevMin != GetCurrentMin() ){
-			PrintScreen();
 		}
-		prevMin = GetCurrentMin(); // Update minute roll over
+
 
 		__no_operation();
 

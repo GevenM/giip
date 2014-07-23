@@ -197,7 +197,8 @@ extern const y_duration k_minTmpDuration;
 extern const y_tmpBasalRate k_maxTmpRate;
 extern const y_tmpBasalRate k_minTmpRate;
 
-extern const y_basalRate k_maxOutputRate;  // maximum output rate in *3600 IU/hr.
+#define k_maxOutputRate 720000  // maximum output rate in *3600 IU/hr. 50IU/hr
+
 extern const unsigned int k_secPerHour;
 
 #endif
