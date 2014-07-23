@@ -1901,18 +1901,35 @@ void PrintIdle(){
 		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
 
 	} else {
+		// Clear previous entries from screen
+		GrContextForegroundSet(&g_sContext, ClrWhite);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
+		GrContextForegroundSet(&g_sContext, ClrBlack);
+
 		GrStringDraw(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
 	}
 
 	// Print bolus status
 	if(BolusIsActive()){
+
 		UnsignedInt_To_ASCII(f_activeBolus.Amount / 3600, outString);
+
+		UnsignedInt_To_ASCII(( f_activeBolus.Amount % 3600 ) / 360, buffer);
+		strncat(outString, ".", 1);
+		strncat(outString, buffer, 1);
 		strncat(outString, " IU Remain", 10);
 
 		GrStringDraw(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
 		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
 
 	} else {
+		// Clear previous entries from screen
+		GrContextForegroundSet(&g_sContext, ClrWhite);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
+		GrContextForegroundSet(&g_sContext, ClrBlack);
+
+
 		GrStringDraw(&g_sContext, "No Bolus" , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
 	}
 	//LoadBanner();

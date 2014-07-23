@@ -35,8 +35,9 @@ void InitBolusSet(){
 
 void CopyBolusPreset(y_bolus *fromPreset, y_bolus *toPreset){
 
+	memcpy( toPreset->Name, fromPreset->Name, sizeof(y_bolusName) );
 	// Copy the name from one profile to the other
-	strncpy( toPreset->Name, fromPreset->Name, k_bolusNameLength );
+	//strncpy( toPreset->Name, fromPreset->Name, k_bolusNameLength );
 
 	// Copy the Amount
 	toPreset->Amount = fromPreset->Amount;

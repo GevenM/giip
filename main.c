@@ -79,6 +79,8 @@ void main(void){
   	PrintScreen();
 
   	int prevMin;
+  	int currentSec = 0;
+  	int prevSec = 0;
 
 
 	while(1){
@@ -111,12 +113,19 @@ void main(void){
 			updateScreen = true;
 		}
 
-		// If bolus is active, we need to stop the bolus when all has been delivered.
+		// bolus is active, check if it's all delivered and stop bolus if it is
 		if ( BolusIsActive() ){
 			if ( f_activeBolus.Amount == 0 ) {
 				CopyBolusPreset( &k_emptyBol, &f_activeBolus);
 				updateScreen = true;
 			}
+		}
+
+		// update screen every second
+		currentSec = GetCurrentSec ();
+		if ( currentSec != prevSec ){
+			updateScreen = true;
+			prevSec = currentSec;
 		}
 
 

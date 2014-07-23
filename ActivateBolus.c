@@ -123,6 +123,8 @@ void ActivateBolus(){
 		default:
 			break;
 		}
+	} else {
+		F_startBolus = false;
 	}
 }
 

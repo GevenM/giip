@@ -68,18 +68,18 @@ Calendar GetCurrentCalendar(){
 }
 
 int GetCurrentHour(){
-	p_currentTime = GetCurrentCalendar();
+	//p_currentTime = GetCurrentCalendar();
     return p_currentTime.Hours;
 }
 
 int GetCurrentMin(){
-	p_currentTime =  GetCurrentCalendar();
+	//p_currentTime =  GetCurrentCalendar();
     return p_currentTime.Minutes;
 
 }
 
 int GetCurrentSec(){
-    p_currentTime = GetCurrentCalendar();
+    //p_currentTime = GetCurrentCalendar();
     return p_currentTime.Seconds;
 }
 
@@ -116,12 +116,13 @@ void RTC_A_ISR(void)
 			GPIO_toggleOutputOnPin(
 					GPIO_PORT_P1,
 					GPIO_PIN0);
+
+			p_currentTime = GetCurrentCalendar();
 			InsulinOutputCalculator();
 			break;
 
 	case 4:         //RTCEVIFG
 			//Interrupts every minute
-		 	 p_currentTime = RTC_A_getCalendarTime(RTC_A_BASE);
 
 			//Read out New Time a Minute Later BREAKPOINT HERE
 			//newTime = RTC_A_getCalendarTime(RTC_A_BASE);
