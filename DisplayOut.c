@@ -506,6 +506,7 @@ void UpdateScreen(){
 					break;
 				case Basal_StartTmp:
 					CopyTmpBasal(&k_emptyTmp, &m_tmpBas);
+					tmpBasal_DurationEntered = false;
 					break;
 				case Basal_Manage: f_menuChoice = Basal_Manage_Create;break;
 				default: break;
@@ -571,6 +572,7 @@ void UpdateScreen(){
 				case Basal_StopProfile: break;
 				case Basal_StartTmp:
 					CopyTmpBasal(&k_emptyTmp, &m_tmpBas);
+					tmpBasal_DurationEntered = false;
 					break;
 				case Basal_Manage: f_menuChoice = Basal_Manage_Create;break;
 				default: break;
@@ -1037,16 +1039,16 @@ void UpdateScreen(){
 			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
 
 				if(M_upReq){
-					if(m_tmpBas.Duration == k_maxTmpDuration) m_tmpBas.Duration = k_minTmpDuration;
+					if(m_tmpBas.Duration >= k_maxTmpDuration ) m_tmpBas.Duration = k_minTmpDuration;
 					else m_tmpBas.Duration = m_tmpBas.Duration + 60;
 					updateScreen = true;
 				}
 				else if(M_downReq) { // decrement numbers
-					if(m_tmpBas.Duration == k_minTmpDuration) m_tmpBas.Duration = k_maxTmpDuration;
+					if(m_tmpBas.Duration <= k_minTmpDuration) m_tmpBas.Duration = k_maxTmpDuration;
 					else m_tmpBas.Duration = m_tmpBas.Duration - 60;
 					updateScreen = true;
 				}
-				else if (M_nextReq){ // hit next, duration is entered
+				else if (M_nextReq || M_rightReq){ // hit next, duration is entered
 					tmpBasal_DurationEntered = true;
 					updateScreen = true;
 				}
@@ -1058,16 +1060,16 @@ void UpdateScreen(){
 			}
 			else {
 				if(M_upReq){ // increment numbers
-					if(m_tmpBas.Rate == k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
+					if(m_tmpBas.Rate >= k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
 					else m_tmpBas.Rate += 3600;
 					updateScreen = true;
 				}
 				else if(M_downReq) { // decrement numbers
-					if(m_tmpBas.Rate == k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
+					if(m_tmpBas.Rate <= k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
 					else m_tmpBas.Rate -= 3600;
 					updateScreen = true;
 				}
-				else if(M_nextReq){
+				else if(M_nextReq || M_leftReq){
 					tmpBasal_DurationEntered = false;
 					updateScreen = true;
 				}
@@ -1903,8 +1905,8 @@ void PrintIdle(){
 	} else {
 		// Clear previous entries from screen
 		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
 		GrContextForegroundSet(&g_sContext, ClrBlack);
 
 		GrStringDraw(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
@@ -1926,7 +1928,7 @@ void PrintIdle(){
 	} else {
 		// Clear previous entries from screen
 		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
 		GrContextForegroundSet(&g_sContext, ClrBlack);
 
 
