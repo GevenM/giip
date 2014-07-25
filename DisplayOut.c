@@ -780,8 +780,10 @@ void UpdateScreen(){
 				f_menuChoice = Settings_DateTime;
 
 			} else if ( M_selReq ) {
-				SetCalendar( p_calendar );
-				updateScreen = true;
+				if ( CalendarIsValid( p_calendar )){
+					SetCalendar( p_calendar );
+					updateScreen = true;
+				}
 			}
 			break;
 		case Settings_DateTime_NotAllowed:
@@ -1905,6 +1907,7 @@ void PrintIdle(){
 	} else {
 		// Clear previous entries from screen
 		GrContextForegroundSet(&g_sContext, ClrWhite);
+		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
 		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
 		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
 		GrContextForegroundSet(&g_sContext, ClrBlack);

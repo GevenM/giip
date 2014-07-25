@@ -62,6 +62,42 @@ void InitRTC(){
 
 }
 
+bool CalendarIsValid( Calendar calendar ){
+	if ( BCDtoInt( calendar.Seconds ) >= 60 ) return false;
+	if ( BCDtoInt( calendar.Minutes ) >= 60 ) return false;
+	if ( BCDtoInt( calendar.Hours ) >= 24 ) return false;
+
+	if ( BCDtoInt( calendar.DayOfMonth ) < 1 || BCDtoInt( calendar.DayOfMonth ) > 31) return false;
+	if ( BCDtoInt( calendar.Month ) < 1 || BCDtoInt( calendar.Month ) > 12 ) return false;
+
+
+	else if ( calendar.Month == 0x02 || calendar.Month == 0x04 || calendar.Month == 0x06 || calendar.Month == 0x09 || calendar.Month == 0x11 ){
+		if ( calendar.DayOfMonth > 0x30) return false;
+
+		if (calendar.Month == 0x02 ){
+			bool leapYear = false;
+
+			if ( BCDtoInt( calendar.Year & 0x00FF ) % 4 == 0) { // If year is divisible by 4
+				leapYear = true;
+
+				if ( BCDtoInt( calendar.Year & 0x00FF ) == 0 ){ // Year divisible by 100
+					leapYear = false;
+
+					if ( BCDtoInt( calendar.Year >> 8 ) % 4 == 0 ){ // Year divisible by 400
+						leapYear = true;
+					}
+				}
+			}
+
+			if ( leapYear ){
+				if ( calendar.DayOfMonth > 0x29 ) return false;
+			} else if ( calendar.DayOfMonth > 0x28 ) return false;
+		}
+	}
+
+	return true;
+
+}
 
 Calendar GetCurrentCalendar(){
 	return RTC_A_getCalendarTime( RTC_A_BASE );
