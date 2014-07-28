@@ -41,7 +41,7 @@ void ChangeProfileName(y_basal *me, char * Name){
 	//strncpy( me->Name, Name, K_NAME_LENGTH-1);
 }
 
-// Add a basal profile to a set of basal profiles. Takes a set and a profile as inputs. Allocates memory for profiles.
+// Add a basal profile to a set of basal profiles.
 int AddProfileToSet(y_basal *profile){
 	LoadProfilesFromFlash();
 
@@ -188,13 +188,14 @@ int RemoveProfileFromSet(y_basal *profile){
 
 
 void CopyProfile(y_basal *fromProfile, y_basal *toProfile){
-	int i;
+	*toProfile = *fromProfile;
+//	int i;
+//
+//	strncpy( toProfile->Name, fromProfile->Name, k_basalNameLength-1 );
 
-	strncpy( toProfile->Name, fromProfile->Name, k_basalNameLength-1 );
-
-	for (i=0 ; i < k_segDay ; i++){
-		toProfile->Rate[i] = fromProfile->Rate[i];
-	}
+//	for (i=0 ; i < k_segDay ; i++){
+//		toProfile->Rate[i] = fromProfile->Rate[i];
+//	}
 }
 
 

@@ -11,7 +11,7 @@
 #define k_basalNameLength 12
 #define k_bolusNameLength 12
 
-#define k_remindMessageLength 100
+#define k_remindMessageLength 60
 #define k_remindNameLength 12
 
 #define k_maxOutputRate 720000
@@ -113,7 +113,13 @@ typedef unsigned char y_second;
 typedef unsigned char y_segment;
 typedef unsigned int y_year;
 
-
+typedef enum{
+	e_remindFreq_oneTime,
+	e_remindFreq_daily,
+	e_remindFreq_weekly,
+	e_remindFreq_weekdays,
+	e_remindFreq_weekends,
+} y_remindFreq;
 /******	COMPLEX TYPES FROM DESIGN SPEC ******/
 typedef struct y_basal{
 	y_basalName Name;
@@ -131,6 +137,7 @@ typedef struct y_reminder{
 	y_remindName Name;
 	y_remindMessage Message;
 	y_dateTime Time;
+	y_remindFreq Frequency;
 } y_reminder;
 
 typedef struct tmpBasal{
