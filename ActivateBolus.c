@@ -6,21 +6,21 @@ y_bolus p_interBol;
 void StartBolus(y_bolus *bolus);
 
 void ActivateBolus(){
-	if (c_operation == StartBol){
+	if (c_operation == e_operation_startBolus){
 		switch(c_bolStartStatus){
 		case e_bolStatus_idle:
 			switch( M_selectedMethod ){
-			case CALCULATOR:
+			case e_bolMethod_calculator:
 				c_bolStartStatus = e_bolStatus_calculator;
 				F_startBolus = false;
 				break;
 
-			case PRESET:
+			case e_bolMethod_preset:
 				c_bolStartStatus = e_bolStatus_preset;
 				F_startBolus = false;
 				break;
 
-			case MANUAL:
+			case e_bolMethod_manual:
 				c_bolStartStatus = e_bolStatus_manual;
 				F_startBolus = false;
 				break;
@@ -39,10 +39,10 @@ void ActivateBolus(){
 					c_bolStartStatus = e_bolStatus_invalid;
 					F_startBolus = false;
 				}
-			} else if( M_bolStartResp == RETRY ){
+			} else if( M_bolStartResp == e_response_retry ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
-			} else if( M_bolStartResp == CANCEL ){
+			} else if( M_bolStartResp == e_response_cancel ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
 			} else {
@@ -60,10 +60,10 @@ void ActivateBolus(){
 					c_bolStartStatus = e_bolStatus_invalid;
 					F_startBolus = false;
 				}
-			} else if( M_bolStartResp == RETRY ){
+			} else if( M_bolStartResp == e_response_retry ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
-			} else if( M_bolStartResp == CANCEL ){
+			} else if( M_bolStartResp == e_response_cancel ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
 			} else {
@@ -81,10 +81,10 @@ void ActivateBolus(){
 					c_bolStartStatus = e_bolStatus_invalid;
 					F_startBolus = false;
 				}
-			} else if( M_bolStartResp == RETRY ){
+			} else if( M_bolStartResp == e_response_retry ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
-			} else if( M_bolStartResp == CANCEL ){
+			} else if( M_bolStartResp == e_response_cancel ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
 			} else {
@@ -93,14 +93,14 @@ void ActivateBolus(){
 			break;
 
 		case e_bolStatus_confirm:
-			if( M_bolStartResp == ACCEPT ){
+			if( M_bolStartResp == e_response_accept ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = true;
 				StartBolus( &p_interBol );
-			} else if( M_bolStartResp == RETRY ){
+			} else if( M_bolStartResp == e_response_retry ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
-			} else if( M_bolStartResp == CANCEL ){
+			} else if( M_bolStartResp == e_response_cancel ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
 			} else {
@@ -109,10 +109,10 @@ void ActivateBolus(){
 			break;
 
 		case e_bolStatus_invalid:
-			if( M_bolStartResp == RETRY ){
+			if( M_bolStartResp == e_response_retry ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
-			} else if( M_bolStartResp == CANCEL ){
+			} else if( M_bolStartResp == e_response_cancel ){
 				c_bolStartStatus = e_bolStatus_idle;
 				F_startBolus = false;
 			} else {
@@ -130,7 +130,7 @@ void ActivateBolus(){
 
 
 bool BolusActivationCompleted(){
-	if ( F_startBolus || M_bolStartResp == CANCEL ){
+	if ( F_startBolus || M_bolStartResp == e_response_cancel ){
 		return true;
 	}
 	return false;

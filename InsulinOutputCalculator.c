@@ -11,7 +11,7 @@ y_insulinValue f_basalOut = 0;
 y_insulinValue f_bolusOut = 0;
 
 void InsulinOutputCalculator(){
-	if ( c_pwrStatus == Ready ){
+	if ( c_pwrStatus == e_pwrStatus_ready ){
 		if ( TemporaryBasalIsActive() ){
 			if( f_activeTmpBasal.Rate <= k_maxOutputRate ) {
 				if ( BolusIsActive() ){

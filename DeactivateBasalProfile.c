@@ -9,12 +9,12 @@ bool F_stopBasal; // From NL expression [ Start Basal ]
 void StopBasalProfile();
 
 void DeactivateBasalProfile(){
-	if ( c_operation == StopBasProf ){
-		if ( M_basStopResp == ACCEPT ){
+	if ( c_operation == e_operation_stopBasProf ){
+		if ( M_basStopResp == e_response_accept ){
 			F_stopBasal = true;
 			StopBasalProfile();
 
-		} else if ( M_basStopResp == CANCEL ){
+		} else if ( M_basStopResp == e_response_cancel ){
 			F_stopBasal = false;
 		}
 
@@ -28,7 +28,7 @@ void StopBasalProfile(){
 }
 
 bool BasalProfileDeactivationCompleted(){
-	if ( F_stopBasal || M_basStopResp == CANCEL ){
+	if ( F_stopBasal || M_basStopResp == e_response_cancel ){
 		return true;
 	}
 	return false;

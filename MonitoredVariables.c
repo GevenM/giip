@@ -24,41 +24,41 @@ bool M_basRemoveReq;
 bool M_bolCreateReq;
 bool M_bolRemoveReq;
 
-unsigned char M_basCreateResp;
+y_response M_basCreateResp = e_response_noValue;
 
 y_basal m_basRemSelected;
 bool M_basRemSelected;
-unsigned char M_basRemResp;
+y_response M_basRemResp = e_response_noValue;
 
 y_basal m_basProf;
 bool M_basProf;
 
 bool M_basActSelected;
 y_basal m_basActSelected;
-unsigned char M_basStartResp;
+y_response M_basStartResp = e_response_noValue;
 
-unsigned char M_basStopResp;
+y_response M_basStopResp = e_response_noValue;
 
-unsigned char M_bolCreateResp;
+y_response M_bolCreateResp = e_response_noValue;
 y_bolus m_bolus;
 bool M_bolus;
 
-unsigned char M_bolRemResp;
+y_response M_bolRemResp = e_response_noValue;
 y_bolus m_bolSelected;
 bool M_bolSelected;
 
-unsigned char M_tmpStartResp;
+y_response M_tmpStartResp = e_response_noValue;
 y_tmpBasal m_tmpBas;
 bool M_tmpBas;
 
-unsigned char M_tmpStopResp;
+y_response M_tmpStopResp = e_response_noValue;
 
-unsigned char M_bolStartResp;
+y_response M_bolStartResp = e_response_noValue;
 y_glucose m_bloodGlucose;
 y_carbs m_carbs;
 bool M_bloodGlucose;
 bool M_carbs;
-unsigned char M_selectedMethod;
+y_bolMethod M_selectedMethod = e_bolMethod_noValue;
 
 
 void UpdateMonitoredVariables(){
@@ -74,140 +74,140 @@ void UpdateMonitoredVariables(){
 
 	//M_selReq must be updated before the following requests.
 	M_pwrReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Main &&
 			M_selReq &&
 			f_menuChoice == ShutDown;
 
 	M_bolStartReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus &&
 			M_selReq &&
 			f_menuChoice == Bolus_Start &&
 			!BolusIsActive();
 
 	M_reminderCreateReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Schedule &&
 			M_selReq &&
 			f_menuChoice == Schedule_Create &&
 			ScheduleCreationAllowed();
 
 	M_reminderRemoveReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Schedule &&
 			M_selReq &&
 			f_menuChoice == Schedule_Remove &&
 			ScheduleExists();
 
 	M_basStopReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalBothActive || c_menuScreen == BasalProfActive) &&
 			M_selReq &&
 			f_menuChoice == Basal_StopProfile;
 
 	M_tmpBasStopReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalBothActive || c_menuScreen == BasalTmpActive ) &&
 			M_selReq &&
 			f_menuChoice == Basal_StopTmp;
 
 	M_tmpBasStartReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalProfActive || c_menuScreen == BasalNoActive ) &&
 			M_selReq &&
 			f_menuChoice == Basal_StartTmp;
 
 	M_basStartReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalTmpActive || c_menuScreen == BasalNoActive) &&
 			M_selReq &&
 			BasalProfileExists() &&
 			f_menuChoice == Basal_StartProfile;
 
 	M_basCreateReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Basal_Manage &&
 			M_selReq &&
 			f_menuChoice == Basal_Manage_Create &&
 			BasalCreationAllowed();
 
 	M_basRemoveReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Basal_Manage &&
 			M_selReq &&
 			f_menuChoice == Basal_Manage_Remove &&
 			BasalProfileExists();
 
 	M_bolCreateReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus_Manage &&
 			M_selReq &&
 			f_menuChoice == Bolus_Manage_Create &&
 			BolusPresetCreationAllowed();
 
 	M_bolRemoveReq =
-			c_operation == Idle &&
+			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus_Manage &&
 			M_selReq &&
 			f_menuChoice == Bolus_Manage_Remove &&
 			BolusPresetExists();
 
-	if ( c_operation == CreateBasProf ){
-		if ( I_middleSelBtn ) M_basCreateResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_basCreateResp = RETRY;
-		else if ( I_leftSelBtn ) M_basCreateResp = CANCEL;
+	if ( c_operation == e_operation_createBasProf ){
+		if ( I_middleSelBtn ) M_basCreateResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_basCreateResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_basCreateResp = e_response_cancel;
 	}
 
-	if ( c_operation == RemoveBasProf ){
-		if ( I_middleSelBtn ) M_basRemResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_basRemResp = RETRY;
-		else if ( I_leftSelBtn ) M_basRemResp = CANCEL;
+	if ( c_operation == e_operation_removeBasProf ){
+		if ( I_middleSelBtn ) M_basRemResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_basRemResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_basRemResp = e_response_cancel;
 	}
 
-	if ( c_operation == StartBasProf ){
-		if ( I_middleSelBtn ) M_basStartResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_basStartResp = RETRY;
-		else if ( I_leftSelBtn ) M_basStartResp = CANCEL;
+	if ( c_operation == e_operation_startBasProf ){
+		if ( I_middleSelBtn ) M_basStartResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_basStartResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_basStartResp = e_response_cancel;
 	}
 
-	if ( c_operation == StartTmpBas ){
-		if ( I_middleSelBtn ) M_tmpStartResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_tmpStartResp = RETRY;
-		else if ( I_leftSelBtn ) M_tmpStartResp = CANCEL;
+	if ( c_operation == e_operation_startTmpBas ){
+		if ( I_middleSelBtn ) M_tmpStartResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_tmpStartResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_tmpStartResp = e_response_cancel;
 	}
 
-	if ( c_operation == StopBasProf ){
-		if ( I_middleSelBtn ) M_basStopResp = ACCEPT;
-		else if ( I_leftSelBtn ) M_basStopResp = CANCEL;
-		else M_basStopResp = NO_VALUE;
+	if ( c_operation == e_operation_stopBasProf ){
+		if ( I_middleSelBtn ) M_basStopResp = e_response_accept;
+		else if ( I_leftSelBtn ) M_basStopResp = e_response_cancel;
+		else M_basStopResp = e_response_noValue;
 	}
 
-	if ( c_operation == StopTmpBas ){
-		if ( I_middleSelBtn ) M_tmpStopResp = ACCEPT;
-		else if ( I_leftSelBtn ) M_tmpStopResp = CANCEL;
-		else M_tmpStopResp = NO_VALUE;
+	if ( c_operation == e_operation_stopTmpBas ){
+		if ( I_middleSelBtn ) M_tmpStopResp = e_response_accept;
+		else if ( I_leftSelBtn ) M_tmpStopResp = e_response_cancel;
+		else M_tmpStopResp = e_response_noValue;
 	}
 
-	if ( c_operation == CreateBolPre ){
-		if ( I_middleSelBtn ) M_bolCreateResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_bolCreateResp = RETRY;
-		else if ( I_leftSelBtn ) M_bolCreateResp = CANCEL;
-		else M_bolCreateResp = NO_VALUE;
+	if ( c_operation == e_operation_createBolusPreset ){
+		if ( I_middleSelBtn ) M_bolCreateResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_bolCreateResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_bolCreateResp = e_response_cancel;
+		else M_bolCreateResp = e_response_noValue;
 	}
 
-	if ( c_operation == RemoveBolPre ){
-		if ( I_middleSelBtn ) M_bolRemResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_bolRemResp = RETRY;
-		else if ( I_leftSelBtn ) M_bolRemResp = CANCEL;
-		else M_bolRemResp = NO_VALUE;
+	if ( c_operation == e_operation_removeBolusPreset ){
+		if ( I_middleSelBtn ) M_bolRemResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_bolRemResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_bolRemResp = e_response_cancel;
+		else M_bolRemResp = e_response_noValue;
 	}
 
-	if ( c_operation == StartBol ){
-		if ( I_middleSelBtn ) M_bolStartResp = ACCEPT;
-		else if ( I_rightSelBtn ) M_bolStartResp = RETRY;
-		else if ( I_leftSelBtn ) M_bolStartResp = CANCEL;
-		else M_bolStartResp = NO_VALUE;
+	if ( c_operation == e_operation_startBolus ){
+		if ( I_middleSelBtn ) M_bolStartResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_bolStartResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_bolStartResp = e_response_cancel;
+		else M_bolStartResp = e_response_noValue;
 	}
 }
 
@@ -236,27 +236,27 @@ void InitMonitoredVariables(){
 	M_basProf = false;
 	M_basRemSelected = false;
 
-	M_basCreateResp = NO_VALUE;
-	M_basRemResp = NO_VALUE;
+	M_basCreateResp = e_response_noValue;
+	M_basRemResp = e_response_noValue;
 
 	M_basActSelected = false;
-	M_basStartResp = NO_VALUE;
+	M_basStartResp = e_response_noValue;
 
-	M_basStopResp = NO_VALUE;
+	M_basStopResp = e_response_noValue;
 
-	M_tmpStartResp = NO_VALUE;
+	M_tmpStartResp = e_response_noValue;
 	M_tmpBas = false;
 
-	M_tmpStopResp = NO_VALUE;
+	M_tmpStopResp = e_response_noValue;
 
 	M_bolus = false;
-	M_bolCreateResp = NO_VALUE;
+	M_bolCreateResp = e_response_noValue;
 
 	M_bolSelected = false;
-	M_bolRemResp = NO_VALUE;
+	M_bolRemResp = e_response_noValue;
 
-	M_bolStartResp = NO_VALUE;
-	M_selectedMethod = NO_VALUE;
+	M_bolStartResp = e_response_noValue;
+	M_selectedMethod = e_bolMethod_noValue;
 	M_carbs = false;
 	M_bloodGlucose = false;
 

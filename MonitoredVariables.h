@@ -6,6 +6,7 @@
 #include <string.h>
 #include "BasalProfiles.h"
 #include "TemporaryBasal.h"
+#include "BolusPresets.h"
 
 extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();
@@ -37,38 +38,38 @@ extern bool M_bolRemoveReq;
 extern y_basal m_basProf;
 extern bool M_basProf;
 
-extern unsigned char M_basCreateResp;
+extern y_response M_basCreateResp;
 
 extern y_basal m_basRemSelected;
 extern bool M_basRemSelected;
-extern unsigned char M_basRemResp;
+extern y_response M_basRemResp;
 
 extern bool M_basActSelected;
 extern y_basal m_basActSelected;
-extern unsigned char M_basStartResp;
+extern y_response M_basStartResp;
 
-extern unsigned char M_basStopResp;
+extern y_response M_basStopResp;
 
-extern unsigned char M_tmpStartResp;
+extern y_response M_tmpStartResp;
 extern y_tmpBasal m_tmpBas;
 extern bool M_tmpBas;
 
-extern unsigned char M_tmpStopResp;
+extern y_response M_tmpStopResp;
 
-extern unsigned char M_bolCreateResp;
+extern y_response M_bolCreateResp;
 extern y_bolus m_bolus;
 extern bool M_bolus;
 
-extern unsigned char M_bolRemResp;
+extern y_response M_bolRemResp;
 extern y_bolus m_bolSelected;
 extern bool M_bolSelected;
 
-extern unsigned char M_bolStartResp;
+extern y_response M_bolStartResp;
 extern y_glucose m_bloodGlucose;
 extern y_carbs m_carbs;
 extern bool M_bloodGlucose;
 extern bool M_carbs;
-extern unsigned char M_selectedMethod;
+extern y_bolMethod M_selectedMethod;
 
 
 #endif

@@ -7,10 +7,10 @@ void StartTemporaryBasal(y_tmpBasal *profile);
 
 
 void ActivateTemporaryBasal(){
-	if (c_operation == StartTmpBas) {
+	if (c_operation == e_operation_startTmpBas) {
 		switch (c_tmpStartStatus) {
 		case e_opStatus_idle:
-			if (M_tmpStartResp == CANCEL) {
+			if (M_tmpStartResp == e_response_cancel) {
 				c_tmpStartStatus = e_opStatus_idle;
 				F_activateTemporaryBasal = false;
 				CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
@@ -35,18 +35,18 @@ void ActivateTemporaryBasal(){
 			break;
 
 		case e_opStatus_confirm:
-			if (M_tmpStartResp == ACCEPT){
+			if ( M_tmpStartResp == e_response_accept ){
 					c_tmpStartStatus = e_opStatus_idle;
 					F_activateTemporaryBasal = true;
 					StartTemporaryBasal(&p_tmpBas);
-					CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
+					CopyTmpBasal( &k_emptyTmp, &p_tmpBas );
 
-				} else if(M_tmpStartResp == RETRY){
+				} else if(M_tmpStartResp == e_response_retry ){
 					c_tmpStartStatus = e_opStatus_idle;
 					F_activateTemporaryBasal = false;
 					CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
 
-				} else if (M_tmpStartResp == CANCEL){
+				} else if (M_tmpStartResp == e_response_cancel ){
 					c_tmpStartStatus = e_opStatus_idle;
 					F_activateTemporaryBasal = false;
 					CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
@@ -54,12 +54,12 @@ void ActivateTemporaryBasal(){
 				break;
 
 		case e_opStatus_invalid:
-			if(M_tmpStartResp == RETRY){
+			if(M_tmpStartResp == e_response_retry ){
 					c_tmpStartStatus = e_opStatus_idle;
 					F_activateTemporaryBasal = false;
 					CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
 
-				} else if (M_tmpStartResp == CANCEL){
+				} else if (M_tmpStartResp == e_response_cancel ){
 					c_tmpStartStatus = e_opStatus_idle;
 					F_activateTemporaryBasal = false;
 					CopyTmpBasal(&k_emptyTmp, &p_tmpBas);
@@ -81,7 +81,7 @@ void StartTemporaryBasal(y_tmpBasal *profile){
 }
 
 bool TemporaryBasalActivationCompleted(){
-	if (F_activateTemporaryBasal || M_tmpStartResp == CANCEL){
+	if ( F_activateTemporaryBasal || M_tmpStartResp == e_response_cancel ){
 		F_activateTemporaryBasal = false;
 		return true;
 	}

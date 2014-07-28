@@ -9,12 +9,12 @@ bool F_stopTemporaryBasal; // From NL expression [ Stop Temporary Basal ]
 void StopTemporaryBasal();
 
 void DeactivateTemporaryBasal(){
-	if ( c_operation == StopTmpBas ){
-		if ( M_tmpStopResp == ACCEPT ){
+	if ( c_operation == e_operation_stopTmpBas ){
+		if ( M_tmpStopResp == e_response_accept ){
 			F_stopTemporaryBasal = true;
 			StopTemporaryBasal();
 
-		} else if ( M_tmpStopResp == CANCEL ){
+		} else if ( M_tmpStopResp == e_response_cancel ){
 			F_stopTemporaryBasal = false;
 		}
 
@@ -28,7 +28,7 @@ void StopTemporaryBasal(){
 }
 
 bool TemporaryBasalDeactivationCompleted(){
-	if ( F_stopTemporaryBasal || M_tmpStopResp == CANCEL ){
+	if ( F_stopTemporaryBasal || M_tmpStopResp == e_response_cancel ){
 		return true;
 	}
 	return false;

@@ -12,7 +12,7 @@ void SaveBolusPreset (y_bolus *preset);
 
 
 void CreateBolusPreset(){
-	if (c_operation == CreateBolPre){
+	if (c_operation == e_operation_createBolusPreset){
 		switch(c_bolCreateStatus){
 		case e_opStatus_idle:
 			if(M_bolus){
@@ -31,18 +31,18 @@ void CreateBolusPreset(){
 			break;
 
 		case e_opStatus_confirm:
-			if ( M_bolCreateResp == ACCEPT ){
+			if ( M_bolCreateResp == e_response_accept ){
 				c_bolCreateStatus = e_opStatus_idle;
 				F_createBolusPreset = true;
 				SaveBolusPreset( &p_bolus );
 				CopyBolusPreset( &k_emptyBol, &p_bolus );
 
-			} else if( M_bolCreateResp == RETRY ){
+			} else if( M_bolCreateResp == e_response_retry ){
 				c_bolCreateStatus = e_opStatus_idle;
 				F_createBolusPreset = false;
 				CopyBolusPreset( &k_emptyBol, &p_bolus );
 
-			} else if ( M_bolCreateResp == CANCEL ){
+			} else if ( M_bolCreateResp == e_response_cancel ){
 				c_bolCreateStatus = e_opStatus_idle;
 				F_createBolusPreset = false;
 				CopyBolusPreset( &k_emptyBol, &p_bolus );
@@ -50,12 +50,12 @@ void CreateBolusPreset(){
 
 			break;
 		case e_opStatus_invalid:
-			if( M_bolCreateResp == RETRY ){
+			if( M_bolCreateResp == e_response_retry ){
 				c_bolCreateStatus = e_opStatus_idle;
 				F_createBolusPreset = false;
 				CopyBolusPreset( &k_emptyBol, &p_bolus );
 
-			} else if ( M_bolCreateResp == CANCEL ){
+			} else if ( M_bolCreateResp == e_response_cancel ){
 				c_bolCreateStatus = e_opStatus_idle;
 				F_createBolusPreset = false;
 				CopyBolusPreset( &k_emptyBol, &p_bolus );
@@ -76,7 +76,7 @@ void CreateBolusPreset(){
 
 
 bool BolusPresetCreationCompleted(){
-	if (F_createBolusPreset || M_bolCreateResp == CANCEL){
+	if ( F_createBolusPreset || M_bolCreateResp == e_response_cancel ){
 		F_createBolusPreset = false;
 		return true;
 	}

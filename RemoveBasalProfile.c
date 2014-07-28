@@ -7,7 +7,7 @@ y_basal p_basRemSelected;
 
 
 void RemoveBasalProfile(){
-	if (c_operation == RemoveBasProf){
+	if (c_operation == e_operation_removeBasProf){
 		switch(c_basRemStatus){
 		case e_opStatus_idle:
 			if (M_basRemSelected){
@@ -26,18 +26,18 @@ void RemoveBasalProfile(){
 			break;
 
 		case e_opStatus_confirm:
-			if (M_basRemResp == ACCEPT){
+			if (M_basRemResp == e_response_accept){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = true;
 				RemoveProfileFromSet(&p_basRemSelected);
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
-			} else if( M_basRemResp == RETRY){
+			} else if( M_basRemResp == e_response_retry){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
-			} else if (M_basRemResp == CANCEL){
+			} else if (M_basRemResp == e_response_cancel){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
@@ -46,12 +46,12 @@ void RemoveBasalProfile(){
 			break;
 
 		case e_opStatus_invalid:
-			if(M_basRemResp == RETRY){
+			if(M_basRemResp == e_response_retry){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
-			} else if (M_basRemResp == CANCEL){
+			} else if (M_basRemResp == e_response_cancel){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
@@ -70,7 +70,7 @@ void RemoveBasalProfile(){
 }
 
 bool BasalProfileRemovalCompleted(){
-	if (F_removeBasalProfile || M_basRemResp == CANCEL){
+	if (F_removeBasalProfile || M_basRemResp == e_response_cancel){
 		F_removeBasalProfile = false;
 		return true;
 	}

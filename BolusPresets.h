@@ -2,19 +2,9 @@
 #define BOLUSPRESETS_H
 
 #include <stdbool.h>
+#include "Shared.h"
 
-#define k_bolusNameLength 12
 #define k_maxNumberOfBolusPresets 8
-
-typedef unsigned int y_carbs;
-typedef unsigned int y_glucose;
-typedef unsigned long y_insulinValue;
-typedef char y_bolusName[k_bolusNameLength+1];
-
-typedef struct bolPreset{
-	y_bolusName Name;
-	y_insulinValue Amount;
-} y_bolus;
 
 typedef struct y_bolusSet{
 	y_bolus Preset[k_maxNumberOfBolusPresets];

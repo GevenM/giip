@@ -1,25 +1,11 @@
 #ifndef SHARED_FILE
 #define SHARED_FILE
 
-#define NO_VALUE 0
+#include "TypesAndConstants.h"
 
-#define ACCEPT 1
-#define RETRY 2
-#define CANCEL 3
-
-#define CALCULATOR 4
-#define PRESET 5
-#define MANUAL 6
-
-
-
-
-//#define k_segDay 48
 
 #include <stdbool.h>
-#include "BasalProfiles.h"
-#include "TemporaryBasal.h"
-#include "BolusPresets.h"
+
 
 typedef enum {
 	None,
@@ -100,74 +86,29 @@ typedef enum {
 	Settings_ClearFlash,
 	Settings_DateTime,
 	Settings_DateTime_NotAllowed
-} e_menus;
-
-
-typedef enum {
-	Standby,
-	POST,
-	Ready,
-	OffReq,
-	Error,
-} e_pwrStatus;
-
-
-typedef enum {
-	Idle,
-	CreateBasProf,
-	RemoveBasProf,
-	StartBasProf,
-	StopBasProf,
-	StartTmpBas,
-	StopTmpBas,
-	CreateBolPre,
-	RemoveBolPre,
-	StartBol,
-	CreateReminder,
-	RemoveReminder,
-} e_operations;
-
-
-typedef enum {
-	e_opStatus_idle,
-	e_opStatus_confirm,
-	e_opStatus_invalid,
-
-} e_opStatus;
-
-
-typedef enum {
-	e_bolStatus_idle,
-	e_bolStatus_confirm,
-	e_bolStatus_invalid,
-	e_bolStatus_preset,
-	e_bolStatus_calculator,
-	e_bolStatus_manual,
-} e_bolStatus;
+} y_menus;
 
 
 
+extern y_menus c_menuScreen;
+extern y_menus c_1_menuScreen;
+extern y_menus f_menuChoice;
+extern y_menus f_1_menuChoice;
 
-extern e_menus c_menuScreen;
-extern e_menus c_1_menuScreen;
-extern e_menus f_menuChoice;
-extern e_menus f_1_menuChoice;
+extern y_operation c_operation;
+extern y_pwrStatus c_pwrStatus;
 
-extern e_operations c_operation;
+extern y_opStatus c_basCreateStatus;
+extern y_opStatus c_basRemStatus;
+extern y_opStatus c_basStartStatus;
+extern y_opStatus c_basStopStatus;
+extern y_opStatus c_tmpStartStatus;
+extern y_opStatus c_bolCreateStatus;
+extern y_opStatus c_bolRemStatus;
+extern y_opStatus c_remindCreateStatus;
+extern y_opStatus c_remindRemStatus;
 
-extern e_pwrStatus c_pwrStatus;
-
-extern e_opStatus c_basCreateStatus;
-extern e_opStatus c_basRemStatus;
-extern e_opStatus c_basStartStatus;
-extern e_opStatus c_basStopStatus;
-extern e_opStatus c_tmpStartStatus;
-extern e_opStatus c_bolCreateStatus;
-extern e_opStatus c_bolRemStatus;
-extern e_opStatus c_remindCreateStatus;
-extern e_opStatus c_remindRemStatus;
-
-extern e_bolStatus c_bolStartStatus;
+extern y_bolStatus c_bolStartStatus;
 
 
 extern bool ScheduleCreationAllowed();
@@ -178,28 +119,12 @@ extern bool ScheduleExists();
 extern bool BasalIsActive();
 extern bool TemporaryBasalIsActive();
 
-extern y_basal k_emptyBas;
-extern y_tmpBasal k_emptyTmp;
-extern y_bolus k_emptyBol;
 
 extern y_basal f_activeBasal;
 extern y_tmpBasal f_activeTmpBasal;
 extern y_bolus f_activeBolus;
 
-extern const y_insulinValue k_maxBasalBound;
-extern const y_insulinValue k_minBasalBound;
-extern const y_insulinValue k_maxDailyInsulin;
-extern const y_insulinValue k_maxBolusBound;
-extern const y_insulinValue k_minBolusBound;
 
-extern const y_duration k_maxTmpDuration;
-extern const y_duration k_minTmpDuration;
-extern const y_tmpBasalRate k_maxTmpRate;
-extern const y_tmpBasalRate k_minTmpRate;
-
-#define k_maxOutputRate 720000  // maximum output rate in *3600 IU/hr. 50IU/hr
-
-extern const unsigned int k_secPerHour;
 
 #endif
 

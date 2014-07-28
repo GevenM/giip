@@ -18,7 +18,7 @@ y_basal p_inputProfile;
 unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
 y_tmpBasal p_inputTmpBasal;
-unsigned char p_selectedMethod = 0;
+y_bolMethod p_selectedMethod = e_bolMethod_noValue;
 
 Calendar p_calendar;
 unsigned char p_calendarIndex;
@@ -77,8 +77,11 @@ void PrintBasalMenu_Manage();
 void PrintBasCreateNotAllowed();
 void PrintCreateBasProf();
 void PrintMessage(char outString[32]);
+
 void PrintCreateBasProf_Idle(y_basal *p_profile);
 void PrintCreateBasProf_Confirm();
+void PrintCreateBasProf_Invalid();
+
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
 
@@ -122,26 +125,26 @@ int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
 
 void DisplayOut(void){
 	switch(c_pwrStatus){
-	case Standby:
+	case e_pwrStatus_standby:
 
 		break;
 
-	case POST:
+	case e_pwrStatus_post:
 
 		break;
 
-	case Ready:
+	case e_pwrStatus_ready:
 		UpdateScreen();
 		//PrintScreen();
 		break;
 
-	case OffReq:
+	case e_pwrStatus_offReq:
 
 		break;
 
-	case Error:
+	//case e_pwrStatus_error:
 
-		break;
+		//break;
 
 	default: break;
 
@@ -178,11 +181,11 @@ void PrintScreen(){
 
 	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
 	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(); break;
-	case CreateBasProf_Invalid:PrintMessage("Invalid Create"); break;
+	case CreateBasProf_Invalid:PrintCreateBasProf_Invalid(); break;
 
 	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle(); break;
 	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(); break;
-	case RemoveBasProf_Invalid:PrintMessage("Invalid Rem"); break;
+	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid(); break;
 
 	case StartBasProf_Idle:PrintStartBasProf_Idle(); break;
 	case StartBasProf_Confirm:PrintStartBasProf_Confirm(); break;
@@ -227,7 +230,7 @@ void PrintScreen(){
 
 void UpdateScreen(){
 	switch (c_operation){
-	case Idle:
+	case e_operation_idle:
 		switch (c_menuScreen){
 		case None:
 			if (M_menuReq) {
@@ -316,7 +319,7 @@ void UpdateScreen(){
 					if(BolusIsActive()){
 						c_menuScreen = BolusAlreadyActive;
 					} else{
-						p_selectedMethod = CALCULATOR;
+						p_selectedMethod = e_bolMethod_calculator;
 						m_bloodGlucose = 0;
 						m_carbs = 0;
 						CopyBolusPreset( &k_emptyBol, &m_bolSelected );
@@ -797,7 +800,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case CreateBasProf:
+	case e_operation_createBasProf:
 		switch (c_basCreateStatus){
 		case e_opStatus_idle:
 			c_menuScreen = CreateBasProf_Idle;
@@ -944,7 +947,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case RemoveBasProf:
+	case e_operation_removeBasProf:
 		switch (c_basRemStatus){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveBasProf_Idle;
@@ -987,7 +990,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case StartBasProf:
+	case e_operation_startBasProf:
 		switch (c_basStartStatus){
 		case e_opStatus_idle:
 			c_menuScreen = StartBasProf_Idle;
@@ -1029,11 +1032,11 @@ void UpdateScreen(){
 		}
 		break;
 
-	case StopBasProf:
+	case e_operation_stopBasProf:
 		c_menuScreen = StopBasProf_All;
 		break;
 
-	case StartTmpBas:
+	case e_operation_startTmpBas:
 		switch (c_tmpStartStatus){
 		case e_opStatus_idle:
 			c_menuScreen = StartTmpBas_Idle;
@@ -1087,11 +1090,11 @@ void UpdateScreen(){
 		}
 		break;
 
-	case StopTmpBas:
+	case e_operation_stopTmpBas:
 		c_menuScreen = StopTmpBas_All;
 		break;
 
-	case CreateBolPre:
+	case e_operation_createBolusPreset:
 		switch (c_bolCreateStatus){
 		case e_opStatus_idle:
 			c_menuScreen = CreateBolusPreset_Idle;
@@ -1170,7 +1173,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case RemoveBolPre:
+	case e_operation_removeBolusPreset:
 		switch (c_bolRemStatus){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveBolusPreset_Idle;
@@ -1210,33 +1213,36 @@ void UpdateScreen(){
 		}
 		break;
 
-	case StartBol:
+	case e_operation_startBolus:
 		switch (c_bolStartStatus){
 		case e_bolStatus_idle:
 			c_menuScreen = StartBolus_Idle;
 
 			if (M_upReq){
 				switch( p_selectedMethod ){
-				case CALCULATOR: p_selectedMethod = MANUAL; break;
-				case MANUAL: p_selectedMethod = PRESET; break;
-				case PRESET: p_selectedMethod = CALCULATOR; break;
+				case e_bolMethod_calculator: p_selectedMethod = e_bolMethod_manual; break;
+				case e_bolMethod_manual: p_selectedMethod = e_bolMethod_preset; break;
+				case e_bolMethod_preset: p_selectedMethod = e_bolMethod_calculator; break;
 				}
 				updateScreen = true;
 
 			} else if( M_downReq ){
 				switch( p_selectedMethod){
-				case CALCULATOR: p_selectedMethod = PRESET; break;
-				case MANUAL: p_selectedMethod = CALCULATOR; break;
-				case PRESET: p_selectedMethod = MANUAL; break;
+				case e_bolMethod_calculator: p_selectedMethod = e_bolMethod_preset; break;
+				case e_bolMethod_manual: p_selectedMethod = e_bolMethod_calculator; break;
+				case e_bolMethod_preset: p_selectedMethod = e_bolMethod_manual; break;
 				}
 				updateScreen = true;
 
 			} else if ( M_selReq ){
 				M_selectedMethod = p_selectedMethod;
-				if (p_selectedMethod == PRESET) LoadPreset( &m_bolSelected, 0 ); // selects first preset.
-				else if (p_selectedMethod == MANUAL ) {
+				if (p_selectedMethod == e_bolMethod_preset) LoadPreset( &m_bolSelected, 0 ); // selects first preset.
+				else if (p_selectedMethod == e_bolMethod_manual ) {
 					CopyBolusPreset( &k_emptyBol, &m_bolus );
 					strncpy( m_bolus.Name, "*Manual", 7);
+				} else {
+					m_carbs = 0;
+					m_bloodGlucose = 0;
 				}
 				updateScreen = true;
 			}
@@ -1351,7 +1357,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case CreateReminder:
+	case e_operation_createReminder:
 		switch (c_remindCreateStatus){
 		case e_opStatus_idle: c_menuScreen = CreateReminder_Idle; break;
 		case e_opStatus_confirm: c_menuScreen = CreateReminder_Confirm; break;
@@ -1359,7 +1365,7 @@ void UpdateScreen(){
 		}
 		break;
 
-	case RemoveReminder:
+	case e_operation_removeReminder:
 		switch (c_remindRemStatus){
 		case e_opStatus_idle: c_menuScreen = RemoveReminder_Idle; break;
 		case e_opStatus_confirm: c_menuScreen = RemoveReminder_Confirm; break;
@@ -1663,6 +1669,20 @@ void PrintStartBasProf_Confirm(){
 	GrFlush(&g_sContext);
 }
 
+
+void PrintCreateBasProf_Invalid(){
+
+	GrStringDrawCentered(&g_sContext, "Invalid Profile" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	//LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+
 void PrintStartBasProf_Invalid(){
 
 	GrStringDrawCentered(&g_sContext, "Profile Invalid" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
@@ -1674,6 +1694,7 @@ void PrintStartBasProf_Invalid(){
 
 	GrFlush(&g_sContext);
 }
+
 
 void PrintStartBasProf_Idle(){
 	int numberOfProfiles;
@@ -2676,15 +2697,15 @@ void PrintStartBolus_Idle(){
 
 	// Highlight selected item
 	switch ( p_selectedMethod ) {
-	case CALCULATOR:
+	case e_bolMethod_calculator:
 		text_start = 18;
 		strcpy(outString, "Calculator");
 		break;
-	case PRESET:
+	case e_bolMethod_preset:
 		text_start = 31;
 		strcpy(outString, "Preset");
 		break;
-	case MANUAL:
+	case e_bolMethod_manual:
 		text_start = 44;
 		strcpy(outString, "Manual");
 		break;

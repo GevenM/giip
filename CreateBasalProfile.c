@@ -12,16 +12,16 @@ y_basal p_basProf;
 //y_basal F_basalProfileToCreate;
 
 void CreateBasalProfile(){
-	if (c_operation == CreateBasProf){
+	if ( c_operation == e_operation_createBasProf ){
 		switch(c_basCreateStatus){
 		case e_opStatus_idle:
-			if (M_basCreateResp == CANCEL){
+			if ( M_basCreateResp == e_response_cancel ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basProf);
 			} else {
 				if(M_basProf){
-					if (BasalProfileIsValid(&m_basProf)){
+					if (BasalProfileIsValid( &m_basProf )){
 						c_basCreateStatus = e_opStatus_confirm;
 						CopyProfile(&m_basProf, &p_basProf);
 						F_createBasalProfile = false;
@@ -37,18 +37,18 @@ void CreateBasalProfile(){
 			break;
 
 		case e_opStatus_confirm:
-			if (M_basCreateResp == ACCEPT){
+			if ( M_basCreateResp == e_response_accept ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = true;
 				SaveBasalProfile(&p_basProf);
 				CopyProfile(&k_emptyBas, &p_basProf);
 
-			} else if(M_basCreateResp == RETRY){
+			} else if( M_basCreateResp == e_response_retry ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basProf);
 
-			} else if (M_basCreateResp == CANCEL){
+			} else if ( M_basCreateResp == e_response_cancel ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basProf);
@@ -57,12 +57,12 @@ void CreateBasalProfile(){
 			break;
 
 		case e_opStatus_invalid:
-			if(M_basCreateResp == RETRY){
+			if( M_basCreateResp == e_response_retry ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basProf);
 
-			} else if (M_basCreateResp == CANCEL){
+			} else if ( M_basCreateResp == e_response_cancel ){
 				c_basCreateStatus = e_opStatus_idle;
 				F_createBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basProf);
@@ -81,7 +81,7 @@ void CreateBasalProfile(){
 }
 
 bool BasalProfileCreationCompleted(){
-	if (F_createBasalProfile || M_basCreateResp == CANCEL){
+	if (F_createBasalProfile || M_basCreateResp == e_response_cancel ){
 		F_createBasalProfile = false;
 		return true;
 	}

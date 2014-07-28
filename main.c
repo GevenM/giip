@@ -75,7 +75,7 @@ void main(void){
 
 
   	InitMonitoredVariables();
-  	c_pwrStatus = Ready;
+  	c_pwrStatus = e_pwrStatus_ready;
   	PrintScreen();
 
   	int prevMin;

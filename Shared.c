@@ -1,52 +1,34 @@
 #include "Shared.h"
 
 
-y_basal k_emptyBas = {"", {0}};
-y_tmpBasal k_emptyTmp = {0, 0};
-y_bolus k_emptyBol = {"", 0};
+
 
 y_basal f_activeBasal = {"", {0}};
 y_tmpBasal f_activeTmpBasal = {0, 0};
 y_bolus f_activeBolus = {"", 0};
 
-//single rate increment bounds
-const y_insulinValue k_maxBasalBound = 36000;
-const y_insulinValue k_minBasalBound = 0;
-
-const y_insulinValue k_maxBolusBound = 36000;
-const y_insulinValue k_minBolusBound = 3600;
-
-// Temporary basal constants
-const y_duration k_maxTmpDuration = 1440;
-const y_duration k_minTmpDuration = 60;
-const y_tmpBasalRate k_maxTmpRate = 36000;
-const y_tmpBasalRate k_minTmpRate = 3600;
-
-//daily bound
-const y_insulinValue k_maxDailyInsulin = 360000;
-
-const unsigned int k_secPerHour = 3600;
 
 
-e_operations c_operation = Idle;
-e_menus c_menuScreen = None;
-e_menus c_1_menuScreen = None;
-e_menus f_menuChoice = Basal;
-e_menus f_1_menuChoice = Basal;
-e_pwrStatus c_pwrStatus = Standby;
+
+y_operation c_operation = e_operation_idle;
+y_menus c_menuScreen = None;
+y_menus c_1_menuScreen = None;
+y_menus f_menuChoice = Basal;
+y_menus f_1_menuChoice = Basal;
+y_pwrStatus c_pwrStatus = e_pwrStatus_standby;
 
 
-e_opStatus c_basCreateStatus;
-e_opStatus c_basRemStatus;
-e_opStatus c_basStartStatus;
-e_opStatus c_basStopStatus;
-e_opStatus c_tmpStartStatus;
-e_opStatus c_bolCreateStatus;
-e_opStatus c_bolRemStatus;
-e_opStatus c_remindCreateStatus;
-e_opStatus c_remindRemStatus;
+y_opStatus c_basCreateStatus;
+y_opStatus c_basRemStatus;
+y_opStatus c_basStartStatus;
+y_opStatus c_basStopStatus;
+y_opStatus c_tmpStartStatus;
+y_opStatus c_bolCreateStatus;
+y_opStatus c_bolRemStatus;
+y_opStatus c_remindCreateStatus;
+y_opStatus c_remindRemStatus;
 
-e_bolStatus c_bolStartStatus;
+y_bolStatus c_bolStartStatus;
 
 
 bool f_basalIsActive = false;
