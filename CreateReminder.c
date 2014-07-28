@@ -1,5 +1,6 @@
 #include "CreateReminder.h"
 #include "MonitoredVariables.h"
+#include "Reminder.h"
 
 bool F_createReminder = false;
 y_reminder p_reminder;
@@ -30,7 +31,7 @@ void CreateReminder(){
 			if ( M_remindCreateResp == e_response_accept ){
 				c_remindCreateStatus = e_opStatus_idle;
 				F_createReminder = true;
-				SaveReminder( &p_reminder );
+				AddReminderToSet( &p_reminder );
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindCreateResp == e_response_retry ){
@@ -75,16 +76,4 @@ bool ReminderCreationCompleted(){
 		return true;
 	}
 	return false;
-}
-
-bool ReminderIsValid( y_reminder *reminder ){
-	return true;
-}
-
-void SaveReminder ( y_reminder *reminder ){
-	;
-}
-
-void CopyReminder ( y_reminder *from, y_reminder *to ){
-	;
 }

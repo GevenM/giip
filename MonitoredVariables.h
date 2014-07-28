@@ -74,6 +74,7 @@ extern y_bolMethod M_selectedMethod;
 extern y_reminder m_reminder;
 extern bool M_reminder;
 extern y_response M_remindCreateResp;
+extern y_response M_remindRemResp;
 
 
 #endif

@@ -63,6 +63,7 @@ y_bolMethod M_selectedMethod = e_bolMethod_noValue;
 y_reminder m_reminder;
 bool M_reminder;
 y_response M_remindCreateResp;
+y_response M_remindRemResp;
 
 
 void UpdateMonitoredVariables(){
@@ -220,6 +221,13 @@ void UpdateMonitoredVariables(){
 		else if ( I_leftSelBtn ) M_remindCreateResp = e_response_cancel;
 		else M_remindCreateResp = e_response_noValue;
 	}
+
+	if ( c_operation == e_operation_removeReminder ){
+		if ( I_middleSelBtn ) M_remindRemResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_remindRemResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_remindRemResp = e_response_cancel;
+		else M_remindRemResp = e_response_noValue;
+	}
 }
 
 void InitMonitoredVariables(){
@@ -273,4 +281,5 @@ void InitMonitoredVariables(){
 
 	M_reminder = false;
 	M_remindCreateResp = e_response_noValue;
+	M_remindRemResp = e_response_noValue;
 }
