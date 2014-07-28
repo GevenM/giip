@@ -32,6 +32,7 @@
 #include "RemoveBolusPreset.h"
 #include "ActivateBolus.h"
 #include "RTC.h"
+#include "CreateReminder.h"
 
 void Delay(void);
 void SavePreviousInput();
@@ -100,6 +101,7 @@ void main(void){
 		CreateBolusPreset();
 		RemoveBolusPreset();
 		ActivateBolus();
+		CreateReminder();
 
 		UpdateOperation();
 

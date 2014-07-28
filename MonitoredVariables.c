@@ -60,6 +60,10 @@ bool M_bloodGlucose;
 bool M_carbs;
 y_bolMethod M_selectedMethod = e_bolMethod_noValue;
 
+y_reminder m_reminder;
+bool M_reminder;
+y_response M_remindCreateResp;
+
 
 void UpdateMonitoredVariables(){
 	M_backReq = I_leftSelBtn;
@@ -209,6 +213,13 @@ void UpdateMonitoredVariables(){
 		else if ( I_leftSelBtn ) M_bolStartResp = e_response_cancel;
 		else M_bolStartResp = e_response_noValue;
 	}
+
+	if ( c_operation == e_operation_createReminder ){
+		if ( I_middleSelBtn ) M_remindCreateResp = e_response_accept;
+		else if ( I_rightSelBtn ) M_remindCreateResp = e_response_retry;
+		else if ( I_leftSelBtn ) M_remindCreateResp = e_response_cancel;
+		else M_remindCreateResp = e_response_noValue;
+	}
 }
 
 void InitMonitoredVariables(){
@@ -260,4 +271,6 @@ void InitMonitoredVariables(){
 	M_carbs = false;
 	M_bloodGlucose = false;
 
+	M_reminder = false;
+	M_remindCreateResp = e_response_noValue;
 }

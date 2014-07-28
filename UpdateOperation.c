@@ -12,6 +12,7 @@
 #include "CreateBolusPreset.h"
 #include "RemoveBolusPreset.h"
 #include "ActivateBolus.h"
+#include "CreateReminder.h"
 
 
 void UpdateOperation(){
@@ -69,7 +70,9 @@ void UpdateOperation(){
 			break;
 
 		case e_operation_createReminder:
+			if ( ReminderCreationCompleted() ) c_operation = e_operation_idle;
 			break;
+
 		case e_operation_removeReminder:
 			break;
 		default: break;

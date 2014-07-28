@@ -143,5 +143,6 @@ typedef struct tmpBasal{
 extern y_basal k_emptyBas;
 extern y_tmpBasal k_emptyTmp;
 extern y_bolus k_emptyBol;
+extern y_reminder k_emptyReminder;
 
 #endif
