@@ -63,6 +63,7 @@ void InitRTC(){
 }
 
 bool CalendarIsValid( Calendar calendar ){
+	int year = BCDtoInt(calendar.Year);
 	if ( BCDtoInt( calendar.Seconds ) >= 60 ) return false;
 	if ( BCDtoInt( calendar.Minutes ) >= 60 ) return false;
 	if ( BCDtoInt( calendar.Hours ) >= 24 ) return false;
@@ -74,8 +75,8 @@ bool CalendarIsValid( Calendar calendar ){
 	else if ( calendar.Month == 0x02 || calendar.Month == 0x04 || calendar.Month == 0x06 || calendar.Month == 0x09 || calendar.Month == 0x11 ){
 		if ( calendar.DayOfMonth > 0x30) return false;
 
-		if (calendar.Month == 0x02 ){3
-			bool leapYear = IsLeapYear(BCDtoInt(calendar.Year));
+		if (calendar.Month == 0x02 ){
+			bool leapYear = IsLeapYear(year);
 
 			if ( leapYear ){
 				if ( calendar.DayOfMonth > 0x29 ) return false;
