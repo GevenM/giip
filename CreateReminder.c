@@ -16,7 +16,7 @@ void CreateReminder(){
 			if ( M_reminder ){
 				if ( ReminderIsValid( &m_reminder )){
 					c_remindCreateStatus = e_opStatus_confirm;
-					F_createReminder = true;
+					F_createReminder = false;
 					CopyReminder( &m_reminder, &p_reminder );
 				} else {
 					c_remindCreateStatus = e_opStatus_invalid;

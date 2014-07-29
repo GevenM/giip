@@ -131,6 +131,8 @@ void PrintSettings_DateTime();
 void PrintSettings_DateTime_NotAllowed();
 
 void PrintCreateReminder_Idle();
+void PrintCreateReminder_Confirm();
+void PrintCreateReminder_Invalid();
 
 void UpdateScreen();
 
@@ -228,8 +230,8 @@ void PrintScreen(){
 	case StartBolus_Invalid: PrintStartBolus_Invalid(); break;
 
 	case CreateReminder_Idle: PrintCreateReminder_Idle(); break;
-	case CreateReminder_Confirm:break;
-	case CreateReminder_Invalid:break;
+	case CreateReminder_Confirm:PrintCreateReminder_Confirm();break;
+	case CreateReminder_Invalid:PrintCreateReminder_Invalid();break;
 	case RemoveReminder_Idle:PrintMessage("Remove Remind"); break;
 	case RemoveReminder_Confirm:break;
 
@@ -413,14 +415,14 @@ void UpdateScreen(){
 						p_reminder = k_emptyReminder;
 						p_reminder.Time = GetCurrentCalendar();
 						remindEntryIndex = 0;
-						// should not happen as it indicates M_ReminderCreateReq
+
 					} else{
 						c_menuScreen = RemindCreateNotAllowed;
 					}
 					break;
 				case Schedule_Remove:
 					if( ReminderRemovalAllowed() ){
-						// should not happen as it indicates M_RemindRemoveReq
+						;
 					} else{
 						c_menuScreen = NoRemind;
 					}
@@ -1380,6 +1382,16 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = CreateReminder_Idle;
 
+			if ( M_selReq ){ // Submit Preset
+				M_reminder = true;
+				CopyReminder( &p_reminder, &m_reminder );
+				updateScreen = true;
+
+				// Reset variables used by this function
+				remindEntryIndex = 0;
+				p_remindSubIndex = HR;
+			}
+
 			if ( remindEntryIndex == NAME ){
 				/** Allow user to enter a reminder name **/
 				// Initialize the First letter of Name to 'A'
@@ -1416,14 +1428,6 @@ void UpdateScreen(){
 				} else if ( M_nextReq ){ // Switch to entering Amount
 					remindEntryIndex++;
 					updateScreen = true;
-
-				} else if ( M_selReq ){ // Submit Preset
-					M_reminder = true;
-					m_reminder = p_reminder;
-					updateScreen = true;
-
-					// Reset variables used by this function
-					remindEntryIndex = 0;
 				}
 			} else if ( remindEntryIndex == DATETIME ){
 				if ( M_upReq ){
@@ -1526,13 +1530,6 @@ void UpdateScreen(){
 					else p_remindSubIndex--;
 					updateScreen = true;
 
-				} else if ( M_selReq ){ // Submit Preset
-					M_reminder = true;
-					m_reminder = p_reminder;
-					updateScreen = true;
-
-					// Reset variables used by this function
-					remindEntryIndex = 0;
 				}
 
 			} else if ( remindEntryIndex == FREQ ){
@@ -1564,13 +1561,6 @@ void UpdateScreen(){
 					remindEntryIndex = DATETIME;
 					updateScreen = true;
 
-				} else if ( M_selReq ){ // Submit Preset
-					M_reminder = true;
-					m_reminder = p_reminder;
-					updateScreen = true;
-
-					// Reset variables used by this function
-					remindEntryIndex = 0;
 				}
 			} else if ( remindEntryIndex == MSG ){
 				/** Allow user to enter a reminder message **/
@@ -1611,13 +1601,6 @@ void UpdateScreen(){
 					remindEntryIndex = FREQ;
 					updateScreen = true;
 
-				} else if ( M_selReq ){ // Submit Preset
-					M_reminder = true;
-					m_reminder = p_reminder;
-					updateScreen = true;
-
-					// Reset variables used by this function
-					remindEntryIndex = 0;
 				}
 			} else {
 				remindEntryIndex = NAME;
@@ -3456,6 +3439,28 @@ void PrintCreateReminder_Idle(){
 	else if ( remindEntryIndex == MSG ) LoadRightButton("FREQ");
 	else ClearRightButton();
 
+
+	GrFlush(&g_sContext);
+}
+
+void PrintCreateReminder_Confirm(){
+	GrStringDraw(&g_sContext, "Save Reminder?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+void PrintCreateReminder_Invalid(){
+
+	GrStringDrawCentered(&g_sContext, "Invalid Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("CANC");
+	//LoadMiddleButton("OK");
+	LoadRightButton("RETY");
 
 	GrFlush(&g_sContext);
 }

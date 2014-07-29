@@ -7,6 +7,7 @@
 #include "BasalProfiles.h"
 #include "TemporaryBasal.h"
 #include "BolusPresets.h"
+#include "Reminder.h"
 
 extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();

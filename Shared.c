@@ -18,15 +18,15 @@ y_menus f_1_menuChoice = Basal;
 y_pwrStatus c_pwrStatus = e_pwrStatus_standby;
 
 
-y_opStatus c_basCreateStatus;
-y_opStatus c_basRemStatus;
-y_opStatus c_basStartStatus;
-y_opStatus c_basStopStatus;
-y_opStatus c_tmpStartStatus;
-y_opStatus c_bolCreateStatus;
-y_opStatus c_bolRemStatus;
-y_opStatus c_remindCreateStatus;
-y_opStatus c_remindRemStatus;
+y_opStatus c_basCreateStatus = e_opStatus_idle;
+y_opStatus c_basRemStatus = e_opStatus_idle;
+y_opStatus c_basStartStatus = e_opStatus_idle;
+y_opStatus c_basStopStatus = e_opStatus_idle;
+y_opStatus c_tmpStartStatus = e_opStatus_idle;
+y_opStatus c_bolCreateStatus = e_opStatus_idle;
+y_opStatus c_bolRemStatus = e_opStatus_idle;
+y_opStatus c_remindCreateStatus = e_opStatus_idle;
+y_opStatus c_remindRemStatus = e_opStatus_idle;
 
 y_bolStatus c_bolStartStatus;
 
