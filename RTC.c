@@ -110,9 +110,9 @@ int GetCurrentSec(){
 
 
 void GetDay( Calendar *date ){
-	int dayNum = BCDtoInt(&date->DayOfMonth);
-	int month = BCDtoInt(&date->Month);
-	int year = BCDtoInt(&date->Year);
+	int dayNum = BCDtoInt(date->DayOfMonth);
+	int month = BCDtoInt(date->Month);
+	int year = BCDtoInt(date->Year);
 	int dayName;
 	int d, m, y, c;
 
