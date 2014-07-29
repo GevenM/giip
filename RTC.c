@@ -104,8 +104,14 @@ int GetCurrentMin(){
 }
 
 int GetCurrentSec(){
-    //p_currentTime = GetCurrentCalendar();
+	//p_currentTime = GetCurrentCalendar();
     return p_currentTime.Seconds;
+}
+
+int GetCurrentDayOfWeek(){
+    //p_currentTime = GetCurrentCalendar();
+    GetDay(&p_currentTime);
+    return p_currentTime.DayOfWeek;
 }
 
 
