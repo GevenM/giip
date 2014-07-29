@@ -12,7 +12,7 @@
 #define k_bolusNameLength 12
 
 #define k_remindMessageLength 60
-#define k_remindNameLength 12
+#define k_remindNameLength 10
 
 #define k_maxOutputRate 720000
 #define k_maxDailyInsulin 360000

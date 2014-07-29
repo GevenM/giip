@@ -1,7 +1,7 @@
 #include "RemoveReminder.h"
 
-bool F_removeReminder = false;
-y_reminder p_reminder;
+static bool F_removeReminder = false;
+static y_reminder p_reminder;
 
 void RemoveReminder(){
 	if( c_operation == e_operation_removeReminder ){

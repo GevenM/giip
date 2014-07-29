@@ -14,7 +14,6 @@ y_reminderSet reminderSetLocal;
 
 void LoadRemindersFromFlash(void);
 void SaveRemindersToFlash(void);
-bool ReminderCreationAllowed();
 int GetReminderIndex( y_reminder *reminder );
 bool ReminderDateTimeValid( y_reminder *reminder );
 
@@ -43,6 +42,16 @@ bool ReminderCreationAllowed(){
 	LoadRemindersFromFlash();
 
 	if ( reminderSetLocal.NumberOfReminders < k_maxNumberOfReminders ){
+		return true;
+	}
+
+	return false;
+}
+
+bool ReminderRemovalAllowed(){
+	LoadRemindersFromFlash();
+
+	if ( reminderSetLocal.NumberOfReminders > 0 ){
 		return true;
 	}
 
@@ -126,4 +135,9 @@ void SaveRemindersToFlash(void)
 void LoadRemindersFromFlash(void)
 {
   reminderSetLocal = reminderSet;
+}
+
+void InitReminderSet(){
+	reminderSetLocal.NumberOfReminders = 0;
+	SaveRemindersToFlash();
 }

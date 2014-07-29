@@ -3,6 +3,7 @@
 #include "ActivateBolus.h"
 #include "RTC.h"
 #include "InsulinOutputCalculator.h"
+#include "Reminder.h"
 
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
@@ -19,6 +20,16 @@ unsigned char segments[k_segDay] = {k_segDay, 0};
 y_basalRate rates[k_segDay];
 y_tmpBasal p_inputTmpBasal;
 y_bolMethod p_selectedMethod = e_bolMethod_noValue;
+static y_reminder p_reminder = {"", "", {0}, e_remindFreq_oneTime };
+
+static char remindEntryIndex;
+#define NAME 0
+#define DATETIME 1
+#define FREQ 2
+#define MSG 3
+
+unsigned char p_remindSubIndex;
+
 
 Calendar p_calendar;
 unsigned char p_calendarIndex;
@@ -119,6 +130,8 @@ void PrintStartBolus_Invalid();
 void PrintSettings_DateTime();
 void PrintSettings_DateTime_NotAllowed();
 
+void PrintCreateReminder_Idle();
+
 void UpdateScreen();
 
 int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
@@ -214,7 +227,7 @@ void PrintScreen(){
 	case StartBolus_Confirm: PrintStartBolus_Confirm(); break;
 	case StartBolus_Invalid: PrintStartBolus_Invalid(); break;
 
-	case CreateReminder_Idle:PrintMessage("Create Remind"); break;
+	case CreateReminder_Idle: PrintCreateReminder_Idle(); break;
 	case CreateReminder_Confirm:break;
 	case CreateReminder_Invalid:break;
 	case RemoveReminder_Idle:PrintMessage("Remove Remind"); break;
@@ -396,14 +409,17 @@ void UpdateScreen(){
 			} else if (M_selReq){
 				switch (f_menuChoice){
 				case Schedule_Create:
-					if(ScheduleCreationAllowed()){
+					if( ReminderCreationAllowed() ){
+						p_reminder = k_emptyReminder;
+						p_reminder.Time = GetCurrentCalendar();
+						remindEntryIndex = 0;
 						// should not happen as it indicates M_ReminderCreateReq
 					} else{
 						c_menuScreen = RemindCreateNotAllowed;
 					}
 					break;
 				case Schedule_Remove:
-					if(ScheduleExists()){
+					if( ReminderRemovalAllowed() ){
 						// should not happen as it indicates M_RemindRemoveReq
 					} else{
 						c_menuScreen = NoRemind;
@@ -434,6 +450,7 @@ void UpdateScreen(){
 				case Settings_ClearFlash:
 					InitBasalSet();
 					InitBolusSet();
+					InitReminderSet();
 					break;
 
 				case Settings_DateTime:
@@ -705,7 +722,7 @@ void UpdateScreen(){
 					break;
 				case MON:
 					value = BCDtoInt( p_calendar.Month );
-					value = (value + 1 ) % 12;
+					value = value % 12 + 1;
 					p_calendar.Month = IntToBCD( value );
 					break;
 				case DOM:
@@ -747,7 +764,8 @@ void UpdateScreen(){
 					break;
 				case MON:
 					value = BCDtoInt( p_calendar.Month );
-					value = (value + 11 ) % 12;
+					value--;
+					if ( value == 0 ) value = 12;
 					p_calendar.Month = IntToBCD( value );
 					break;
 				case DOM:
@@ -1359,7 +1377,253 @@ void UpdateScreen(){
 
 	case e_operation_createReminder:
 		switch (c_remindCreateStatus){
-		case e_opStatus_idle: c_menuScreen = CreateReminder_Idle; break;
+		case e_opStatus_idle:
+			c_menuScreen = CreateReminder_Idle;
+
+			if ( remindEntryIndex == NAME ){
+				/** Allow user to enter a reminder name **/
+				// Initialize the First letter of Name to 'A'
+				if( strlen( p_reminder.Name ) == 0 ) {
+					p_reminder.Name[ 0 ] = 65;
+					updateScreen = true;
+				}
+
+				int index = strlen( p_reminder.Name ) - 1;
+				if ( M_upReq ){ // Increment current character by one and wrap around the alphabet if needed.
+					if (index == 0 && p_reminder.Name[0] == 90) p_reminder.Name[0] = 65; //ASCII 90 = Z, 65 = A
+					else if (p_reminder.Name[ index ] == 122) p_reminder.Name[ index ] = 97; //ASCII 122 = z, 97 = a
+					else p_reminder.Name[ index ]++;
+					updateScreen = true;
+
+				} else if( M_downReq ){ // Decrement current character by one and wrap around the alphabet if needed.
+					if (index == 0 && p_reminder.Name[ index ] == 65 ) p_reminder.Name[ index ] = 90;
+					else if ( p_reminder.Name[ index ] == 97 ) p_reminder.Name[ index ] = 122;
+					else p_reminder.Name[ index ]--;
+					updateScreen = true;
+
+				} else if( M_rightReq ){ // Go to next character and initialize it to 'a'
+					if( index < k_remindNameLength - 1){
+						p_reminder.Name[ ++index ] = 97;
+						updateScreen = true;
+					}
+
+				} else if ( M_leftReq ){ // Go to previous character (if possible) and remove last character.
+					if( index > 0 ){
+						p_reminder.Name[ index-- ] = 0;
+						updateScreen = true;
+					}
+
+				} else if ( M_nextReq ){ // Switch to entering Amount
+					remindEntryIndex++;
+					updateScreen = true;
+
+				} else if ( M_selReq ){ // Submit Preset
+					M_reminder = true;
+					m_reminder = p_reminder;
+					updateScreen = true;
+
+					// Reset variables used by this function
+					remindEntryIndex = 0;
+				}
+			} else if ( remindEntryIndex == DATETIME ){
+				if ( M_upReq ){
+					switch ( p_remindSubIndex ){
+					int value;
+					//case SEC:
+					//	value = BCDtoInt( p_reminder.Time.Seconds );
+					//	value = (value + 1 ) % 60;
+					//	p_reminder.Time.Seconds = IntToBCD( value );
+					//	break;
+					case MIN:
+						value = BCDtoInt( p_reminder.Time.Minutes );
+						value = (value + 1 ) % 60;
+						p_reminder.Time.Minutes = IntToBCD( value );
+						break;
+					case HR:
+						value = BCDtoInt( p_reminder.Time.Hours );
+						value = (value + 1 ) % 24;
+						p_reminder.Time.Hours = IntToBCD( value );
+						break;
+					case MON:
+						value = BCDtoInt( p_reminder.Time.Month );
+						value = (value) % 12 + 1;
+						p_reminder.Time.Month = IntToBCD( value );
+						break;
+					case DOM:
+						value = BCDtoInt( p_reminder.Time.DayOfMonth );
+						if (value < 31 ) value++;
+						else value = 1;
+						p_reminder.Time.DayOfMonth = IntToBCD( value );
+						break;
+					case YEAR_1:
+						value = BCDtoInt(p_reminder.Time.Year >> 8 );
+						value = (value + 1 ) % 100;
+						p_reminder.Time.Year = (p_reminder.Time.Year & 0x00FF) | (IntToBCD( value ) << 8);
+						break;
+					case YEAR_2:
+						value = BCDtoInt( p_reminder.Time.Year & 0x00FF );
+						value = (value + 1 ) % 100;
+						p_reminder.Time.Year = ( p_reminder.Time.Year & 0xFF00) | IntToBCD( value );
+						break;
+					}
+					updateScreen = true;
+
+				} else if ( M_downReq ){
+					switch ( p_remindSubIndex ){
+					int value;
+					//case SEC:
+					//	value = BCDtoInt( p_reminder.Time.Seconds );
+					//	value = (value + 59 ) % 60;
+					//	p_reminder.Time.Seconds = IntToBCD( value );
+					//	break;
+					case MIN:
+						value = BCDtoInt( p_reminder.Time.Minutes );
+						value = (value + 59 ) % 60;
+						p_reminder.Time.Minutes = IntToBCD( value );
+						break;
+					case HR:
+						value = BCDtoInt( p_reminder.Time.Hours );
+						value = (value + 23 ) % 24;
+						p_reminder.Time.Hours = IntToBCD( value );
+						break;
+					case MON:
+						value = BCDtoInt( p_reminder.Time.Month );
+						value--;
+						if ( value == 0 ) value = 12;
+						p_reminder.Time.Month = IntToBCD( value );
+						break;
+					case DOM:
+						value = BCDtoInt( p_reminder.Time.DayOfMonth );
+						if (value > 1 ) value--;
+						else value = 31;
+						p_reminder.Time.DayOfMonth = IntToBCD( value );
+						break;
+					case YEAR_1:
+						value = BCDtoInt( p_reminder.Time.Year >> 8 );
+						value = (value + 99 ) % 100;
+						p_reminder.Time.Year = (p_reminder.Time.Year & 0x00FF) | (IntToBCD( value ) << 8);
+						break;
+					case YEAR_2:
+						value = BCDtoInt( p_reminder.Time.Year & 0x00FF );
+						value = (value + 99 ) % 100;
+						p_reminder.Time.Year = ( p_reminder.Time.Year & 0xFF00) | IntToBCD( value );
+						break;
+					}
+					updateScreen = true;
+
+				} else if ( M_rightReq ) {
+					if ( p_remindSubIndex == MIN ) p_remindSubIndex = DOM;
+					else if ( p_remindSubIndex == YEAR_2 ){
+						remindEntryIndex = FREQ;
+					} else {
+						p_remindSubIndex++;
+					}
+					updateScreen = true;
+
+				} else if ( M_leftReq ) {
+					if ( p_remindSubIndex == DOM ) p_remindSubIndex = MIN;
+					else if (p_remindSubIndex == HR ) remindEntryIndex = NAME;
+					else p_remindSubIndex--;
+					updateScreen = true;
+
+				} else if ( M_selReq ){ // Submit Preset
+					M_reminder = true;
+					m_reminder = p_reminder;
+					updateScreen = true;
+
+					// Reset variables used by this function
+					remindEntryIndex = 0;
+				}
+
+			} else if ( remindEntryIndex == FREQ ){
+				if ( M_downReq ){
+					switch ( p_reminder.Frequency ){
+					case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_daily; break;
+					case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_weekly; break;
+					case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_weekdays; break;
+					case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekends; break;
+					case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_oneTime; break;
+					default: break;
+					}
+					updateScreen = true;
+				} else if ( M_upReq ){
+					switch ( p_reminder.Frequency ){
+					case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_weekends; break;
+					case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_oneTime; break;
+					case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_daily; break;
+					case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekly; break;
+					case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_weekly; break;
+					default: break;
+					}
+					updateScreen = true;
+				} else if ( M_rightReq ) {
+					remindEntryIndex = MSG;
+					updateScreen = true;
+
+				} else if ( M_leftReq ) {
+					remindEntryIndex = DATETIME;
+					updateScreen = true;
+
+				} else if ( M_selReq ){ // Submit Preset
+					M_reminder = true;
+					m_reminder = p_reminder;
+					updateScreen = true;
+
+					// Reset variables used by this function
+					remindEntryIndex = 0;
+				}
+			} else if ( remindEntryIndex == MSG ){
+				/** Allow user to enter a reminder message **/
+				// Initialize the First letter of Name to 'A'
+				if( strlen( p_reminder.Message ) == 0 ) {
+					p_reminder.Message[ 0 ] = 65;
+					updateScreen = true;
+				}
+
+				int index = strlen( p_reminder.Message ) - 1;
+				if ( M_upReq ){ // Increment current character by one and wrap around the alphabet if needed.
+					if (index == 0 && p_reminder.Message[0] == 90) p_reminder.Message[0] = 65; //ASCII 90 = Z, 65 = A
+					else if (p_reminder.Message[ index ] == 122) p_reminder.Message[ index ] = 32; //ASCII 122 = z, 97 = a, 32 = space
+					else if (p_reminder.Message[index ] == 32 ) p_reminder.Message[ index ] = 97;
+					else p_reminder.Message[ index ]++;
+					updateScreen = true;
+
+				} else if( M_downReq ){ // Decrement current character by one and wrap around the alphabet if needed.
+					if (index == 0 && p_reminder.Message[ index ] == 65 ) p_reminder.Message[ index ] = 90;
+					else if ( p_reminder.Message[ index ] == 97 ) p_reminder.Message[ index ] = 32;
+					else if ( p_reminder.Message[index ] == 32 ) p_reminder.Message[ index ] = 122;
+					else p_reminder.Message[ index ]--;
+					updateScreen = true;
+
+				} else if( M_rightReq ){ // Go to next character and initialize it to ' '
+					if( index < k_remindMessageLength - 1){
+						p_reminder.Message[ ++index ] = 32;
+						updateScreen = true;
+					}
+
+				} else if ( M_leftReq ){ // Go to previous character (if possible) and remove last character.
+					if( index > 0 ){
+						p_reminder.Message[ index-- ] = 0;
+						updateScreen = true;
+					}
+
+				} else if ( M_nextReq ){ // Switch to entering Amount
+					remindEntryIndex = FREQ;
+					updateScreen = true;
+
+				} else if ( M_selReq ){ // Submit Preset
+					M_reminder = true;
+					m_reminder = p_reminder;
+					updateScreen = true;
+
+					// Reset variables used by this function
+					remindEntryIndex = 0;
+				}
+			} else {
+				remindEntryIndex = NAME;
+			}
+
+			break;
 		case e_opStatus_confirm: c_menuScreen = CreateReminder_Confirm; break;
 		case e_opStatus_invalid: c_menuScreen = CreateReminder_Invalid; break;
 		}
@@ -1494,13 +1758,60 @@ void PrintNoBolusPreset(){
 	GrFlush(&g_sContext);
 }
 void PrintNoRemind(){
-	;
+	GrStringDrawCentered(&g_sContext, "No Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Exists" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("BACK");
+
+	GrFlush(&g_sContext);
 }
+
 void PrintRemindCreateNotAllowed(){
-	;
+	GrStringDrawCentered(&g_sContext, "Reminder Creation" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Not Allowed" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+
+	LoadLeftButton("BACK");
+
+	GrFlush(&g_sContext);
 }
+
 void PrintSchedule(){
-	;
+	char outString[32] = "";
+	unsigned char text_start = 18;
+
+	// Draw top and bottom banner and buttons
+	LoadLeftButton("BACK");
+	LoadMiddleButton("SEL");
+	//LoadRightButton("");
+
+
+	// Menu options
+	GrStringDraw(&g_sContext, "Create Reminder", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Remove Reminder", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+
+
+	// Highlight selected item
+	switch (f_menuChoice) {
+	case Schedule_Create:
+		text_start = 18;
+		strcpy(outString, "Create Reminder");
+		break;
+	case Schedule_Remove:
+		text_start = 31;
+		strcpy(outString, "Remove Reminder");
+		break;
+	default: break;
+	}
+
+	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+	GrFlush(&g_sContext);
 }
 
 void PrintSettings(){
@@ -3011,4 +3322,140 @@ void PrintSettings_DateTime_NotAllowed(){
 
 	GrFlush(&g_sContext);
 
+}
+
+void PrintCreateReminder_Idle(){
+	int digits = 0, domDigits = 0;
+	char buffer[10] = "";
+	char outString[32] = "";
+
+	// Clear previous entries from screen
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	GrStringDraw(&g_sContext, "Name:" , AUTO_STRING_LENGTH, 3, 16, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, p_reminder.Name , AUTO_STRING_LENGTH, 33, 16, OPAQUE_TEXT);
+
+
+	// Get Day of month
+	domDigits = UnsignedInt_To_ASCII( BCDtoInt( p_reminder.Time.DayOfMonth ), buffer ); // Read upper half of byte by bitshifting four places
+	strncpy(outString, buffer, domDigits);
+	strncat( outString, "/", 1 );
+
+	// Get Month
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Month >> 4, buffer );
+	strncat( outString, buffer, digits );
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Month & 0xF, buffer );
+	strncat( outString, buffer, digits );
+	strncat( outString, "/", 1 );
+
+	// Get Year
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 12, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 8 & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 4 & 0xF, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year & 0xF, buffer );
+	strncat(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Date:" , AUTO_STRING_LENGTH, 3, 36, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 36, TRANSPARENT_TEXT);
+
+
+	// Get Hours
+	strcpy(outString, "");
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Hours >> 4, buffer ); // Read upper half of byte by bitshifting four places
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Hours & 0xF, buffer ); // Read lower half of byte by overwriting the upper half with 0s
+	strncat(outString, buffer, digits);
+	strncat(outString, ":", 1);
+
+	// Get Minutes
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Minutes >> 4, buffer );
+	strncat(outString, buffer, digits);
+	digits = UnsignedInt_To_ASCII( p_reminder.Time.Minutes & 0xF, buffer );
+	strncat(outString, buffer, digits);
+//	strncat(outString, ":", 1);
+
+	// Get Seconds
+//	digits = UnsignedInt_To_ASCII( p_reminder.Time.Seconds >> 4, buffer );
+//	strncat(outString, buffer, digits);
+//	digits = UnsignedInt_To_ASCII( p_reminder.Time.Seconds & 0xF, buffer );
+//	strncat(outString, buffer, digits);
+
+	GrStringDraw(&g_sContext, "Time:" , AUTO_STRING_LENGTH, 3, 26, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 26, OPAQUE_TEXT);
+
+
+
+	strcpy(outString, "");
+	switch ( p_reminder.Frequency ){
+	case e_remindFreq_oneTime: strcpy( outString, "One Time" ); break;
+	case e_remindFreq_daily: strcpy( outString, "Daily" ); break;
+	case e_remindFreq_weekly: strcpy( outString, "Weekly" ); break;
+	case e_remindFreq_weekdays: strcpy( outString, "Weekdays" ); break;
+	case e_remindFreq_weekends: strcpy( outString, "Weekends" ); break;
+	default: break;
+	}
+
+	GrStringDraw(&g_sContext, "Freq:" , AUTO_STRING_LENGTH, 3, 46, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 46, OPAQUE_TEXT);
+
+	GrStringDraw(&g_sContext, "Msg:" , AUTO_STRING_LENGTH, 3, 56, OPAQUE_TEXT);
+
+	// split message over as many lines as needed
+	if ( strlen( p_reminder.Message ) < 10){
+		GrStringDraw(&g_sContext, p_reminder.Message , AUTO_STRING_LENGTH, 30, 56, OPAQUE_TEXT);
+	} else if ( strlen( p_reminder.Message ) < 25 ){
+		strcpy( outString, "" );
+		strncat( outString, p_reminder.Message, 10 );
+		if ( p_reminder.Message[9] != 32 && p_reminder.Message[10] != 32 && strlen( p_reminder.Message ) > 10){
+			strncat( outString, "-", 1 );
+		}
+
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 30, 56, OPAQUE_TEXT);
+
+		strcpy( outString, "" );
+		strcat( outString, p_reminder.Message + 10 );
+		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 3, 66, OPAQUE_TEXT);
+
+	}
+
+
+
+	/* Draw Cursor */
+	int cursorY, cursorX, cursorW;
+	switch ( remindEntryIndex ){
+	case NAME: 							cursorX = 27 + strlen( p_reminder.Name ) * 6;	cursorY = 24; 	cursorW = 4; 	break;
+	case DATETIME:
+		switch ( p_remindSubIndex ){
+		//case SEC:						cursorX = 69;	cursorY = 34; 	cursorW = 10; 	break;
+		case MIN:						cursorX = 51;	cursorY = 34; 	cursorW = 10; 	break;
+		case HR:						cursorX = 33;	cursorY = 34; 	cursorW = 10; 	break;
+		case DOM:						cursorX = 33;	cursorY = 44; 	cursorW = 10; 	break;
+		case MON: 						cursorX = 51;	cursorY = 44; 	cursorW = 10; 	break;
+		case YEAR_1:					cursorX = 69;	cursorY = 44; 	cursorW = 10; 	break;
+		case YEAR_2:					cursorX = 80;	cursorY = 44; 	cursorW = 10; 	break;
+		}
+		break;
+	case FREQ: 							cursorX = 33; 	cursorY = 54; 	cursorW = 50;	break;
+	case MSG:
+		if ( strlen( p_reminder.Message ) <= 10){
+			cursorX = 24 + strlen( p_reminder.Message ) * 6; 	cursorY = 64; 	cursorW = 4;	break;
+		} else if ( strlen( p_reminder.Message ) < 25 ){
+			cursorX = (strlen( p_reminder.Message )-10) * 6 - 3; 	cursorY = 74; 	cursorW = 4;	break;
+		}
+	}
+	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("DONE");
+	if( remindEntryIndex == NAME ) LoadRightButton("TIME");
+	else if ( remindEntryIndex == MSG ) LoadRightButton("FREQ");
+	else ClearRightButton();
+
+
+	GrFlush(&g_sContext);
 }

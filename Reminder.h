@@ -14,6 +14,9 @@ typedef struct y_reminderSet{
 
 extern int AddReminderToSet( );
 extern int RemoveReminderFromSet( );
+extern void InitReminderSet();
+extern bool ReminderCreationAllowed();
+extern bool ReminderRemovalAllowed();
 
 extern bool ReminderIsValid( y_reminder *reminder );
 extern void CopyReminder ( y_reminder *from, y_reminder *to );
