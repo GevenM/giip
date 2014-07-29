@@ -74,8 +74,8 @@ bool CalendarIsValid( Calendar calendar ){
 	else if ( calendar.Month == 0x02 || calendar.Month == 0x04 || calendar.Month == 0x06 || calendar.Month == 0x09 || calendar.Month == 0x11 ){
 		if ( calendar.DayOfMonth > 0x30) return false;
 
-		if (calendar.Month == 0x02 ){
-			bool leapYear = IsLeapYear(calendar.Year);
+		if (calendar.Month == 0x02 ){3
+			bool leapYear = IsLeapYear(BCDtoInt(calendar.Year));
 
 			if ( leapYear ){
 				if ( calendar.DayOfMonth > 0x29 ) return false;
