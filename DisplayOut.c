@@ -75,9 +75,6 @@ void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 void PrintError();
 
-void PrintNoRemind();
-void PrintRemindCreateNotAllowed();
-void PrintSchedule();
 void PrintSettings();
 void PrintIdle();
 void PrintMainMenu();
@@ -177,13 +174,13 @@ void PrintScreen(){
 	case BasalNoActive: PrintBasNoActive(&g_sContext, f_menuChoice); break;
 
 	case Bolus: PrintBolus( &g_sContext, f_menuChoice ); break;
-	case Schedule: PrintSchedule(); break;
+	case Reminder: PrintReminder(&g_sContext, f_menuChoice); break;
 	case Settings: PrintSettings(); break;
 
 	case BolusAlreadyActive: PrintBolusAlreadyActive( &g_sContext ); break;
 	case Bolus_Manage: PrintBolus_Manage( &g_sContext, f_menuChoice ); break;
-	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(); break;
-	case NoRemind: PrintNoRemind(); break;
+	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(&g_sContext); break;
+	case NoRemind: PrintNoRemind(&g_sContext); break;
 
 	case NoBasProf: PrintNoBasProf(&g_sContext); break;
 	case Basal_Manage: PrintBasal_Manage( &g_sContext, f_menuChoice ); break;
@@ -259,16 +256,16 @@ void UpdateScreen(){
 				switch (f_menuChoice){
 				case Basal: f_menuChoice = ShutDown;break;
 				case Bolus: f_menuChoice = Basal;break;
-				case Schedule: f_menuChoice = Bolus;break;
-				case Settings: f_menuChoice = Schedule;break;
+				case Reminder: f_menuChoice = Bolus;break;
+				case Settings: f_menuChoice = Reminder;break;
 				case ShutDown: f_menuChoice = Settings;break;
 				default:  break;
 				}
 			} else if (M_downReq){
 				switch (f_menuChoice){
 				case Basal: f_menuChoice = Bolus;break;
-				case Bolus: f_menuChoice = Schedule;break;
-				case Schedule: f_menuChoice = Settings;break;
+				case Bolus: f_menuChoice = Reminder;break;
+				case Reminder: f_menuChoice = Settings;break;
 				case Settings: f_menuChoice = ShutDown;break;
 				case ShutDown: f_menuChoice = Basal;break;
 				default: break;
@@ -295,9 +292,9 @@ void UpdateScreen(){
 					f_menuChoice = Bolus_Start;
 					break;
 
-				case Schedule:
-					c_menuScreen = Schedule;
-					f_menuChoice = Schedule_Create;
+				case Reminder:
+					c_menuScreen = Reminder;
+					f_menuChoice = Reminder_Create;
 					break;
 
 				case Settings:
@@ -391,25 +388,25 @@ void UpdateScreen(){
 
 			break;
 
-		case Schedule:
+		case Reminder:
 			if (M_backReq){
 				c_menuScreen = Main;
-				f_menuChoice = Schedule;
+				f_menuChoice = Reminder;
 			} else if (M_upReq){
 				switch (f_menuChoice){
-				case Schedule_Create: f_menuChoice = Schedule_Remove;break;
-				case Schedule_Remove: f_menuChoice = Schedule_Create;break;
+				case Reminder_Create: f_menuChoice = Reminder_Remove;break;
+				case Reminder_Remove: f_menuChoice = Reminder_Create;break;
 				default:  break;
 				}
 			} else if (M_downReq){
 				switch (f_menuChoice){
-				case Schedule_Create: f_menuChoice = Schedule_Remove;break;
-				case Schedule_Remove: f_menuChoice = Schedule_Create;break;
+				case Reminder_Create: f_menuChoice = Reminder_Remove;break;
+				case Reminder_Remove: f_menuChoice = Reminder_Create;break;
 				default:  break;
 				}
 			} else if (M_selReq){
 				switch (f_menuChoice){
-				case Schedule_Create:
+				case Reminder_Create:
 					if( ReminderCreationAllowed() ){
 						p_reminder = k_emptyReminder;
 						p_reminder.Time = GetCurrentCalendar();
@@ -419,7 +416,7 @@ void UpdateScreen(){
 						c_menuScreen = RemindCreateNotAllowed;
 					}
 					break;
-				case Schedule_Remove:
+				case Reminder_Remove:
 					if( ReminderRemovalAllowed() ){
 						m_reminder = GetReminderFromIndex( 0 );
 
@@ -680,13 +677,13 @@ void UpdateScreen(){
 
 		case RemindCreateNotAllowed:
 			if (M_backReq){
-				c_menuScreen = Schedule;
+				c_menuScreen = Reminder;
 			}
 			break;
 
 		case NoRemind:
 			if (M_backReq){
-				c_menuScreen = Schedule;
+				c_menuScreen = Reminder;
 			}
 			break;
 
@@ -1670,64 +1667,6 @@ void PrintError(){
 	;
 }
 
-void PrintNoRemind(){
-	GrStringDrawCentered(&g_sContext, "No Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Exists" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("BACK");
-
-	GrFlush(&g_sContext);
-}
-
-void PrintRemindCreateNotAllowed(){
-	GrStringDrawCentered(&g_sContext, "Reminder" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Creation" , AUTO_STRING_LENGTH, 46, 40, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Not Allowed" , AUTO_STRING_LENGTH, 46, 50, OPAQUE_TEXT);
-	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("BACK");
-
-	GrFlush(&g_sContext);
-}
-
-void PrintSchedule(){
-	char outString[32] = "";
-	unsigned char text_start = 18;
-
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Create Reminder", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Remove Reminder", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-	// Highlight selected item
-	switch (f_menuChoice) {
-	case Schedule_Create:
-		text_start = 18;
-		strcpy(outString, "Create Reminder");
-		break;
-	case Schedule_Remove:
-		text_start = 31;
-		strcpy(outString, "Remove Reminder");
-		break;
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
-
 void PrintSettings(){
 	char outString[32] = "";
 	unsigned char text_start = 18;
@@ -2296,7 +2235,7 @@ void PrintMainMenu(){
 	// Menu options
 	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
 	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Schedule", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Reminder", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
 	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, OPAQUE_TEXT);
 	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, OPAQUE_TEXT);
 
@@ -2311,9 +2250,9 @@ void PrintMainMenu(){
         text_start = 31;
         strcpy(outString, "Bolus Menu");
         break;
-    case Schedule:
+    case Reminder:
         text_start = 44;
-        strcpy(outString, "Schedule");
+        strcpy(outString, "Reminder");
         break;
     case Settings:
         text_start = 57;

@@ -12,7 +12,7 @@ typedef enum {
 	Main,
 	Basal,
 	Bolus,
-	Schedule,
+	Reminder,
 	Settings,
 	ShutDown,
 	BasalTmpActive,
@@ -30,8 +30,8 @@ typedef enum {
 	Bolus_Manage,
 	Bolus_Manage_Create,
 	Bolus_Manage_Remove,
-	Schedule_Create,
-	Schedule_Remove,
+	Reminder_Create,
+	Reminder_Remove,
 
 	BolusAlreadyActive,
 	RemindCreateNotAllowed,
@@ -111,8 +111,8 @@ extern y_opStatus c_remindRemStatus;
 extern y_bolStatus c_bolStartStatus;
 
 
-extern bool ScheduleCreationAllowed();
-extern bool ScheduleExists();
+extern bool ReminderCreationAllowed();
+extern bool ReminderExists();
 
 
 
