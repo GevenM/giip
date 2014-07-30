@@ -1794,31 +1794,6 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 
 }
 
-void PrintRemoveBasProf_Confirm(){
-
-	GrStringDrawCentered(&g_sContext, "Remove Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, m_basRemSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
-void PrintRemoveBasProf_Invalid(){
-
-	GrStringDrawCentered(&g_sContext, "Profile Active" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Cannot Remove" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
 void PrintStartBasProf_Confirm(){
 
 	GrStringDrawCentered(&g_sContext, "Start Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
