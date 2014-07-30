@@ -28,6 +28,8 @@ extern void ClearScreen();
 
 extern const char * convertToChar(unsigned int x);
 
+extern int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
+
 extern tContext g_sContext;
 extern tRectangle myRectangleBotMid;
 extern tRectangle myRectangleBotRight;

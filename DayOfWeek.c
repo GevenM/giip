@@ -1,5 +1,6 @@
 #include "DayOfWeek.h"
 #include "RTC.h"
+#include "DisplayOut.h"
 
 int GetdNumber(int day);
 int GetmNumber(int month, int year);
@@ -514,28 +515,36 @@ int GetcNumber(int year){
 
 void DateToDay(int date, char *day){
 
-	switch(date){
-		case 0:
-			strcpy(day, "Sunday");
-			break;
-		case 1:
-			strcpy(day, "Monday");
-			break;
-		case 2:
-			strcpy(day, "Tuesday");
-			break;
-		case 3:
-			strcpy(day, "Wednesday");
-			break;
-		case 4:
-			strcpy(day, "Thursday");
-			break;
-		case 5:
-			strcpy(day, "Friday");
-			break;
-		case 6:
-			strcpy(day, "Saturday");
-			break;
+	if(date > 6 || date < 0){ //checking if there is no error and date is within realm of possibility
+		char buffer[10] = "";
+		int digits;
+		digits = UnsignedInt_To_ASCII(date, buffer);
+		strncat(day, buffer, digits);
+	}
+	else { //date number is valid
+		switch(date){
+			case 0:
+				strcpy(day, "Sunday");
+				break;
+			case 1:
+				strcpy(day, "Monday");
+				break;
+			case 2:
+				strcpy(day, "Tuesday");
+				break;
+			case 3:
+				strcpy(day, "Wednesday");
+				break;
+			case 4:
+				strcpy(day, "Thursday");
+				break;
+			case 5:
+				strcpy(day, "Friday");
+				break;
+			case 6:
+				strcpy(day, "Saturday");
+				break;
+		}
 	}
 
 }

@@ -141,8 +141,6 @@ void PrintRemoveReminder_Confirm();
 
 void UpdateScreen();
 
-int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
-
 void DisplayOut(void){
 	switch(c_pwrStatus){
 	case e_pwrStatus_standby:
