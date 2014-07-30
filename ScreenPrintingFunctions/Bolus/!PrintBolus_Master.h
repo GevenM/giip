@@ -15,4 +15,14 @@ extern void PrintBolusAlreadyActive( tContext *context );
 extern void PrintBolusCreateNotAllowed( tContext *context );
 extern void PrintNoBolusPreset( tContext *context );
 
+
+void PrintRemoveBolusPreset_Confirm();
+void PrintRemoveBolusPreset_Invalid();
+
+void PrintCreateBolusPreset_Confirm();
+void PrintCreateBolusPreset_Invalid();
+
+void PrintStartBolus_Confirm();
+void PrintStartBolus_Invalid();
+
 #endif

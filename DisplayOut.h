@@ -35,6 +35,7 @@ extern tRectangle myRectangleBotMid;
 extern tRectangle myRectangleBotRight;
 extern tRectangle myRectangleBotLeft;
 extern tRectangle myRectangleTopBan;
+extern tRectangle myRectangleScreen;
 
 
 extern bool updateScreen;

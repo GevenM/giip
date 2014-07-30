@@ -96,19 +96,16 @@ void PrintStartTmpBas_Invalid();
 void PrintStopTmpBas_All();
 
 void PrintCreateBolusPreset_Idle();
-void PrintCreateBolusPreset_Confirm();
-void PrintCreateBolusPreset_Invalid();
+
 
 void PrintRemoveBolusPreset_Idle();
-void PrintRemoveBolusPreset_Confirm();
-void PrintRemoveBolusPreset_Invalid();
+
 
 void PrintStartBolus_Idle();
 void PrintStartBolus_Calculator();
 void PrintStartBolus_Preset();
 void PrintStartBolus_Manual();
-void PrintStartBolus_Confirm();
-void PrintStartBolus_Invalid();
+
 
 void PrintSettings_DateTime();
 void PrintSettings_DateTime_NotAllowed();
@@ -2253,48 +2250,6 @@ void PrintCreateBolusPreset_Idle(){
 	GrFlush(&g_sContext);
 }
 
-void PrintCreateBolusPreset_Confirm(){
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits = 0;
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	GrStringDrawCentered(&g_sContext, "Save Bolus", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Preset?", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
-
-	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_bolus.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
-
-
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
-	strcpy(outString, "Amount: ");
-	strncat(outString, buffer, digits);
-	strncat(outString, " IU", 3);
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 65, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-void PrintCreateBolusPreset_Invalid(){
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	GrStringDrawCentered(&g_sContext, "Bolus", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
 
 void PrintRemoveBolusPreset_Idle(){
 	int numberOfPresets = GetNumberOfBolusPresets();
@@ -2326,45 +2281,6 @@ void PrintRemoveBolusPreset_Idle(){
 	GrFlush(&g_sContext);
 }
 
-void PrintRemoveBolusPreset_Confirm(){
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits = 0;
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	GrStringDrawCentered(&g_sContext, "Remove Bolus", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Preset?", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
-
-	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_bolSelected.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
-
-
-	digits = UnsignedInt_To_ASCII(m_bolSelected.Amount, buffer);
-	strcpy(outString, "Amount: ");
-	strncat(outString, buffer, digits);
-	strncat(outString, " IU", 3);
-	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 65, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
-void PrintRemoveBolusPreset_Invalid(){
-	GrStringDrawCentered(&g_sContext, "Selected", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "is Active", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
 
 void PrintStartBolus_Idle(){
 	char outString[32];
@@ -2541,54 +2457,6 @@ void PrintStartBolus_Manual(){
 	GrFlush(&g_sContext);
 }
 
-void PrintStartBolus_Confirm(){
-	// Draw Header
-	GrStringDrawCentered(&g_sContext, "Activate Bolus?", AUTO_STRING_LENGTH, 47, 21, OPAQUE_TEXT);
-
-	// Get names of saved presets and draw them
-	y_bolus *bolus;
-	bolus = (y_bolus *) malloc( sizeof( y_bolus ));
-
-	// Get the bolus to activate
-	BolusToActivate( bolus );
-
-	// Draw bolus name
-	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, bolus->Name, AUTO_STRING_LENGTH, 15, 47, OPAQUE_TEXT);
-
-	// Draw bolus amount
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits = 0;
-	digits = UnsignedInt_To_ASCII(bolus->Amount / 3600, buffer);
-
-	strcpy(outString, "Amount: ");
-	strncat(outString, buffer, digits);
-	strncat(outString, " IU", 3);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 60, OPAQUE_TEXT);
-
-	free( bolus );
-
-	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
-
-
-	// Flush to screen
-	GrFlush(&g_sContext);
-}
-
-void PrintStartBolus_Invalid(){
-	GrStringDrawCentered(&g_sContext, "Provided", AUTO_STRING_LENGTH, 47, 37, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Bolus is", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
 
 void  PrintSettings_DateTime(){
 	// Clear previous entries from screen
