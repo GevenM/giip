@@ -71,7 +71,7 @@ void ClearBasalMenu_Manage();
 void ClearMainMenu();
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
-void PrintBolus();
+
 void PrintBolusAlreadyActive();
 void PrintBolusCreateNotAllowed();
 void PrintError();
@@ -182,7 +182,7 @@ void PrintScreen(){
 	case BasalTmpActive: PrintBasTmpActive(); break;
 	case BasalNoActive: PrintBasNoActive(); break;
 
-	case Bolus: PrintBolus(); break;
+	case Bolus: PrintBolus( &g_sContext, f_menuChoice ); break;
 	case Schedule: PrintSchedule(); break;
 	case Settings: PrintSettings(); break;
 
@@ -1671,42 +1671,7 @@ void ClearScreen(){
 }
 
 
-void PrintBolus(){
-	char outString[32];
-	unsigned char text_start = 18;
 
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Start Bolus", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Presets", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-	// Highlight selected item
-	switch (f_menuChoice) {
-	case Bolus_Start:
-		text_start = 18;
-		strcpy(outString, "Start Bolus");
-		break;
-	case Bolus_Manage:
-		text_start = 31;
-		strcpy(outString, "Manage Presets");
-		break;
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
 
 void PrintBolusAlreadyActive(){
 	 // Draw top and bottom banner and buttons
