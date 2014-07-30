@@ -18,6 +18,8 @@ extern void PrintCreateBasProf(tContext *context);
 extern void PrintRemoveBasProf_Confirm(tContext *context);
 extern void PrintRemoveBasProf_Invalid(tContext *context);
 extern void PrintStartBasProf_Confirm(tContext *context);
+extern void PrintStartBasProf_Invalid(tContext *context);
+extern void PrintCreateBasProf_Confirm(tContext *context);
 extern void PrintCreateBasProf_Invalid(tContext *context);
 
 #endif

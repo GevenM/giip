@@ -79,19 +79,13 @@ void PrintSettings();
 void PrintMessage(char outString[32]);
 
 void PrintCreateBasProf_Idle(y_basal *p_profile);
-void PrintCreateBasProf_Confirm();
-void PrintCreateBasProf_Invalid();
 
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
 
 void PrintRemoveBasProf_Idle();
-void PrintRemoveBasProf_Confirm();
-void PrintRemoveBasProf_Invalid();
 
 void PrintStartBasProf_Idle();
-void PrintStartBasProf_Confirm();
-void PrintStartBasProf_Invalid();
 
 void PrintStopBas_All();
 
@@ -185,16 +179,16 @@ void PrintScreen(){
 	case NoBolusPreset: PrintNoBolusPreset( &g_sContext ); break;
 
 	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
-	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(); break;
-	case CreateBasProf_Invalid:PrintCreateBasProf_Invalid(); break;
+	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(&g_sContext); break;
+	case CreateBasProf_Invalid:PrintCreateBasProf_Invalid(&g_sContext); break;
 
 	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle(); break;
-	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(); break;
-	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid(); break;
+	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(&g_sContext); break;
+	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid(&g_sContext); break;
 
 	case StartBasProf_Idle:PrintStartBasProf_Idle(); break;
-	case StartBasProf_Confirm:PrintStartBasProf_Confirm(); break;
-	case StartBasProf_Invalid:PrintStartBasProf_Invalid(); break;
+	case StartBasProf_Confirm:PrintStartBasProf_Confirm(&g_sContext); break;
+	case StartBasProf_Invalid:PrintStartBasProf_Invalid(&g_sContext); break;
 
 	case StopBasProf_All:PrintStopBas_All(); break;
 
@@ -1702,17 +1696,6 @@ void PrintSettings(){
 	GrFlush(&g_sContext);
 }
 
-void PrintCreateBasProf_Confirm(){
-	GrStringDraw(&g_sContext, "Save Profile?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_basProf.Name , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
 void ClearCreateBasProf_Idle(y_basal *p_profile){
 	GrStringDraw(&g_sContext, p_profile->Name, AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);
 
@@ -1793,19 +1776,6 @@ void LoadRates(y_basal *p_profile, int scrollOffset){
 	if (50 + i*10-scrollOffset > 15 && 50+ i*10-scrollOffset < 80) GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 10*i+50 - scrollOffset, OPAQUE_TEXT);
 
 }
-
-void PrintStartBasProf_Invalid(){
-
-	GrStringDrawCentered(&g_sContext, "Profile Invalid" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
 
 void PrintStartBasProf_Idle(){
 	int numberOfProfiles;
