@@ -40,5 +40,9 @@ extern tRectangle myRectangleTopBan;
 extern bool updateScreen;
 
 
+extern void LoadLeftButton(const char * text);
+extern void LoadMiddleButton(const char * text);
+extern void LoadRightButton(const char * text);
+
 #endif
 

@@ -5,6 +5,8 @@
 #include "InsulinOutputCalculator.h"
 #include "Reminder.h"
 
+#include "ScreenPrintingFunctions/Basal/PrintBasal.h"
+
 #include "TestSettings.h"
 
 tContext g_sContext;
@@ -53,7 +55,6 @@ bool tmpBasal_DurationEntered = false;
 bool bolCreateStatus_NameEntered = false;
 bool bolStartCalc_CarbsEntered = false;
 
-void PrintBasal_Manage();
 void LoadBanner(void);
 void LoadLeftButton(const char * text);
 void LoadMiddleButton(const char * text);
@@ -192,7 +193,7 @@ void PrintScreen(){
 	case NoRemind: PrintNoRemind(); break;
 
 	case NoBasProf: PrintNoBasProf(); break;
-	case Basal_Manage: PrintBasal_Manage(); break;
+	case Basal_Manage: PrintBasal_Manage( &g_sContext, f_menuChoice ); break;
 	case BasCreateNotAllowed: PrintBasCreateNotAllowed(); break;
 	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(); break;
 	case NoBolusPreset: PrintNoBolusPreset(); break;
@@ -245,6 +246,7 @@ void PrintScreen(){
 
 	default: PrintError(); break;
 	}
+	GrFlush(&g_sContext);
 }
 
 void UpdateScreen(){
@@ -1669,42 +1671,7 @@ void ClearScreen(){
 	GrClearDisplay(&g_sContext); // Clears the screen
 }
 
-void PrintBolus_Manage(){
-	char outString[32];
-	unsigned char text_start = 18;
 
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Create Preset", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Remove Preset", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-	// Highlight selected item
-	switch (f_menuChoice) {
-	case Bolus_Manage_Create:
-		text_start = 18;
-		strcpy(outString, "Create Preset");
-		break;
-	case Bolus_Manage_Remove:
-		text_start = 31;
-		strcpy(outString, "Remove Preset");
-		break;
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
 void PrintBolus(){
 	char outString[32];
 	unsigned char text_start = 18;
@@ -2210,7 +2177,40 @@ void PrintCreateBasProf(){
 
 }
 
+void PrintBolus_Manage( ){
+	char outString[32];
+	unsigned char text_start = 18;
 
+	// Draw top and bottom banner and buttons
+	LoadLeftButton("BACK");
+	LoadMiddleButton("SEL");
+	//LoadRightButton("");
+
+
+	// Menu options
+	GrStringDraw(&g_sContext, "Create Preset", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, "Remove Preset", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+
+
+	// Highlight selected item
+	switch (f_menuChoice) {
+	case Bolus_Manage_Create:
+		text_start = 18;
+		strcpy(outString, "Create Preset");
+		break;
+	case Bolus_Manage_Remove:
+		text_start = 31;
+		strcpy(outString, "Remove Preset");
+		break;
+	default: break;
+	}
+
+	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
+	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+}
 
 void PrintIdle(){
 	char buffer[10] = "";
@@ -2659,45 +2659,6 @@ void PrintBasTmpActive(){
     GrFlush(&g_sContext);
 }
 
-
-void PrintBasal_Manage(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Create Profile", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Remove Profile", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-    // Highlight selected item
-    switch (f_menuChoice) {
-    case Basal_Manage_Create:
-        text_start = 18;
-        strcpy(outString, "Create Profile");
-        break;
-    case Basal_Manage_Remove:
-        text_start = 31;
-        strcpy(outString, "Remove Profile");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);  //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
 
 
 void ClearInputProfile(){
