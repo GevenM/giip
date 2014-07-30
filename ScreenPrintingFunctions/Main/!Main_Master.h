@@ -8,5 +8,6 @@
 #include <string.h>
 
 extern void PrintIdle( tContext *context );
+extern void PrintMainMenu( tContext *context, y_menus f_menuChoice );
 
 #endif
