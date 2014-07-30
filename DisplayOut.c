@@ -134,6 +134,9 @@ void PrintCreateReminder_Idle();
 void PrintCreateReminder_Confirm();
 void PrintCreateReminder_Invalid();
 
+void PrintRemoveReminder_Idle();
+void PrintRemoveReminder_Confirm();
+
 void UpdateScreen();
 
 int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
@@ -232,8 +235,9 @@ void PrintScreen(){
 	case CreateReminder_Idle: PrintCreateReminder_Idle(); break;
 	case CreateReminder_Confirm:PrintCreateReminder_Confirm();break;
 	case CreateReminder_Invalid:PrintCreateReminder_Invalid();break;
-	case RemoveReminder_Idle:PrintMessage("Remove Remind"); break;
-	case RemoveReminder_Confirm:break;
+
+	case RemoveReminder_Idle:PrintRemoveReminder_Idle(); break;
+	case RemoveReminder_Confirm: PrintRemoveReminder_Confirm();break;
 
 	case Settings_DateTime: PrintSettings_DateTime(); break;
 	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(); break;
@@ -422,7 +426,8 @@ void UpdateScreen(){
 					break;
 				case Schedule_Remove:
 					if( ReminderRemovalAllowed() ){
-						;
+						m_reminder = GetReminderFromIndex( 0 );
+
 					} else{
 						c_menuScreen = NoRemind;
 					}
@@ -1614,7 +1619,39 @@ void UpdateScreen(){
 
 	case e_operation_removeReminder:
 		switch (c_remindRemStatus){
-		case e_opStatus_idle: c_menuScreen = RemoveReminder_Idle; break;
+		case e_opStatus_idle:
+			c_menuScreen = RemoveReminder_Idle;
+			int reminderIndex;
+			if ( M_downReq ){
+				reminderIndex = GetReminderIndex( &m_reminder );
+				if( reminderIndex == GetNumberOfReminders() - 1 ){
+					m_reminder = GetReminderFromIndex ( 0 );
+					updateScreen = true;
+				} else {
+					reminderIndex++;
+					m_reminder = GetReminderFromIndex ( reminderIndex );
+					updateScreen = true;
+				}
+
+
+			} else if(M_upReq){
+				reminderIndex = GetReminderIndex( &m_reminder );
+				if( reminderIndex == 0 ){
+					m_reminder = GetReminderFromIndex ( GetNumberOfReminders() - 1 );
+					updateScreen = true;
+				} else {
+					reminderIndex--;
+					m_reminder = GetReminderFromIndex ( reminderIndex );
+					updateScreen = true;
+				}
+
+
+			} else if ( M_selReq ){
+				M_reminder = true;
+				updateScreen = true;
+			}
+			break;
+
 		case e_opStatus_confirm: c_menuScreen = RemoveReminder_Confirm; break;
 		case e_opStatus_invalid: break; //do nothing, should not happen.
 		}
@@ -1751,8 +1788,9 @@ void PrintNoRemind(){
 }
 
 void PrintRemindCreateNotAllowed(){
-	GrStringDrawCentered(&g_sContext, "Reminder Creation" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Not Allowed" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Reminder" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Creation" , AUTO_STRING_LENGTH, 46, 40, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Not Allowed" , AUTO_STRING_LENGTH, 46, 50, OPAQUE_TEXT);
 	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
 	LoadLeftButton("BACK");
@@ -3460,6 +3498,57 @@ void PrintCreateReminder_Invalid(){
 
 	LoadLeftButton("CANC");
 	//LoadMiddleButton("OK");
+	LoadRightButton("RETY");
+
+	GrFlush(&g_sContext);
+}
+
+
+void PrintRemoveReminder_Idle(){
+	int numberOfReminders;
+	numberOfReminders = GetNumberOfReminders();
+
+	y_remindName *Name;
+	Name = (y_remindName *) malloc( sizeof( y_remindName ));
+
+	int i;
+	for ( i = 0; i < numberOfReminders; i++ ){
+		GetReminderName( Name, i );
+		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
+	}
+	free(Name);
+
+	// highlight the selected profile
+    unsigned char text_start = 18;
+    int index = GetReminderIndex( &m_reminder );
+	text_start = 16 + 10 * index;
+
+    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
+    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
+    GrStringDraw(&g_sContext, m_reminder.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+	GrContextBackgroundSet(&g_sContext, ClrWhite);
+
+	LoadLeftButton( "CANC" );
+	LoadMiddleButton( "SEL" );
+	GrFlush(&g_sContext);
+}
+
+
+void PrintRemoveReminder_Confirm(){
+	GrContextForegroundSet(&g_sContext, ClrWhite);
+	GrRectFill(&g_sContext, &myRectangleScreen);
+	GrContextForegroundSet(&g_sContext, ClrBlack);
+
+	GrStringDrawCentered(&g_sContext, "Remove", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
+	GrStringDrawCentered(&g_sContext, "Reminder?", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
+
+	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT);
+	GrStringDraw(&g_sContext, m_reminder.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
+
+
+	LoadLeftButton("CANC");
+	LoadMiddleButton("OK");
 	LoadRightButton("RETY");
 
 	GrFlush(&g_sContext);

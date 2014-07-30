@@ -21,6 +21,9 @@ extern bool ReminderRemovalAllowed();
 extern bool ReminderIsValid( y_reminder *reminder );
 extern void CopyReminder ( y_reminder *from, y_reminder *to );
 
-
+extern int GetReminderIndex( y_reminder *reminder );
+extern int GetNumberOfReminders();
+extern y_reminder GetReminderFromIndex( int index );
+extern void GetReminderName( y_remindName *name, int index );
 
 #endif

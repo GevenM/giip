@@ -14,7 +14,6 @@ y_reminderSet reminderSetLocal;
 
 void LoadRemindersFromFlash(void);
 void SaveRemindersToFlash(void);
-int GetReminderIndex( y_reminder *reminder );
 bool ReminderDateTimeValid( y_reminder *reminder );
 
 // Add a reminder to the set of reminders.
@@ -140,4 +139,21 @@ void LoadRemindersFromFlash(void)
 void InitReminderSet(){
 	reminderSetLocal.NumberOfReminders = 0;
 	SaveRemindersToFlash();
+}
+
+
+int GetNumberOfReminders(){
+	LoadRemindersFromFlash();
+
+	return reminderSetLocal.NumberOfReminders;
+}
+
+y_reminder GetReminderFromIndex( int index ){
+	LoadRemindersFromFlash();
+	return reminderSetLocal.Reminder[ index ];
+}
+
+void GetReminderName( y_remindName *name, int index ){
+	LoadRemindersFromFlash();
+	strncpy( *name, reminderSetLocal.Reminder[ index ].Name, k_remindNameLength );
 }
