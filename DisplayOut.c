@@ -7,6 +7,8 @@
 
 #include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
 #include "ScreenPrintingFunctions/Bolus/!PrintBolus_Master.h"
+#include "ScreenPrintingFunctions/Reminder/!PrintReminder_Master.h"
+#include "ScreenPrintingFunctions/Main/!Main_Master.h"
 
 #include "TestSettings.h"
 
@@ -76,7 +78,6 @@ void ClearCreateBasProf_Idle(y_basal *p_profile);
 void PrintError();
 
 void PrintSettings();
-void PrintIdle();
 void PrintMainMenu();
 
 
@@ -165,7 +166,7 @@ void PrintScreen(){
 	//ClearScreen();
 	LoadBanner();
 	switch(c_menuScreen){
-	case None: PrintIdle(); break;
+	case None: PrintIdle( &g_sContext ); break;
 	case Main: PrintMainMenu(); break;
 
 	case BasalBothActive: PrintBasBothActive(&g_sContext, f_menuChoice); break;
@@ -2029,92 +2030,6 @@ void PrintMessage(char outString[32]){
 
 
 
-void PrintIdle(){
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits;
-
-	// Print basal status
-	if (TemporaryBasalIsActive()){
-		UnsignedInt_To_ASCII(f_activeTmpBasal.Rate / 3600, outString);
-		strncat(outString, " IU/hr", 6);
-
-		GrStringDraw(&g_sContext, "Temporary Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
-
-		// Draw duration in hours and minutes
-		// get hours
-		memset(outString, 0, sizeof(outString));
-		digits = UnsignedInt_To_ASCII(f_activeTmpBasal.Duration / 60, buffer);
-		strncpy(outString, buffer, digits);
-		strncat(outString, ":", 1);
-
-		// get minutes
-		digits = UnsignedInt_To_ASCII(f_activeTmpBasal.Duration % 60, buffer);
-		if (digits == 1) strncat(outString, "0", 1);
-		strncat(outString, buffer, digits);
-
-		strncat(outString, " Remain", 7);
-
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
-
-
-	} else if(BasalIsActive()){
-		int currentHour = GetCurrentHour();
-		currentHour = BCDtoInt( currentHour );
-
-		int currentMin = GetCurrentMin();
-		currentMin = BCDtoInt( currentMin );
-
-		int currentSegment = ( k_segDay / 24 ) * currentHour;
-		currentSegment = currentSegment + ( currentMin / (60/(k_segDay/24)));
-
-		UnsignedInt_To_ASCII(f_activeBasal.Rate[ currentSegment ] / 3600, outString);
-		strncat(outString, " IU/hr", 6);
-
-		GrStringDraw(&g_sContext, "Basal:" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
-
-	} else {
-		// Clear previous entries from screen
-		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-
-		GrStringDraw(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT);
-	}
-
-	// Print bolus status
-	if(BolusIsActive()){
-
-		UnsignedInt_To_ASCII(f_activeBolus.Amount / 3600, outString);
-
-		UnsignedInt_To_ASCII(( f_activeBolus.Amount % 3600 ) / 360, buffer);
-		strncat(outString, ".", 1);
-		strncat(outString, buffer, 1);
-		strncat(outString, " IU Remain", 10);
-
-		GrStringDraw(&g_sContext, "Bolus: " , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
-
-	} else {
-		// Clear previous entries from screen
-		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrStringDraw(&g_sContext, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-
-
-		GrStringDraw(&g_sContext, "No Bolus" , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT);
-	}
-	//LoadBanner();
-	// Load bottom buttons
-	//LoadLeftButton("");
-	LoadMiddleButton("MENU");
-	//LoadRightButton("");
-	GrFlush(&g_sContext);
-}
 
 void LoadLeftButton(const char * text){
 	GrRectFill(&g_sContext, &myRectangleBotLeft);
