@@ -5,7 +5,8 @@
 #include "InsulinOutputCalculator.h"
 #include "Reminder.h"
 
-#include "ScreenPrintingFunctions/Basal/PrintBasal.h"
+#include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
+#include "ScreenPrintingFunctions/Bolus/!PrintBolus_Master.h"
 
 #include "TestSettings.h"
 
@@ -70,7 +71,6 @@ void ClearBasalMenu_Manage();
 void ClearMainMenu();
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
-void PrintBolus_Manage();
 void PrintBolus();
 void PrintBolusAlreadyActive();
 void PrintBolusCreateNotAllowed();
@@ -187,7 +187,7 @@ void PrintScreen(){
 	case Settings: PrintSettings(); break;
 
 	case BolusAlreadyActive: PrintBolusAlreadyActive(); break;
-	case Bolus_Manage: PrintBolus_Manage(); break;
+	case Bolus_Manage: PrintBolus_Manage( &g_sContext, f_menuChoice ); break;
 	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(); break;
 	case NoRemind: PrintNoRemind(); break;
 
@@ -1707,6 +1707,7 @@ void PrintBolus(){
 
 	GrFlush(&g_sContext);
 }
+
 void PrintBolusAlreadyActive(){
 	 // Draw top and bottom banner and buttons
 	LoadLeftButton("BACK");
@@ -2177,40 +2178,7 @@ void PrintCreateBasProf(){
 
 }
 
-void PrintBolus_Manage( ){
-	char outString[32];
-	unsigned char text_start = 18;
 
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Create Preset", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Remove Preset", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-	// Highlight selected item
-	switch (f_menuChoice) {
-	case Bolus_Manage_Create:
-		text_start = 18;
-		strcpy(outString, "Create Preset");
-		break;
-	case Bolus_Manage_Remove:
-		text_start = 31;
-		strcpy(outString, "Remove Preset");
-		break;
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
 
 void PrintIdle(){
 	char buffer[10] = "";
