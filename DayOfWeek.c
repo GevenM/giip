@@ -512,6 +512,34 @@ int GetcNumber(int year){
 	return c;
 }
 
+void DateToDay(int date, char *day){
+
+	switch(date){
+		case 0:
+			strcpy(day, "Sunday");
+			break;
+		case 1:
+			strcpy(day, "Monday");
+			break;
+		case 2:
+			strcpy(day, "Tuesday");
+			break;
+		case 3:
+			strcpy(day, "Wednesday");
+			break;
+		case 4:
+			strcpy(day, "Thursday");
+			break;
+		case 5:
+			strcpy(day, "Friday");
+			break;
+		case 6:
+			strcpy(day, "Saturday");
+			break;
+	}
+
+}
+
 bool IsLeapYear(int year){
 	 bool leapYear = false;
 
