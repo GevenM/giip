@@ -5,6 +5,8 @@
 #include "InsulinOutputCalculator.h"
 #include "Reminder.h"
 
+#include "TestSettings.h"
+
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
 tRectangle myRectangleBotRight = { 66, 82, 95, 95};
@@ -1844,6 +1846,7 @@ void PrintSettings(){
 	LoadMiddleButton("SEL");
 	//LoadRightButton("");
 
+	ShowDay();
 
 	// Menu options
 	GrStringDraw(&g_sContext, "Clear Flash", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
