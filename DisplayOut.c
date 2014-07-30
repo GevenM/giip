@@ -72,10 +72,9 @@ void ClearMainMenu();
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 
-void PrintBolusAlreadyActive();
-void PrintBolusCreateNotAllowed();
+
 void PrintError();
-void PrintNoBolusPreset();
+
 void PrintNoRemind();
 void PrintRemindCreateNotAllowed();
 void PrintSchedule();
@@ -181,7 +180,7 @@ void PrintScreen(){
 	case Schedule: PrintSchedule(); break;
 	case Settings: PrintSettings(); break;
 
-	case BolusAlreadyActive: PrintBolusAlreadyActive(); break;
+	case BolusAlreadyActive: PrintBolusAlreadyActive( &g_sContext ); break;
 	case Bolus_Manage: PrintBolus_Manage( &g_sContext, f_menuChoice ); break;
 	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(); break;
 	case NoRemind: PrintNoRemind(); break;
@@ -190,7 +189,7 @@ void PrintScreen(){
 	case Basal_Manage: PrintBasal_Manage( &g_sContext, f_menuChoice ); break;
 	case BasCreateNotAllowed: PrintBasCreateNotAllowed(&g_sContext); break;
 	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(&g_sContext); break;
-	case NoBolusPreset: PrintNoBolusPreset(); break;
+	case NoBolusPreset: PrintNoBolusPreset( &g_sContext ); break;
 
 	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
 	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(); break;
@@ -1667,43 +1666,10 @@ void ClearScreen(){
 
 
 
-
-void PrintBolusAlreadyActive(){
-	 // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-
-	// Menu options
-	GrStringDrawCentered(&g_sContext, "A bolus", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "is already ", AUTO_STRING_LENGTH, 47, 44, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "in progress", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	GrFlush(&g_sContext);
-}
-void PrintBolusCreateNotAllowed(){
-	 // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-
-	// Menu options
-	GrStringDrawCentered(&g_sContext, "Bolus Preset", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Creation", AUTO_STRING_LENGTH, 47, 44, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "not Allowed", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	GrFlush(&g_sContext);
-}
 void PrintError(){
 	;
 }
-void PrintNoBolusPreset(){
-	 // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
 
-	// Menu options
-	GrStringDrawCentered(&g_sContext, "No Bolus", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Presets", AUTO_STRING_LENGTH, 47, 44, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Available", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-	GrFlush(&g_sContext);
-}
 void PrintNoRemind(){
 	GrStringDrawCentered(&g_sContext, "No Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
 	GrStringDrawCentered(&g_sContext, "Exists" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);

@@ -4,7 +4,7 @@
 void PrintCreateBasProf(tContext *context){
 	// Print basal status
 
-		GrStringDrawCentered(&context, "Create Basal " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
+		GrStringDrawCentered(context, "Create Basal " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
 	//	GrStringDrawCentered(&context, "Temp Basal: " , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
 		//GrStringDrawCentered(&context, "No Basal" , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
 
