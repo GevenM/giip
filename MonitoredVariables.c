@@ -93,16 +93,16 @@ void UpdateMonitoredVariables(){
 
 	M_reminderCreateReq =
 			c_operation == e_operation_idle &&
-			c_menuScreen == Schedule &&
+			c_menuScreen == Reminder &&
 			M_selReq &&
-			f_menuChoice == Schedule_Create &&
+			f_menuChoice == Reminder_Create &&
 			ReminderCreationAllowed();
 
 	M_reminderRemoveReq =
 			c_operation == e_operation_idle &&
-			c_menuScreen == Schedule &&
+			c_menuScreen == Reminder &&
 			M_selReq &&
-			f_menuChoice == Schedule_Remove &&
+			f_menuChoice == Reminder_Remove &&
 			ReminderRemovalAllowed();
 
 	M_basStopReq =
