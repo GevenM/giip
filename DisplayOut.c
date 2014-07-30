@@ -82,10 +82,9 @@ void PrintSchedule();
 void PrintSettings();
 void PrintIdle();
 void PrintMainMenu();
-void PrintBasNoActive();
-void PrintBasBothActive();
-void PrintBasTmpActive();
-void PrintBasProfActive();
+
+
+
 void PrintNoBasProf();
 void PrintBasalMenu_Manage();
 void PrintBasCreateNotAllowed();
@@ -2459,49 +2458,6 @@ void PrintMainMenu(){
     GrFlush(&g_sContext);
 }
 
-
-void PrintBasNoActive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Start Profile", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-
-    // Highlight selected item
-    switch (f_menuChoice) {
-    case Basal_StartProfile:
-        text_start = 18;
-        strcpy(outString, "Start Profile");
-        break;
-    case Basal_StartTmp:
-        text_start = 31;
-        strcpy(outString, "Start Temporary");
-        break;
-    case Basal_Manage:
-        text_start = 44;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
 void PrintBasCreateNotAllowed(){
     // Draw top and bottom banner and buttons
 	LoadLeftButton("BACK");
@@ -2531,136 +2487,6 @@ void PrintNoBasProf(){
 
     GrFlush(&g_sContext);
 }
-
-void PrintBasProfActive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Stop Profile", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Start Temporary", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-
-    // Highlight selected item
-    switch (f_menuChoice) {
-    case Basal_StopProfile:
-        text_start = 18;
-        strcpy(outString, "Stop Profile");
-        break;
-    case Basal_StartTmp:
-        text_start = 31;
-        strcpy(outString, "Start Temporary");
-        break;
-    case Basal_Manage:
-        text_start = 44;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
-
-void PrintBasBothActive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Stop Profile", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Stop Temporary", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-
-    // Highlight selected item
-    switch (f_menuChoice) {
-    case Basal_StopProfile:
-        text_start = 18;
-        strcpy(outString, "Stop Profile");
-        break;
-    case Basal_StopTmp:
-        text_start = 31;
-        strcpy(outString, "Stop Temporary");
-        break;
-    case Basal_Manage:
-        text_start = 44;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
-
-void PrintBasTmpActive(){
-    char outString[32];
-    unsigned char text_start = 18;
-
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Start Profile", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Stop Temporary", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manage Profiles", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-
-    // Highlight selected item
-    switch (f_menuChoice) {
-    case Basal_StartProfile:
-        text_start = 18;
-        strcpy(outString, "Start Profile");
-        break;
-    case Basal_StopTmp:
-        text_start = 31;
-        strcpy(outString, "Stop Temporary");
-        break;
-    case Basal_Manage:
-        text_start = 44;
-        strcpy(outString, "Manage Profiles");
-        break;
-
-    default: break;
-    }
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-    GrFlush(&g_sContext);
-}
-
-
 
 void ClearInputProfile(){
 	int i;

@@ -1,6 +1,6 @@
 
 
-#include "PrintBasal.h"
+#include "!PrintBasal_Master.h"
 #include "DisplayOut.h"
 
 void PrintBasal_Manage( tContext *context, y_menus f_menuChoice ){
