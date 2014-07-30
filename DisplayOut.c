@@ -1811,6 +1811,7 @@ void PrintSettings(){
 	LoadMiddleButton("SEL");
 	//LoadRightButton("");
 
+	//Test Prints to show in settings screen
 	ShowDay();
 
 	// Menu options
