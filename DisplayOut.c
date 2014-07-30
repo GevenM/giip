@@ -196,19 +196,19 @@ void PrintScreen(){
 	case StopTmpBas_All:PrintStopTmpBas_All(); break;
 
 	case CreateBolusPreset_Idle:PrintCreateBolusPreset_Idle(); break;
-	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm(); break;
-	case CreateBolusPreset_Invalid:PrintCreateBolusPreset_Invalid(); break;
+	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm( &g_sContext ); break;
+	case CreateBolusPreset_Invalid:PrintCreateBolusPreset_Invalid( &g_sContext ); break;
 
 	case RemoveBolusPreset_Idle:PrintRemoveBolusPreset_Idle(); break;
-	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm(); break;
-	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid(); break;
+	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm( &g_sContext ); break;
+	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid( &g_sContext ); break;
 
 	case StartBolus_Idle:PrintStartBolus_Idle(); break;
 	case StartBolus_Calculator:PrintStartBolus_Calculator(); break;
 	case StartBolus_Preset: PrintStartBolus_Preset(); break;
 	case StartBolus_Manual: PrintStartBolus_Manual(); break;
-	case StartBolus_Confirm: PrintStartBolus_Confirm(); break;
-	case StartBolus_Invalid: PrintStartBolus_Invalid(); break;
+	case StartBolus_Confirm: PrintStartBolus_Confirm( &g_sContext ); break;
+	case StartBolus_Invalid: PrintStartBolus_Invalid( &g_sContext ); break;
 
 	case CreateReminder_Idle: PrintCreateReminder_Idle(); break;
 	case CreateReminder_Confirm:PrintCreateReminder_Confirm();break;
