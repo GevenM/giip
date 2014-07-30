@@ -84,11 +84,6 @@ void PrintIdle();
 void PrintMainMenu();
 
 
-
-void PrintNoBasProf();
-void PrintBasalMenu_Manage();
-void PrintBasCreateNotAllowed();
-void PrintCreateBasProf();
 void PrintMessage(char outString[32]);
 
 void PrintCreateBasProf_Idle(y_basal *p_profile);
@@ -177,10 +172,10 @@ void PrintScreen(){
 	case None: PrintIdle(); break;
 	case Main: PrintMainMenu(); break;
 
-	case BasalBothActive: PrintBasBothActive(); break;
-	case BasalProfActive: PrintBasProfActive(); break;
-	case BasalTmpActive: PrintBasTmpActive(); break;
-	case BasalNoActive: PrintBasNoActive(); break;
+	case BasalBothActive: PrintBasBothActive(&g_sContext, f_menuChoice); break;
+	case BasalProfActive: PrintBasProfActive(&g_sContext, f_menuChoice); break;
+	case BasalTmpActive: PrintBasTmpActive(&g_sContext, f_menuChoice); break;
+	case BasalNoActive: PrintBasNoActive(&g_sContext, f_menuChoice); break;
 
 	case Bolus: PrintBolus( &g_sContext, f_menuChoice ); break;
 	case Schedule: PrintSchedule(); break;
@@ -191,10 +186,10 @@ void PrintScreen(){
 	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(); break;
 	case NoRemind: PrintNoRemind(); break;
 
-	case NoBasProf: PrintNoBasProf(); break;
+	case NoBasProf: PrintNoBasProf(&g_sContext); break;
 	case Basal_Manage: PrintBasal_Manage( &g_sContext, f_menuChoice ); break;
-	case BasCreateNotAllowed: PrintBasCreateNotAllowed(); break;
-	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(); break;
+	case BasCreateNotAllowed: PrintBasCreateNotAllowed(&g_sContext); break;
+	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(&g_sContext); break;
 	case NoBolusPreset: PrintNoBolusPreset(); break;
 
 	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
@@ -2125,23 +2120,7 @@ void PrintMessage(char outString[32]){
 
 }
 
-void PrintCreateBasProf(){
-	// Print basal status
 
-		GrStringDrawCentered(&g_sContext, "Create Basal " , AUTO_STRING_LENGTH, 48, 25, OPAQUE_TEXT);
-	//	GrStringDrawCentered(&g_sContext, "Temp Basal: " , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
-		//GrStringDrawCentered(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
-
-
-
-		//LoadBanner();
-		// Load bottom buttons
-		LoadLeftButton("BACK");
-		//LoadMiddleButton("MENU");
-		//LoadRightButton("");
-		GrFlush(&g_sContext);
-
-}
 
 
 
@@ -2391,35 +2370,6 @@ void PrintMainMenu(){
     GrFlush(&g_sContext);
 }
 
-void PrintBasCreateNotAllowed(){
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	//LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDrawCentered(&g_sContext, "Basal Profile", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Creation", AUTO_STRING_LENGTH, 47, 44, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "not Allowed", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-    GrFlush(&g_sContext);
-}
-
-void PrintNoBasProf(){
-    // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	//LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-
-	// Menu options
-	GrStringDrawCentered(&g_sContext, "No Basal", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Profile", AUTO_STRING_LENGTH, 47, 44, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Available", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
-
-    GrFlush(&g_sContext);
-}
 
 void ClearInputProfile(){
 	int i;
