@@ -182,7 +182,7 @@ void PrintScreen(){
 	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm( &g_sContext ); break;
 	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid( &g_sContext ); break;
 
-	case StartBolus_Idle:PrintStartBolus_Idle( &g_sContext, M_selectedMethod ); break;
+	case StartBolus_Idle:PrintStartBolus_Idle( &g_sContext, p_selectedMethod ); break;
 	case StartBolus_Calculator:PrintStartBolus_Calculator( &g_sContext, bolStartCalc_CarbsEntered, m_carbs, m_bloodGlucose ); break;
 	case StartBolus_Preset: PrintStartBolus_Preset( &g_sContext, m_bolSelected ); break;
 	case StartBolus_Manual: PrintStartBolus_Manual( &g_sContext, m_bolus ); break;
