@@ -8,6 +8,7 @@
 #include <string.h>
 
 extern void PrintSettings( tContext *context, y_menus f_menuChoice );
-
+extern void  PrintSettings_DateTime(tContext *context, Calendar calendar);
+extern void PrintSettings_DateTime_NotAllowed(tContext *context);
 
 #endif
