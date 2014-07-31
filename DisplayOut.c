@@ -66,15 +66,10 @@ void LoadRightButton(const char * text);
 void ClearRightButton();
 
 
-
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 
-
 void PrintError();
-
-
-
 
 
 void ClearInputProfile();
@@ -82,7 +77,6 @@ void InputProfileToBasalProfile(y_basal *basProf);
 
 
 void PrintRemoveBolusPreset_Idle();
-
 
 void PrintStartBolus_Idle();
 void PrintStartBolus_Calculator();
@@ -182,11 +176,11 @@ void PrintScreen(){
 
 	case StopBasProf_All:PrintStopBas_All( &g_sContext ); break;
 
-	case StartTmpBas_Idle:PrintStartTmpBas_Idle(); break;
-	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(); break;
-	case StartTmpBas_Invalid:PrintStartTmpBas_Invalid(); break;
+	case StartTmpBas_Idle:PrintStartTmpBas_Idle(&g_sContext, tmpBasal_DurationEntered, m_tmpBas); break;
+	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(&g_sContext, m_tmpBas); break;
+	case StartTmpBas_Invalid:PrintStartTmpBas_Invalid(&g_sContext); break;
 
-	case StopTmpBas_All:PrintStopTmpBas_All(); break;
+	case StopTmpBas_All:PrintStopTmpBas_All(&g_sContext); break;
 
 	case CreateBolusPreset_Idle:PrintCreateBolusPreset_Idle( &g_sContext, m_bolus, bolCreateStatus_NameEntered ); break;
 	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm( &g_sContext ); break;
