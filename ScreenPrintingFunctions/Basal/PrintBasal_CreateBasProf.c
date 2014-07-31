@@ -12,7 +12,7 @@ void PrintCreateBasProf(tContext *context){
 
 		//LoadBanner();
 		// Load bottom buttons
-		LoadLeftButton("BACK");
+		LoadLeftButton( context , "BACK");
 		//LoadMiddleButton("MENU");
 		//LoadRightButton("");
 

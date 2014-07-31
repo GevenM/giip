@@ -24,9 +24,9 @@ void PrintRemoveBolusPreset_Confirm( tContext *context ){
 //	strncat(outString, " IU", 3);
 //	GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 65, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintRemoveBolusPreset_Invalid( tContext *context ){
@@ -34,8 +34,8 @@ void PrintRemoveBolusPreset_Invalid( tContext *context ){
 	GrStringDrawCentered( context, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT );
 	GrStringDrawCentered( context, "is Active", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT );
 
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadRightButton( context , "RETY");
 
 }
 
@@ -64,6 +64,6 @@ void PrintRemoveBolusPreset_Idle( tContext *context, y_bolus selectedBolus ){
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
+	LoadLeftButton( context ,  "CANC" );
+	LoadMiddleButton( context , "SEL" );
 }

@@ -4,7 +4,7 @@
 void PrintBolusCreateNotAllowed( tContext *context ){
 
 	 // Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
+	LoadLeftButton( context , "BACK");
 
 	// Menu options
 	GrStringDrawCentered(context, "Bolus Preset", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);

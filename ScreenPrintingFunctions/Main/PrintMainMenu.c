@@ -6,8 +6,8 @@ void PrintMainMenu( tContext *context, y_menus f_menuChoice ){
     unsigned char text_start = 18;
 
     // Draw bottom buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
+	LoadLeftButton( context , "BACK");
+	LoadMiddleButton( context , "SEL");
 	//LoadRightButton("");
 
 

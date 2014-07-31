@@ -7,5 +7,5 @@ void PrintSettings_DateTime_NotAllowed(tContext *context){
 	GrStringDrawCentered(context, "delivery is", AUTO_STRING_LENGTH, 47, 49, OPAQUE_TEXT);
 	GrStringDrawCentered(context, "in progress", AUTO_STRING_LENGTH, 47, 60, OPAQUE_TEXT);
 
-	LoadMiddleButton("OK");
+	LoadMiddleButton( context , "OK");
 }

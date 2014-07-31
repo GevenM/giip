@@ -7,6 +7,7 @@
 #include "LcdDriver/Sharp96x96.h"
 #include <string.h>
 #include "RTC.h"
+#include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 
 extern void PrintNoRemind(tContext *context);
 extern void PrintRemindCreateNotAllowed(tContext *context);

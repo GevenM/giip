@@ -25,9 +25,9 @@ void PrintCreateBolusPreset_Confirm( tContext *context ){
 	//strncat(outString, " IU", 3);
 	//GrStringDraw( context, outString , AUTO_STRING_LENGTH, 5, 65, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 
 }
 
@@ -40,8 +40,8 @@ void PrintCreateBolusPreset_Invalid( tContext *context ){
 	GrStringDrawCentered( context, "Preset", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT );
 	GrStringDrawCentered( context, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT );
 
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadRightButton( context , "RETY");
 
 }
 
@@ -81,9 +81,9 @@ void PrintCreateBolusPreset_Idle( tContext *context, y_bolus enteredBolus, bool 
 	GrLineDrawH( context, cursorX, cursorX+cursorW, cursorY );
 
 	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	if ( nameEntered == false ) LoadRightButton("AMNT");
-	else LoadRightButton("NAME");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
+	if ( nameEntered == false ) LoadRightButton( context , "AMNT");
+	else LoadRightButton( context , "NAME");
 
 }

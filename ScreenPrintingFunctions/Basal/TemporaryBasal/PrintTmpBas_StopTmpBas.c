@@ -6,6 +6,6 @@ void PrintStopTmpBas_All(tContext *context){
 	GrStringDrawCentered(context, "Temporary" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 	GrStringDrawCentered(context, "Basal?" , AUTO_STRING_LENGTH, 46, 40, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
 }

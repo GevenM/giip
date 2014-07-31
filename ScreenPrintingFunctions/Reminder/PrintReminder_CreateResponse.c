@@ -127,19 +127,19 @@ void PrintCreateReminder_Idle(tContext *context, char remindEntryIndex, y_remind
 	}
 	GrLineDrawH(context, cursorX, cursorX+cursorW, cursorY);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	if( remindEntryIndex == NAME ) LoadRightButton("TIME");
-	else if ( remindEntryIndex == MSG ) LoadRightButton("FREQ");
-	else ClearRightButton();
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
+	if( remindEntryIndex == NAME ) LoadRightButton( context , "TIME");
+	else if ( remindEntryIndex == MSG ) LoadRightButton( context , "FREQ");
+	else ClearRightButton( context );
 }
 
 void PrintCreateReminder_Confirm(tContext *context){
 	GrStringDraw(context, "Save Reminder?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintCreateReminder_Invalid(tContext *context){
@@ -147,7 +147,7 @@ void PrintCreateReminder_Invalid(tContext *context){
 	GrStringDrawCentered(context, "Invalid Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
 	//GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
+	LoadLeftButton( context , "CANC");
 	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadRightButton( context , "RETY");
 }

@@ -31,9 +31,9 @@ void PrintStartBolus_Confirm( tContext *context ){
 	free( bolus );
 
 	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
+	LoadRightButton( context , "RETY");
 
 }
 
@@ -42,8 +42,8 @@ void PrintStartBolus_Invalid( tContext *context ){
 	GrStringDrawCentered( context, "Bolus is", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT );
 	GrStringDrawCentered( context, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT );
 
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartBolus_Idle( tContext *context, unsigned char p_selectedMethod ){
@@ -52,8 +52,8 @@ void PrintStartBolus_Idle( tContext *context, unsigned char p_selectedMethod ){
 
 
 	// Draw top and bottom banner and buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("SEL");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "SEL");
 	//LoadRightButton("");
 
 
@@ -132,9 +132,9 @@ void PrintStartBolus_Calculator( tContext *context, bool carbsEnteredFlag, y_car
 	GrLineDrawH( context, cursorX, cursorX+cursorW, cursorY);
 
 	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartBolus_Preset( tContext *context, y_bolus selectedPreset ){
@@ -163,15 +163,15 @@ void PrintStartBolus_Preset( tContext *context, y_bolus selectedPreset ){
 		GrContextForegroundSet( context, ClrBlack);
 		GrContextBackgroundSet( context, ClrWhite);
 
-		LoadMiddleButton( "SEL" );
+		LoadMiddleButton( context , "SEL" );
 
 	} else {
 		GrStringDrawCentered(context, "No Presets", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
 		GrStringDrawCentered( context, "Available", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
 	}
 
-	LoadLeftButton( "CANC" );
-	LoadRightButton( "RETY" );
+	LoadLeftButton( context ,  "CANC" );
+	LoadRightButton( context ,  "RETY" );
 
 }
 
@@ -206,8 +206,8 @@ void PrintStartBolus_Manual( tContext *context, y_bolus enteredBolus ){
 	GrLineDrawH( context, cursorX, cursorX+cursorW, cursorY);
 
 	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
+	LoadRightButton( context , "RETY");
 
 }

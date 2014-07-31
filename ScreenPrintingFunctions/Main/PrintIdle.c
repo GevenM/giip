@@ -87,7 +87,7 @@ void PrintIdle( tContext *context ){
 	}
 
 	// Load bottom buttons
-	LoadMiddleButton( "MENU" );
+	LoadMiddleButton(  context , "MENU" );
 
 
 }

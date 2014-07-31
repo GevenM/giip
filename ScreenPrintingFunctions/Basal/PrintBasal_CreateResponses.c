@@ -7,9 +7,9 @@ void PrintCreateBasProf_Confirm(tContext *context){
 	GrStringDraw(context, "Save Profile?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
 	GrStringDraw(context, m_basProf.Name , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintCreateBasProf_Invalid(tContext *context){
@@ -17,9 +17,9 @@ void PrintCreateBasProf_Invalid(tContext *context){
 	GrStringDrawCentered(context, "Invalid Profile" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
 	//GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
+	LoadLeftButton( context , "CANC");
 	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadRightButton( context , "RETY");
 }
 
 
@@ -64,14 +64,14 @@ void PrintCreateBasProf_Idle(tContext *context, y_basal p_profile, bool nameEnte
 	if ( cursorY > 13 && cursorY - scrollOffset < 81 ) GrLineDrawH( context, cursorX, cursorX + cursorW, cursorY - scrollOffset );
 	if ( 26-scrollOffset > 15 && 26 - scrollOffset < 80 ) GrStringDraw( context, p_profile.Name , AUTO_STRING_LENGTH, 5, 26 - scrollOffset, OPAQUE_TEXT );
 
-	LoadLeftButton("CANC");
+	LoadLeftButton( context , "CANC");
 	if ( nameEntered == false ){
-		LoadRightButton( "RATE" );
-		LoadMiddleButton( "DONE" );
+		LoadRightButton( context ,  "RATE" );
+		LoadMiddleButton( context ,  "DONE" );
 	}
 	else {
-		LoadRightButton( "NAME" );
-		LoadMiddleButton( "DONE" );
+		LoadRightButton( context ,  "NAME" );
+		LoadMiddleButton( context ,  "DONE" );
 	}
 }
 

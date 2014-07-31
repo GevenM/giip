@@ -47,10 +47,6 @@ bool tmpBasal_DurationEntered = false;
 bool bolCreateStatus_NameEntered = false;
 bool bolStartCalc_CarbsEntered = false;
 
-void LoadBanner(void);
-void LoadLeftButton(const char * text);
-void LoadMiddleButton(const char * text);
-void LoadRightButton(const char * text);
 
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
@@ -102,7 +98,7 @@ void DisplayOut(void){
 
 void PrintScreen(){
 	//ClearScreen();
-	LoadBanner();
+	LoadBanner( &g_sContext );
 	switch( c_menuScreen ){
 	case None: PrintIdle( &g_sContext ); break;
 	case Main: PrintMainMenu( &g_sContext, f_menuChoice ); break;
@@ -1646,107 +1642,9 @@ int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII)
 
 
 
-void LoadLeftButton(const char * text){
-	GrRectFill(&g_sContext, &myRectangleBotLeft);
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, text, AUTO_STRING_LENGTH, 14, 88, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
-
-void LoadMiddleButton(const char * text){
-	GrRectFill(&g_sContext, &myRectangleBotMid);
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, text, AUTO_STRING_LENGTH, 49, 88, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
-
-void LoadRightButton(const char * text){
-	GrRectFill(&g_sContext, &myRectangleBotRight);
-
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, text, AUTO_STRING_LENGTH, 82, 88, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
-
-void ClearRightButton(){
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrRectFill(&g_sContext, &myRectangleBotRight);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
-
-void LoadBanner(void){
-
-	int hour = GetCurrentHour();
-	int min = GetCurrentMin();
-	int sec = GetCurrentSec();
-
-	int digits = 0;
-	char buffer[10] = "";
-    char outString[10] = "";
-
-    // Get Hours
-	digits = UnsignedInt_To_ASCII( hour >> 4, buffer ); // Read upper half of byte by bitshifting four places
-	strncpy(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( hour & 0xF, buffer ); // Read lower half of byte by overwriting the upper half with 0s
-	strncat(outString, buffer, digits);
-	strncat(outString, ":", 1);
-
-	// Get Minutes
-	digits = UnsignedInt_To_ASCII( min >> 4, buffer );
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( min & 0xF, buffer );
-	strncat(outString, buffer, digits);
-	//strncat(outString, ":", 1);
-
-	// Get Seconds
-	//digits = UnsignedInt_To_ASCII( sec >> 4, buffer );
-	//strncat(outString, buffer, digits);
-	//digits = UnsignedInt_To_ASCII( sec & 0xF, buffer );
-	//strncat(outString, buffer, digits);
-
-
-	// Draw top banner
-	GrRectFill(&g_sContext, &myRectangleTopBan);
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, outString, AUTO_STRING_LENGTH, 75 , 7, TRANSPARENT_TEXT);
-	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
-	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
 
 
 
-
-
-	// Get basal and bolus rate
-	strcpy(outString, "");
-	digits = UnsignedInt_To_ASCII( f_basalOut, buffer );
-	strncat(outString, buffer, digits);
-	strncat(outString, "/", 1);
-	digits = UnsignedInt_To_ASCII( f_bolusOut, buffer );
-	strncat(outString, buffer, digits);
-	//strncat(outString, ":", 1);
-
-	// Draw top banner
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrContextBackgroundSet(&g_sContext, ClrBlack);
-	GrStringDrawCentered(&g_sContext, outString, AUTO_STRING_LENGTH, 20 , 7, TRANSPARENT_TEXT);
-	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
-	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-}
 
 void ClearInputProfile(){
 	int i;

@@ -7,6 +7,7 @@
 #include "LcdDriver/Sharp96x96.h"
 #include <string.h>
 #include "RTC.h"
+#include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 
 extern void PrintSettings( tContext *context, y_menus f_menuChoice );
 extern void  PrintSettings_DateTime(tContext *context, Calendar calendar, unsigned char calendarIndex);

@@ -6,5 +6,5 @@ void PrintNoRemind(tContext *context){
 	GrStringDrawCentered(context, "Exists" , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 	//GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("BACK");
+	LoadLeftButton( context , "BACK");
 }

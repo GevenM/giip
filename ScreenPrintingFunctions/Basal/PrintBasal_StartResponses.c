@@ -6,9 +6,9 @@ void PrintStartBasProf_Confirm(tContext *context){
 	GrStringDrawCentered(context, "Start Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
 	GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartBasProf_Invalid(tContext *context){
@@ -16,9 +16,9 @@ void PrintStartBasProf_Invalid(tContext *context){
 	GrStringDrawCentered(context, "Profile Invalid" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
 	//GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
+	LoadLeftButton( context , "CANC");
 	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartBasProf_Idle( tContext *context, y_basal selectedProfile ){
@@ -46,6 +46,6 @@ void PrintStartBasProf_Idle( tContext *context, y_basal selectedProfile ){
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
+	LoadLeftButton( context ,  "CANC" );
+	LoadMiddleButton( context , "SEL" );
 }

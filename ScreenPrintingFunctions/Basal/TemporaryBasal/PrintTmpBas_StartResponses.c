@@ -25,9 +25,9 @@ void PrintStartTmpBas_Confirm(tContext *context, y_tmpBasal tmpBas){
 
 	GrStringDraw(context, outString , AUTO_STRING_LENGTH, 5, 49, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartTmpBas_Invalid(tContext *context){
@@ -40,8 +40,8 @@ void PrintStartTmpBas_Invalid(tContext *context){
 	GrStringDrawCentered(context, "Basal", AUTO_STRING_LENGTH, 47, 47, OPAQUE_TEXT);
 	GrStringDrawCentered(context, "Invalid", AUTO_STRING_LENGTH, 47, 57, OPAQUE_TEXT);
 
-	LoadLeftButton("CANC");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadRightButton( context , "RETY");
 }
 
 void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_tmpBasal tmpBas){
@@ -51,7 +51,7 @@ void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_t
 	int cursorY, cursorX, cursorW;
 
 		if (tmpBasal_DurationEntered == false){
-			LoadRightButton("RATE");
+			LoadRightButton( context , "RATE");
 			cursorY = 38;
 			cursorX = 65;
 
@@ -61,7 +61,7 @@ void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_t
 				cursorW = 10;
 		}
 		else {
-			LoadRightButton("DUR");
+			LoadRightButton( context , "DUR");
 			cursorY = 48;
 			cursorX = 65;
 			if(tmpBas.Rate / 3600 <= 9)
@@ -91,6 +91,6 @@ void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_t
 
 	GrLineDrawH(context, cursorX, cursorX+cursorW, cursorY);
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "DONE");
 }

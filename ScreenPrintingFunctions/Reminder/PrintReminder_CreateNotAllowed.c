@@ -7,5 +7,5 @@ void PrintRemindCreateNotAllowed(tContext *context){
 	GrStringDrawCentered(context, "Not Allowed" , AUTO_STRING_LENGTH, 46, 50, OPAQUE_TEXT);
 	//GrStringDrawCentered(context, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
 
-	LoadLeftButton("BACK");
+	LoadLeftButton( context , "BACK");
 }

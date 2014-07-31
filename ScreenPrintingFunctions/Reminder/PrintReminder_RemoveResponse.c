@@ -27,8 +27,8 @@ void PrintRemoveReminder_Idle(tContext *context){
 	GrContextForegroundSet(context, ClrBlack);
 	GrContextBackgroundSet(context, ClrWhite);
 
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
+	LoadLeftButton(  context , "CANC" );
+	LoadMiddleButton(  context , "SEL" );
 }
 
 
@@ -44,7 +44,7 @@ void PrintRemoveReminder_Confirm(tContext *context){
 	GrStringDraw(context, m_reminder.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
 
 
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
+	LoadLeftButton( context , "CANC");
+	LoadMiddleButton( context , "OK");
+	LoadRightButton( context , "RETY");
 }

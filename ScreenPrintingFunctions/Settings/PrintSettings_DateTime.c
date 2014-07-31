@@ -92,6 +92,6 @@ void  PrintSettings_DateTime(tContext *context, Calendar calendar, unsigned char
 
 	GrStringDrawCentered(context, "Edit Calendar", AUTO_STRING_LENGTH, 46 , 27, TRANSPARENT_TEXT);
 
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SET");
+	LoadLeftButton( context , "BACK");
+	LoadMiddleButton( context , "SET");
 }
