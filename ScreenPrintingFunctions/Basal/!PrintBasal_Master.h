@@ -21,5 +21,6 @@ extern void PrintStartBasProf_Confirm(tContext *context);
 extern void PrintStartBasProf_Invalid(tContext *context);
 extern void PrintCreateBasProf_Confirm(tContext *context);
 extern void PrintCreateBasProf_Invalid(tContext *context);
+extern void PrintStopBas_All(tContext *context);
 
 #endif
