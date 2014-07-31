@@ -23,8 +23,9 @@ tRectangle g_sRect;
 uint8_t g_delayCounter = 0;
 
 y_basal p_inputProfile;
-unsigned char segments[k_segDay] = {k_segDay, 0};
-y_basalRate rates[k_segDay];
+unsigned char segments[ k_segDay ] = {k_segDay, 0};
+
+y_basalRate rates[ k_segDay ];
 y_tmpBasal p_inputTmpBasal;
 y_bolMethod p_selectedMethod = e_bolMethod_noValue;
 static y_reminder p_reminder = {"", "", {0}, e_remindFreq_oneTime };
@@ -65,7 +66,7 @@ void LoadRightButton(const char * text);
 void ClearRightButton();
 
 
-void LoadRates(y_basal *p_profile, int scollOffset);
+
 void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 
@@ -74,14 +75,12 @@ void PrintError();
 
 
 
-void PrintMessage(char outString[32]);
 
-void PrintCreateBasProf_Idle(y_basal *p_profile);
 
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
 
-void PrintRemoveBasProf_Idle();
+
 
 void PrintStartBasProf_Idle();
 
@@ -158,7 +157,7 @@ void DisplayOut(void){
 void PrintScreen(){
 	//ClearScreen();
 	LoadBanner();
-	switch(c_menuScreen){
+	switch( c_menuScreen ){
 	case None: PrintIdle( &g_sContext ); break;
 	case Main: PrintMainMenu( &g_sContext, f_menuChoice ); break;
 
@@ -173,28 +172,28 @@ void PrintScreen(){
 
 	case BolusAlreadyActive: PrintBolusAlreadyActive( &g_sContext ); break;
 	case Bolus_Manage: PrintBolus_Manage( &g_sContext, f_menuChoice ); break;
-	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed(&g_sContext); break;
-	case NoRemind: PrintNoRemind(&g_sContext); break;
+	case RemindCreateNotAllowed: PrintRemindCreateNotAllowed( &g_sContext ); break;
+	case NoRemind: PrintNoRemind( &g_sContext ); break;
 
-	case NoBasProf: PrintNoBasProf(&g_sContext); break;
+	case NoBasProf: PrintNoBasProf( &g_sContext ); break;
 	case Basal_Manage: PrintBasal_Manage( &g_sContext, f_menuChoice ); break;
-	case BasCreateNotAllowed: PrintBasCreateNotAllowed(&g_sContext); break;
-	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed(&g_sContext); break;
+	case BasCreateNotAllowed: PrintBasCreateNotAllowed( &g_sContext ); break;
+	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed( &g_sContext ); break;
 	case NoBolusPreset: PrintNoBolusPreset( &g_sContext ); break;
 
-	case CreateBasProf_Idle: PrintCreateBasProf_Idle(&p_inputProfile); break;
-	case CreateBasProf_Confirm:PrintCreateBasProf_Confirm(&g_sContext); break;
-	case CreateBasProf_Invalid:PrintCreateBasProf_Invalid(&g_sContext); break;
+	case CreateBasProf_Idle: PrintCreateBasProf_Idle( &g_sContext, &p_inputProfile, basCreateStatus_NameEntered, segmentIndex, rateIndex, segments ); break;
+	case CreateBasProf_Confirm: PrintCreateBasProf_Confirm(&g_sContext); break;
+	case CreateBasProf_Invalid: PrintCreateBasProf_Invalid(&g_sContext); break;
 
-	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle(); break;
-	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm(&g_sContext); break;
-	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid(&g_sContext); break;
+	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle( &g_sContext, &m_basRemSelected ); break;
+	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm( &g_sContext ); break;
+	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid( &g_sContext ); break;
 
 	case StartBasProf_Idle:PrintStartBasProf_Idle(); break;
-	case StartBasProf_Confirm:PrintStartBasProf_Confirm(&g_sContext); break;
-	case StartBasProf_Invalid:PrintStartBasProf_Invalid(&g_sContext); break;
+	case StartBasProf_Confirm:PrintStartBasProf_Confirm( &g_sContext ); break;
+	case StartBasProf_Invalid:PrintStartBasProf_Invalid( &g_sContext ); break;
 
-	case StopBasProf_All:PrintStopBas_All(); break;
+	case StopBasProf_All:PrintStopBas_All( &g_sContext ); break;
 
 	case StartTmpBas_Idle:PrintStartTmpBas_Idle(); break;
 	case StartTmpBas_Confirm:PrintStartTmpBas_Confirm(); break;
@@ -1669,80 +1668,7 @@ void ClearCreateBasProf_Idle(y_basal *p_profile){
 	GrFlush(&g_sContext);
 }
 
-void LoadRates(y_basal *p_profile, int scrollOffset){
 
-	char buffer[10] = "";
-	char rateBuffer[10] = "";
-	char outString[32] = "";
-	int rateDigs, hours, halfs, digits, segCount = 0;
-	int i = 0;
-
-
-	strcpy(outString, "0000-");
-
-	while(i<k_segDay && segments[i+1]!= 0)
-	{
-		segCount += segments[i];
-		hours = segCount/2;
-		halfs = segCount%2;
-
-		digits = UnsignedInt_To_ASCII(hours, buffer);
-		strncat(outString, buffer, digits);
-
-		if (halfs == 1)	strncat(outString, "30", 2);
-		else strncat(outString, "00", 2);
-
-		if (digits == 1) strncat(outString, " ", 1);
-
-		rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i] / 3600, rateBuffer);
-		strncat(outString, "|", 1);
-		strncat(outString, rateBuffer, rateDigs);
-
-		if (50+i*10-scrollOffset > 15 && 50 + i*10-scrollOffset < 80) GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, i*10+50 - scrollOffset, OPAQUE_TEXT);
-
-		strcpy(outString, "");
-		if (digits == 1) strncat(outString, " ", 1);
-
-		strncat(outString, buffer,digits);
-
-		if (halfs == 1)	strncat(outString, "30-", 3);
-		else strncat(outString, "00-", 3);
-
-
-		// Remove previously written underline
-		GrContextForegroundSet(&g_sContext, ClrWhite);
-		if (58 + i*10-scrollOffset > 15 && 58 + i*10-scrollOffset < 81) GrLineDrawH(&g_sContext, 35, 95, 58 + i*10 -scrollOffset);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-
-		i++;
-	}
-
-	// Remove previously written underline
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	if (58 + i*10-scrollOffset > 15 && 58 + i*10-scrollOffset < 81) GrLineDrawH(&g_sContext, 35, 95, 58 + i*10 - scrollOffset);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	segCount += segments[i];
-	hours = segCount/2;
-	halfs = segCount%2;
-	digits = UnsignedInt_To_ASCII(hours, buffer);
-
-	if (digits == 1) strncat(outString, " ", 1);
-
-	strncat(outString, buffer,digits);
-
-	if (halfs == 1)	strncat(outString, "30", 2);
-	else strncat(outString, "00", 2);
-
-	if (digits == 1) strncat(outString, " ", 1);
-
-	rateDigs = UnsignedInt_To_ASCII(p_profile->Rate[i] / 3600, rateBuffer);
-	strncat(outString, "|", 1);
-	strncat(outString, rateBuffer, rateDigs);
-
-	if (50 + i*10-scrollOffset > 15 && 50+ i*10-scrollOffset < 80) GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 5, 10*i+50 - scrollOffset, OPAQUE_TEXT);
-
-}
 
 void PrintStartBasProf_Idle(){
 	int numberOfProfiles;
@@ -1774,89 +1700,9 @@ void PrintStartBasProf_Idle(){
 	GrFlush(&g_sContext);
 }
 
-void PrintRemoveBasProf_Idle(){
-	int numberOfProfiles;
-	numberOfProfiles = GetNumberBasalProfiles();
 
-	y_basalName *Name;
-	Name = (y_basalName *) malloc( sizeof( y_basalName ));
 
-	int i;
-	for ( i = 0; i < numberOfProfiles; i++ ){
-		GetProfileName( Name, i );
-		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
-	}
-	free(Name);
 
-	// highlight the selected profile
-    unsigned char text_start = 18;
-    int index = GetProfileIndex( &m_basRemSelected );
-	text_start = 16 + 10 * index;
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, m_basRemSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
-	GrFlush(&g_sContext);
-}
-
-void PrintCreateBasProf_Idle(y_basal *p_profile){
-	int cursorY, cursorX, cursorW, scrollOffset=0;
-
-	if (basCreateStatus_NameEntered == false){
-		cursorY = 34;
-		cursorX = nameIndex+(nameIndex+1)*5;
-		cursorW = 4;
-	} else {
-		cursorY = 58 + segmentIndex*10 ;
-		cursorX = 35 + rateIndex*30;
-		cursorW = 23 - rateIndex*7;
-	}
-
-	if (cursorY > 80){
-		scrollOffset = cursorY - 80;
-
-		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrRectFill(&g_sContext, &myRectangleScreen);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-	} else if (cursorY > 70){
-		// takes care of clearing the screen when returning to the top of the page.
-		GrContextForegroundSet(&g_sContext, ClrWhite);
-		GrRectFill(&g_sContext, &myRectangleScreen);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-	}
-
-	if (16-scrollOffset > 15 && 16-scrollOffset < 80) GrStringDraw(&g_sContext, "Profile Name:" , AUTO_STRING_LENGTH, 5, 16-scrollOffset, OPAQUE_TEXT);
-
-	if (40-scrollOffset > 15 && 40-scrollOffset < 80) GrStringDraw(&g_sContext, "Rates:   |U/hr" , AUTO_STRING_LENGTH, 5, 40-scrollOffset, OPAQUE_TEXT);
-
-	LoadRates(p_profile, scrollOffset);
-
-	// Remove previously written letters and underline
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	if (26-scrollOffset > 15 && 26-scrollOffset < 80)GrStringDraw(&g_sContext, "xxxxxxxxxxx", AUTO_STRING_LENGTH, 5, 26-scrollOffset, OPAQUE_TEXT);
-	if (30-scrollOffset > 15 && 30-scrollOffset < 80)GrStringDraw(&g_sContext, "xxxxxxxxxxx", AUTO_STRING_LENGTH, 5, 30-scrollOffset, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	if (cursorY > 13&& cursorY-scrollOffset < 81)GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY-scrollOffset);
-	if (26-scrollOffset > 15 && 26-scrollOffset < 80)GrStringDraw(&g_sContext, p_profile->Name , AUTO_STRING_LENGTH, 5, 26-scrollOffset, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	if (basCreateStatus_NameEntered == false){
-		LoadRightButton("RATE");
-		LoadMiddleButton("DONE");
-	}
-	else {
-		LoadRightButton("NAME");
-		LoadMiddleButton("DONE");
-	}
-
-	GrFlush(&g_sContext);
-}
 
 
 /**********************************************************************//**
@@ -1889,23 +1735,6 @@ int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII)
 }
 
 
-void PrintMessage(char outString[32]){
-	// Print basal status
-
-		GrStringDrawCentered(&g_sContext, outString , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
-	//	GrStringDrawCentered(&g_sContext, "Temp Basal: " , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
-		//GrStringDrawCentered(&g_sContext, "No Basal" , AUTO_STRING_LENGTH, 48, 25, TRANSPARENT_TEXT);
-
-
-
-		//LoadBanner();
-		// Load bottom buttons
-		LoadLeftButton("BACK");
-		//LoadMiddleButton("MENU");
-		//LoadRightButton("");
-		GrFlush(&g_sContext);
-
-}
 
 
 
