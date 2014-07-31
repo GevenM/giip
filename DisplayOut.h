@@ -11,6 +11,14 @@
 #include "BasalProfiles.h"
 #include "TemporaryBasal.h"
 
+#define SEC		2
+#define MIN		1
+#define HR		0
+#define MON		4
+#define DOM		3
+#define YEAR_1	5
+#define YEAR_2	6
+
 extern void DisplayOut(void);
 extern void PrintScreen();
 

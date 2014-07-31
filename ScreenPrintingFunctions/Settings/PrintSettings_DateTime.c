@@ -1,7 +1,7 @@
 #include "!PrintSettings_Master.h"
 #include "DisplayOut.h"
 
-void  PrintSettings_DateTime(tContext *context, Calendar calendar){
+void  PrintSettings_DateTime(tContext *context, Calendar calendar, unsigned char calendarIndex){
 	// Clear previous entries from screen
 	GrContextForegroundSet(context, ClrWhite);
 	GrRectFill(context, &myRectangleScreen);

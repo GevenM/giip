@@ -42,14 +42,6 @@ unsigned char p_remindSubIndex;
 
 Calendar p_calendar;
 unsigned char p_calendarIndex;
-#define SEC		2
-#define MIN		1
-#define HR		0
-#define MON		4
-#define DOM		3
-#define YEAR_1	5
-#define YEAR_2	6
-
 
 unsigned char rateIndex = 0;
 unsigned char segmentIndex = 0;
@@ -196,7 +188,7 @@ void PrintScreen(){
 	case RemoveReminder_Idle:PrintRemoveReminder_Idle(); break;
 	case RemoveReminder_Confirm: PrintRemoveReminder_Confirm();break;
 
-	case Settings_DateTime: PrintSettings_DateTime(&g_sContext, p_calendar); break;
+	case Settings_DateTime: PrintSettings_DateTime(&g_sContext, p_calendar, p_calendarIndex); break;
 	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(&g_sContext); break;
 
 
