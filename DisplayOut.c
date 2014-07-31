@@ -162,15 +162,15 @@ void PrintScreen(){
 	case BolusCreateNotAllowed: PrintBolusCreateNotAllowed( &g_sContext ); break;
 	case NoBolusPreset: PrintNoBolusPreset( &g_sContext ); break;
 
-	case CreateBasProf_Idle: PrintCreateBasProf_Idle( &g_sContext, &p_inputProfile, basCreateStatus_NameEntered, segmentIndex, rateIndex, segments ); break;
+	case CreateBasProf_Idle: PrintCreateBasProf_Idle( &g_sContext, p_inputProfile, basCreateStatus_NameEntered, segmentIndex, rateIndex, segments ); break;
 	case CreateBasProf_Confirm: PrintCreateBasProf_Confirm(&g_sContext); break;
 	case CreateBasProf_Invalid: PrintCreateBasProf_Invalid(&g_sContext); break;
 
-	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle( &g_sContext, &m_basRemSelected ); break;
+	case RemoveBasProf_Idle:PrintRemoveBasProf_Idle( &g_sContext, m_basRemSelected ); break;
 	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm( &g_sContext ); break;
 	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid( &g_sContext ); break;
 
-	case StartBasProf_Idle:PrintStartBasProf_Idle( &g_sContext, &m_basActSelected); break;
+	case StartBasProf_Idle:PrintStartBasProf_Idle( &g_sContext, m_basActSelected); break;
 	case StartBasProf_Confirm:PrintStartBasProf_Confirm( &g_sContext ); break;
 	case StartBasProf_Invalid:PrintStartBasProf_Invalid( &g_sContext ); break;
 
