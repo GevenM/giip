@@ -85,7 +85,6 @@ void PrintRemoveBasProf_Idle();
 
 void PrintStartBasProf_Idle();
 
-void PrintStopBas_All();
 
 void PrintStartTmpBas_Idle();
 void PrintStartTmpBas_Confirm();
@@ -2052,16 +2051,6 @@ void InputProfileToBasalProfile( y_basal *basProf ){
 	}
 
 	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
-}
-
-void PrintStopBas_All(){
-	GrStringDrawCentered(&g_sContext, "Stop Profile?" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, f_activeBasal.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-
-	GrFlush(&g_sContext);
 }
 
 void PrintStopTmpBas_All(){
