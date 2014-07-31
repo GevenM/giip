@@ -80,8 +80,6 @@ void PrintError();
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
 
-void PrintCreateBolusPreset_Idle();
-
 
 void PrintRemoveBolusPreset_Idle();
 
@@ -190,7 +188,7 @@ void PrintScreen(){
 
 	case StopTmpBas_All:PrintStopTmpBas_All(); break;
 
-	case CreateBolusPreset_Idle:PrintCreateBolusPreset_Idle(); break;
+	case CreateBolusPreset_Idle:PrintCreateBolusPreset_Idle( &g_sContext, m_bolus, bolCreateStatus_NameEntered ); break;
 	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm( &g_sContext ); break;
 	case CreateBolusPreset_Invalid:PrintCreateBolusPreset_Invalid( &g_sContext ); break;
 
@@ -1840,51 +1838,6 @@ void InputProfileToBasalProfile( y_basal *basProf ){
 	}
 
 	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
-}
-
-void PrintCreateBolusPreset_Idle(){
-
-	// Clear previous entries from screen
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	// Draw name header and user entered name
-	GrStringDraw(&g_sContext, "Preset Name:" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_bolus.Name , AUTO_STRING_LENGTH, 5, 26, OPAQUE_TEXT);
-
-	// Draw Amount header and user entered amount
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits = 0;
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
-	strcpy(outString, "Amount: ");
-	strncat(outString, buffer, digits);
-	strncat(outString, " IU", 3);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 43, OPAQUE_TEXT);
-
-	// Draw Cursor
-	int cursorY, cursorX, cursorW;
-	if (bolCreateStatus_NameEntered == false){
-		cursorY = 35; // y location
-		cursorW = 4; // width
-		cursorX = (6 * strlen(m_bolus.Name)) - 1; // x location is under last entered letter
-	}
-	else {
-		cursorY = 51;
-		cursorX = 53;
-		cursorW = digits * 5;
-	}
-	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
-
-	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	if (bolCreateStatus_NameEntered == false) LoadRightButton("AMNT");
-	else LoadRightButton("NAME");
-
-	// Flush to screen
-	GrFlush(&g_sContext);
 }
 
 

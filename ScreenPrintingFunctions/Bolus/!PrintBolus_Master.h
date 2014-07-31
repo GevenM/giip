@@ -16,13 +16,14 @@ extern void PrintBolusCreateNotAllowed( tContext *context );
 extern void PrintNoBolusPreset( tContext *context );
 
 
-void PrintRemoveBolusPreset_Confirm( tContext *context );
-void PrintRemoveBolusPreset_Invalid( tContext *context );
+extern void PrintRemoveBolusPreset_Confirm( tContext *context );
+extern void PrintRemoveBolusPreset_Invalid( tContext *context );
 
-void PrintCreateBolusPreset_Confirm( tContext *context );
-void PrintCreateBolusPreset_Invalid( tContext *context );
+extern void PrintCreateBolusPreset_Idle( tContext *context, y_bolus enteredBolus, bool nameEntered );
+extern void PrintCreateBolusPreset_Confirm( tContext *context );
+extern void PrintCreateBolusPreset_Invalid( tContext *context );
 
-void PrintStartBolus_Confirm( tContext *context );
-void PrintStartBolus_Invalid( tContext *context );
+extern void PrintStartBolus_Confirm( tContext *context );
+extern void PrintStartBolus_Invalid( tContext *context );
 
 #endif
