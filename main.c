@@ -35,8 +35,6 @@
 #include "CreateReminder.h"
 #include "RemoveReminder.h"
 
-void Delay(void);
-void SavePreviousInput();
 void InputEvents();
 
 

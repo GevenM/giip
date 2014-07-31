@@ -5,10 +5,6 @@
 bool F_createReminder = false;
 y_reminder p_reminder;
 
-void SaveReminder( y_reminder *reminder );
-bool ReminderIsValid( y_reminder *reminder );
-void CopyReminder ( y_reminder *from, y_reminder *to );
-
 void CreateReminder(){
 	if ( c_operation == e_operation_createReminder ){
 		switch ( c_remindCreateStatus ){
