@@ -10,5 +10,10 @@
 extern void PrintNoRemind(tContext *context);
 extern void PrintRemindCreateNotAllowed(tContext *context);
 extern void PrintReminder(tContext *context, y_menus f_menuChoice);
+extern void PrintCreateReminder_Idle(tContext *context, char remindEntryIndex, y_reminder reminder, char remindSubIndex);
+extern void PrintCreateReminder_Confirm(tContext *context);
+extern void PrintCreateReminder_Invalid(tContext *context);
+extern void PrintRemoveReminder_Idle(tContext *context);
+extern void PrintRemoveReminder_Confirm(tContext *context);
 
 #endif

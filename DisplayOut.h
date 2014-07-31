@@ -11,6 +11,8 @@
 #include "BasalProfiles.h"
 #include "TemporaryBasal.h"
 
+
+//datetime definitions
 #define SEC		2
 #define MIN		1
 #define HR		0
@@ -18,6 +20,13 @@
 #define DOM		3
 #define YEAR_1	5
 #define YEAR_2	6
+
+
+//reminder definitions
+#define NAME 0
+#define DATETIME 1
+#define FREQ 2
+#define MSG 3
 
 extern void DisplayOut(void);
 extern void PrintScreen();

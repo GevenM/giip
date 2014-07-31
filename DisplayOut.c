@@ -32,13 +32,8 @@ y_bolMethod p_selectedMethod = e_bolMethod_noValue;
 static y_reminder p_reminder = {"", "", {0}, e_remindFreq_oneTime };
 
 static char remindEntryIndex;
-#define NAME 0
-#define DATETIME 1
-#define FREQ 2
-#define MSG 3
 
 unsigned char p_remindSubIndex;
-
 
 Calendar p_calendar;
 unsigned char p_calendarIndex;
@@ -64,19 +59,8 @@ void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 void PrintError();
 
-
 void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
-
-
-
-
-void PrintCreateReminder_Idle();
-void PrintCreateReminder_Confirm();
-void PrintCreateReminder_Invalid();
-
-void PrintRemoveReminder_Idle();
-void PrintRemoveReminder_Confirm();
 
 void UpdateScreen();
 
@@ -181,12 +165,12 @@ void PrintScreen(){
 	case StartBolus_Confirm: PrintStartBolus_Confirm( &g_sContext ); break;
 	case StartBolus_Invalid: PrintStartBolus_Invalid( &g_sContext ); break;
 
-	case CreateReminder_Idle: PrintCreateReminder_Idle(); break;
-	case CreateReminder_Confirm:PrintCreateReminder_Confirm();break;
-	case CreateReminder_Invalid:PrintCreateReminder_Invalid();break;
+	case CreateReminder_Idle: PrintCreateReminder_Idle(&g_sContext, remindEntryIndex, p_reminder, p_remindSubIndex); break;
+	case CreateReminder_Confirm:PrintCreateReminder_Confirm(&g_sContext);break;
+	case CreateReminder_Invalid:PrintCreateReminder_Invalid(&g_sContext);break;
 
-	case RemoveReminder_Idle:PrintRemoveReminder_Idle(); break;
-	case RemoveReminder_Confirm: PrintRemoveReminder_Confirm();break;
+	case RemoveReminder_Idle:PrintRemoveReminder_Idle(&g_sContext); break;
+	case RemoveReminder_Confirm: PrintRemoveReminder_Confirm(&g_sContext);break;
 
 	case Settings_DateTime: PrintSettings_DateTime(&g_sContext, p_calendar, p_calendarIndex); break;
 	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(&g_sContext); break;
@@ -1816,216 +1800,4 @@ void InputProfileToBasalProfile( y_basal *basProf ){
 	}
 
 	strncpy( basProf->Name, p_inputProfile.Name, k_basalNameLength-1 );
-}
-
-
-
-
-void PrintCreateReminder_Idle(){
-	int digits = 0, domDigits = 0;
-	char buffer[10] = "";
-	char outString[32] = "";
-
-	// Clear previous entries from screen
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	GrStringDraw(&g_sContext, "Name:" , AUTO_STRING_LENGTH, 3, 16, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, p_reminder.Name , AUTO_STRING_LENGTH, 33, 16, OPAQUE_TEXT);
-
-
-	// Get Day of month
-	domDigits = UnsignedInt_To_ASCII( BCDtoInt( p_reminder.Time.DayOfMonth ), buffer ); // Read upper half of byte by bitshifting four places
-	strncpy(outString, buffer, domDigits);
-	strncat( outString, "/", 1 );
-
-	// Get Month
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Month >> 4, buffer );
-	strncat( outString, buffer, digits );
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Month & 0xF, buffer );
-	strncat( outString, buffer, digits );
-	strncat( outString, "/", 1 );
-
-	// Get Year
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 12, buffer );
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 8 & 0xF, buffer );
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year >> 4 & 0xF, buffer );
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Year & 0xF, buffer );
-	strncat(outString, buffer, digits);
-
-	GrStringDraw(&g_sContext, "Date:" , AUTO_STRING_LENGTH, 3, 36, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 36, TRANSPARENT_TEXT);
-
-
-	// Get Hours
-	strcpy(outString, "");
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Hours >> 4, buffer ); // Read upper half of byte by bitshifting four places
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Hours & 0xF, buffer ); // Read lower half of byte by overwriting the upper half with 0s
-	strncat(outString, buffer, digits);
-	strncat(outString, ":", 1);
-
-	// Get Minutes
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Minutes >> 4, buffer );
-	strncat(outString, buffer, digits);
-	digits = UnsignedInt_To_ASCII( p_reminder.Time.Minutes & 0xF, buffer );
-	strncat(outString, buffer, digits);
-//	strncat(outString, ":", 1);
-
-	// Get Seconds
-//	digits = UnsignedInt_To_ASCII( p_reminder.Time.Seconds >> 4, buffer );
-//	strncat(outString, buffer, digits);
-//	digits = UnsignedInt_To_ASCII( p_reminder.Time.Seconds & 0xF, buffer );
-//	strncat(outString, buffer, digits);
-
-	GrStringDraw(&g_sContext, "Time:" , AUTO_STRING_LENGTH, 3, 26, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 26, OPAQUE_TEXT);
-
-
-
-	strcpy(outString, "");
-	switch ( p_reminder.Frequency ){
-	case e_remindFreq_oneTime: strcpy( outString, "One Time" ); break;
-	case e_remindFreq_daily: strcpy( outString, "Daily" ); break;
-	case e_remindFreq_weekly: strcpy( outString, "Weekly" ); break;
-	case e_remindFreq_weekdays: strcpy( outString, "Weekdays" ); break;
-	case e_remindFreq_weekends: strcpy( outString, "Weekends" ); break;
-	default: break;
-	}
-
-	GrStringDraw(&g_sContext, "Freq:" , AUTO_STRING_LENGTH, 3, 46, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 33 , 46, OPAQUE_TEXT);
-
-	GrStringDraw(&g_sContext, "Msg:" , AUTO_STRING_LENGTH, 3, 56, OPAQUE_TEXT);
-
-	// split message over as many lines as needed
-	if ( strlen( p_reminder.Message ) < 10){
-		GrStringDraw(&g_sContext, p_reminder.Message , AUTO_STRING_LENGTH, 30, 56, OPAQUE_TEXT);
-	} else if ( strlen( p_reminder.Message ) < 25 ){
-		strcpy( outString, "" );
-		strncat( outString, p_reminder.Message, 10 );
-		if ( p_reminder.Message[9] != 32 && p_reminder.Message[10] != 32 && strlen( p_reminder.Message ) > 10){
-			strncat( outString, "-", 1 );
-		}
-
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 30, 56, OPAQUE_TEXT);
-
-		strcpy( outString, "" );
-		strcat( outString, p_reminder.Message + 10 );
-		GrStringDraw(&g_sContext, outString , AUTO_STRING_LENGTH, 3, 66, OPAQUE_TEXT);
-
-	}
-
-
-
-	/* Draw Cursor */
-	int cursorY, cursorX, cursorW;
-	switch ( remindEntryIndex ){
-	case NAME: 							cursorX = 27 + strlen( p_reminder.Name ) * 6;	cursorY = 24; 	cursorW = 4; 	break;
-	case DATETIME:
-		switch ( p_remindSubIndex ){
-		//case SEC:						cursorX = 69;	cursorY = 34; 	cursorW = 10; 	break;
-		case MIN:						cursorX = 51;	cursorY = 34; 	cursorW = 10; 	break;
-		case HR:						cursorX = 33;	cursorY = 34; 	cursorW = 10; 	break;
-		case DOM:						cursorX = 33;	cursorY = 44; 	cursorW = 10; 	break;
-		case MON: 						cursorX = 51;	cursorY = 44; 	cursorW = 10; 	break;
-		case YEAR_1:					cursorX = 69;	cursorY = 44; 	cursorW = 10; 	break;
-		case YEAR_2:					cursorX = 80;	cursorY = 44; 	cursorW = 10; 	break;
-		}
-		break;
-	case FREQ: 							cursorX = 33; 	cursorY = 54; 	cursorW = 50;	break;
-	case MSG:
-		if ( strlen( p_reminder.Message ) <= 10){
-			cursorX = 24 + strlen( p_reminder.Message ) * 6; 	cursorY = 64; 	cursorW = 4;	break;
-		} else if ( strlen( p_reminder.Message ) < 25 ){
-			cursorX = (strlen( p_reminder.Message )-10) * 6 - 3; 	cursorY = 74; 	cursorW = 4;	break;
-		}
-	}
-	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	if( remindEntryIndex == NAME ) LoadRightButton("TIME");
-	else if ( remindEntryIndex == MSG ) LoadRightButton("FREQ");
-	else ClearRightButton();
-
-
-	GrFlush(&g_sContext);
-}
-
-void PrintCreateReminder_Confirm(){
-	GrStringDraw(&g_sContext, "Save Reminder?" , AUTO_STRING_LENGTH, 5, 16, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
-void PrintCreateReminder_Invalid(){
-
-	GrStringDrawCentered(&g_sContext, "Invalid Reminder" , AUTO_STRING_LENGTH, 46, 20, OPAQUE_TEXT);
-	//GrStringDrawCentered(&g_sContext, m_basActSelected.Name , AUTO_STRING_LENGTH, 46, 30, OPAQUE_TEXT);
-
-	LoadLeftButton("CANC");
-	//LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
-}
-
-
-void PrintRemoveReminder_Idle(){
-	int numberOfReminders;
-	numberOfReminders = GetNumberOfReminders();
-
-	y_remindName *Name;
-	Name = (y_remindName *) malloc( sizeof( y_remindName ));
-
-	int i;
-	for ( i = 0; i < numberOfReminders; i++ ){
-		GetReminderName( Name, i );
-		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
-	}
-	free(Name);
-
-	// highlight the selected profile
-    unsigned char text_start = 18;
-    int index = GetReminderIndex( &m_reminder );
-	text_start = 16 + 10 * index;
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, m_reminder.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
-	GrFlush(&g_sContext);
-}
-
-
-void PrintRemoveReminder_Confirm(){
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	GrStringDrawCentered(&g_sContext, "Remove", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Reminder?", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
-
-	GrStringDraw(&g_sContext, "Name: " , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, m_reminder.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
-
-
-	LoadLeftButton("CANC");
-	LoadMiddleButton("OK");
-	LoadRightButton("RETY");
-
-	GrFlush(&g_sContext);
 }
