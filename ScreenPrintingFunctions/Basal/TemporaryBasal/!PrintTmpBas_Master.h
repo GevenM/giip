@@ -7,7 +7,7 @@
 #include "LcdDriver/Sharp96x96.h"
 #include <string.h>
 
-extern void PrintStartTmpBas_Confirm(tContext *context);
+extern void PrintStartTmpBas_Confirm(tContext *context, y_tmpBasal tmpBas);
 extern void PrintStartTmpBas_Invalid(tContext *context);
 extern void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_tmpBasal tmpBas);
 extern void PrintStopTmpBas_All(tContext *context);

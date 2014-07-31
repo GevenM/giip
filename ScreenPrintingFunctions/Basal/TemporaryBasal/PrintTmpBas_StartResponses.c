@@ -74,7 +74,7 @@ void PrintStartTmpBas_Idle(tContext *context, bool tmpBasal_DurationEntered, y_t
 	GrRectFill(context, &myRectangleScreen);
 	GrContextForegroundSet(context, ClrBlack);
 
-	GrStringDraw(&g_sContext, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 20, OPAQUE_TEXT);
+	GrStringDraw(context, "Temporary Basal" , AUTO_STRING_LENGTH, 5, 20, OPAQUE_TEXT);
 
 	digits = UnsignedInt_To_ASCII(tmpBas.Duration / 60, buffer);
 	strcpy(outString, "Duration: ");

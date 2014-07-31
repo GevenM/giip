@@ -6,6 +6,7 @@
 #include "Reminder.h"
 
 #include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
+#include "ScreenPrintingFunctions/Basal/TemporaryBasal/!PrintTmpBas_Master.h"
 #include "ScreenPrintingFunctions/Bolus/!PrintBolus_Master.h"
 #include "ScreenPrintingFunctions/Reminder/!PrintReminder_Master.h"
 #include "ScreenPrintingFunctions/Main/!Main_Master.h"
