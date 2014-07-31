@@ -79,10 +79,6 @@ void InputProfileToBasalProfile(y_basal *basProf);
 
 void PrintRemoveBolusPreset_Idle();
 
-void PrintStartBolus_Idle();
-void PrintStartBolus_Calculator();
-void PrintStartBolus_Preset();
-void PrintStartBolus_Manual();
 
 
 void PrintSettings_DateTime();
@@ -191,10 +187,10 @@ void PrintScreen(){
 	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm( &g_sContext ); break;
 	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid( &g_sContext ); break;
 
-	case StartBolus_Idle:PrintStartBolus_Idle(); break;
-	case StartBolus_Calculator:PrintStartBolus_Calculator(); break;
-	case StartBolus_Preset: PrintStartBolus_Preset(); break;
-	case StartBolus_Manual: PrintStartBolus_Manual(); break;
+	case StartBolus_Idle:PrintStartBolus_Idle( &g_sContext, M_selectedMethod ); break;
+	case StartBolus_Calculator:PrintStartBolus_Calculator( &g_sContext, bolStartCalc_CarbsEntered, m_carbs, m_bloodGlucose ); break;
+	case StartBolus_Preset: PrintStartBolus_Preset( &g_sContext, m_bolSelected ); break;
+	case StartBolus_Manual: PrintStartBolus_Manual( &g_sContext, m_bolus ); break;
 	case StartBolus_Confirm: PrintStartBolus_Confirm( &g_sContext ); break;
 	case StartBolus_Invalid: PrintStartBolus_Invalid( &g_sContext ); break;
 
@@ -1867,180 +1863,9 @@ void PrintRemoveBolusPreset_Idle(){
 }
 
 
-void PrintStartBolus_Idle(){
-	char outString[32];
-	unsigned char text_start = 18;
 
 
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
 
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Calculator", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Preset", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Manual", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-
-	// Highlight selected item
-	switch ( p_selectedMethod ) {
-	case e_bolMethod_calculator:
-		text_start = 18;
-		strcpy(outString, "Calculator");
-		break;
-	case e_bolMethod_preset:
-		text_start = 31;
-		strcpy(outString, "Preset");
-		break;
-	case e_bolMethod_manual:
-		text_start = 44;
-		strcpy(outString, "Manual");
-		break;
-
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);  //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
-
-void PrintStartBolus_Calculator(){
-	// Clear previous entries from screen
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	// Print header
-	GrStringDrawCentered(&g_sContext, "Use < > arrows", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "to select input", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
-
-	// Draw carbs header and user entered carbs
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digitsCarb = 0;
-	digitsCarb = UnsignedInt_To_ASCII(m_carbs, buffer);
-	strcpy(outString, "Carb: ");
-	strncat(outString, buffer, digitsCarb);
-	strncat(outString, " g", 2);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 45, OPAQUE_TEXT);
-
-
-	// Draw glucose header and user entered glucose
-	int digitsGluc = 0;
-	digitsGluc = UnsignedInt_To_ASCII(m_bloodGlucose, buffer);
-	strcpy(outString, "BG: ");
-	strncat(outString, buffer, digitsGluc);
-	strncat(outString, " mmol/L", 7);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 58, OPAQUE_TEXT);
-
-	// Draw Cursor
-	int cursorY, cursorX, cursorW;
-	if (bolStartCalc_CarbsEntered == false){
-		cursorY = 53; // y location
-		cursorW = digitsCarb * 5;; // width
-		cursorX = 41; // x location is under last entered letter
-	}
-	else {
-		cursorY = 66;
-		cursorX = 29;
-		cursorW = digitsGluc * 5;
-	}
-	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
-
-	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
-
-
-	// Flush to screen
-	GrFlush(&g_sContext);
-}
-
-void PrintStartBolus_Preset(){
-	if( BolusPresetExists() ){
-		int numberOfPresets = GetNumberOfBolusPresets();
-
-		// Get names of saved presets and draw them
-		y_bolusName *Name;
-		Name = (y_bolusName *) malloc( sizeof( y_bolusName ));
-
-		int i;
-		for ( i = 0; i < numberOfPresets; i++ ){
-			GetPresetName( Name, i );
-			GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
-		}
-		free(Name);
-
-		// highlight the selected profile
-		unsigned char text_start = 18;
-		int index = GetPresetIndex( &m_bolSelected );
-		text_start = 16 + 10 * index;
-
-		GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-		GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-		GrStringDraw(&g_sContext, m_bolSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-		GrContextForegroundSet(&g_sContext, ClrBlack);
-		GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-		LoadMiddleButton( "SEL" );
-
-	} else {
-		GrStringDrawCentered(&g_sContext, "No Presets", AUTO_STRING_LENGTH, 47, 20, OPAQUE_TEXT);
-		GrStringDrawCentered(&g_sContext, "Available", AUTO_STRING_LENGTH, 47, 30, OPAQUE_TEXT);
-	}
-
-	LoadLeftButton( "CANC" );
-	LoadRightButton( "RETY" );
-
-	GrFlush(&g_sContext);
-}
-
-void PrintStartBolus_Manual(){
-	// Clear previous entries from screen
-	GrContextForegroundSet(&g_sContext, ClrWhite);
-	GrRectFill(&g_sContext, &myRectangleScreen);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-
-	// Draw Header
-	GrStringDrawCentered(&g_sContext, "Enter Bolus", AUTO_STRING_LENGTH, 47, 21, OPAQUE_TEXT);
-	GrStringDrawCentered(&g_sContext, "Amount", AUTO_STRING_LENGTH, 47, 31, OPAQUE_TEXT);
-
-
-	// Draw  header and user entered amount
-	char buffer[10] = "";
-	char outString[32] = "";
-	int digits = 0;
-	digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
-
-	strcpy(outString, "Amount: ");
-	strncat(outString, buffer, digits);
-	strncat(outString, " IU", 3);
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, 45, OPAQUE_TEXT);
-
-
-	// Draw Cursor
-	int cursorY, cursorX, cursorW;
-	cursorY = 53; // y location
-	cursorW = digits * 5;; // width
-	cursorX = 53; // x location is under last entered letter
-	GrLineDrawH(&g_sContext, cursorX, cursorX+cursorW, cursorY);
-
-	// Draw Buttons
-	LoadLeftButton("CANC");
-	LoadMiddleButton("DONE");
-	LoadRightButton("RETY");
-
-
-	// Flush to screen
-	GrFlush(&g_sContext);
-}
 
 
 void  PrintSettings_DateTime(){
