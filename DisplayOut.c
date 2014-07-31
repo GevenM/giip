@@ -82,9 +82,6 @@ void InputProfileToBasalProfile(y_basal *basProf);
 
 
 
-void PrintStartBasProf_Idle();
-
-
 void PrintStartTmpBas_Idle();
 void PrintStartTmpBas_Confirm();
 void PrintStartTmpBas_Invalid();
@@ -189,7 +186,7 @@ void PrintScreen(){
 	case RemoveBasProf_Confirm:PrintRemoveBasProf_Confirm( &g_sContext ); break;
 	case RemoveBasProf_Invalid:PrintRemoveBasProf_Invalid( &g_sContext ); break;
 
-	case StartBasProf_Idle:PrintStartBasProf_Idle(); break;
+	case StartBasProf_Idle:PrintStartBasProf_Idle( &g_sContext, &m_basActSelected); break;
 	case StartBasProf_Confirm:PrintStartBasProf_Confirm( &g_sContext ); break;
 	case StartBasProf_Invalid:PrintStartBasProf_Invalid( &g_sContext ); break;
 
@@ -1670,35 +1667,6 @@ void ClearCreateBasProf_Idle(y_basal *p_profile){
 
 
 
-void PrintStartBasProf_Idle(){
-	int numberOfProfiles;
-	numberOfProfiles = GetNumberBasalProfiles();
-
-	y_basalName *Name;
-	Name = (y_basalName *) malloc( sizeof( y_basalName ));
-
-	int i;
-	for ( i = 0; i < numberOfProfiles; i++ ){
-		GetProfileName( Name, i );
-		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
-	}
-	free(Name);
-
-	// highlight the selected profile
-    unsigned char text_start = 18;
-    int index = GetProfileIndex( &m_basActSelected );
-	text_start = 16 + 10 * index;
-
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, m_basActSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
-	GrFlush(&g_sContext);
-}
 
 
 
