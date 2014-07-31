@@ -17,15 +17,15 @@ extern void PrintNoBasProf( tContext *context );
 extern void PrintBasCreateNotAllowed( tContext *context );
 extern void PrintCreateBasProf( tContext *context );
 
-extern void PrintRemoveBasProf_Idle( tContext *context, y_basal *selectedProfile );
+extern void PrintRemoveBasProf_Idle( tContext *context, y_basal selectedProfile );
 extern void PrintRemoveBasProf_Confirm( tContext *context );
 extern void PrintRemoveBasProf_Invalid( tContext *context );
 
-extern void PrintStartBasProf_Idle( tContext *context, y_basal *selectedProfile );
+extern void PrintStartBasProf_Idle( tContext *context, y_basal selectedProfile );
 extern void PrintStartBasProf_Confirm( tContext *context );
 extern void PrintStartBasProf_Invalid( tContext *context );
 
-extern void PrintCreateBasProf_Idle( tContext *context, y_basal *p_profile, bool nameEntered, unsigned char segmentIndex, unsigned char rateIndex, unsigned char *segments );
+extern void PrintCreateBasProf_Idle( tContext *context, y_basal p_profile, bool nameEntered, unsigned char segmentIndex, unsigned char rateIndex, unsigned char *segments );
 extern void PrintCreateBasProf_Confirm( tContext *context );
 extern void PrintCreateBasProf_Invalid( tContext *context );
 

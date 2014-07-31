@@ -23,12 +23,12 @@ void PrintCreateBasProf_Invalid(tContext *context){
 }
 
 
-void PrintCreateBasProf_Idle(tContext *context, y_basal *p_profile, bool nameEntered, unsigned char segmentIndex, unsigned char rateIndex, unsigned char *segments ){
+void PrintCreateBasProf_Idle(tContext *context, y_basal p_profile, bool nameEntered, unsigned char segmentIndex, unsigned char rateIndex, unsigned char *segments ){
 	int cursorY, cursorX, cursorW, scrollOffset = 0;
 
 	if ( nameEntered == false){
 		cursorY = 34;
-		cursorX = strlen( p_profile->Name ) * 6 - 1;
+		cursorX = strlen( p_profile.Name ) * 6 - 1;
 		cursorW = 4;
 	} else {
 		cursorY = 58 + segmentIndex * 10 ;
@@ -53,7 +53,7 @@ void PrintCreateBasProf_Idle(tContext *context, y_basal *p_profile, bool nameEnt
 
 	if ( 40-scrollOffset > 15 && 40-scrollOffset < 80 ) GrStringDraw( context, "Rates:   |U/hr" , AUTO_STRING_LENGTH, 5, 40 - scrollOffset, OPAQUE_TEXT );
 
-	LoadRates( context, p_profile, scrollOffset, segments );
+	LoadRates( context, &p_profile, scrollOffset, segments );
 
 	// Remove previously written letters and underline
 	GrContextForegroundSet( context, ClrWhite );
@@ -62,7 +62,7 @@ void PrintCreateBasProf_Idle(tContext *context, y_basal *p_profile, bool nameEnt
 	GrContextForegroundSet( context, ClrBlack );
 
 	if ( cursorY > 13 && cursorY - scrollOffset < 81 ) GrLineDrawH( context, cursorX, cursorX + cursorW, cursorY - scrollOffset );
-	if ( 26-scrollOffset > 15 && 26 - scrollOffset < 80 ) GrStringDraw( context, p_profile->Name , AUTO_STRING_LENGTH, 5, 26 - scrollOffset, OPAQUE_TEXT );
+	if ( 26-scrollOffset > 15 && 26 - scrollOffset < 80 ) GrStringDraw( context, p_profile.Name , AUTO_STRING_LENGTH, 5, 26 - scrollOffset, OPAQUE_TEXT );
 
 	LoadLeftButton("CANC");
 	if ( nameEntered == false ){

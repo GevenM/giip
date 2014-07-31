@@ -21,7 +21,7 @@ void PrintStartBasProf_Invalid(tContext *context){
 	LoadRightButton("RETY");
 }
 
-void PrintStartBasProf_Idle( tContext *context, y_basal *selectedProfile ){
+void PrintStartBasProf_Idle( tContext *context, y_basal selectedProfile ){
 	int numberOfProfiles;
 	numberOfProfiles = GetNumberBasalProfiles();
 
@@ -37,12 +37,12 @@ void PrintStartBasProf_Idle( tContext *context, y_basal *selectedProfile ){
 
 	// highlight the selected profile
     unsigned char text_start = 18;
-    int index = GetProfileIndex( selectedProfile );
+    int index = GetProfileIndex( &selectedProfile );
 	text_start = 16 + 10 * index;
 
     GrContextForegroundSet( context, ClrWhite); //ClrBlack       this affects the highlight color
     GrContextBackgroundSet( context, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw( context, selectedProfile->Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+    GrStringDraw( context, selectedProfile.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 

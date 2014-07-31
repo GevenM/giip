@@ -23,7 +23,7 @@ void PrintRemoveBasProf_Invalid(tContext *context){
 }
 
 
-void PrintRemoveBasProf_Idle( tContext *context, y_basal *selectedProfile ){
+void PrintRemoveBasProf_Idle( tContext *context, y_basal selectedProfile ){
 	int numberOfProfiles;
 	numberOfProfiles = GetNumberBasalProfiles();
 
@@ -39,12 +39,12 @@ void PrintRemoveBasProf_Idle( tContext *context, y_basal *selectedProfile ){
 
 	// highlight the selected profile
     unsigned char textStart = 18;
-    int index = GetProfileIndex( selectedProfile );
+    int index = GetProfileIndex( &selectedProfile );
 	textStart = 16 + 10 * index;
 
     GrContextForegroundSet( context, ClrWhite); //ClrBlack       this affects the highlight color
     GrContextBackgroundSet( context, ClrBlack); //ClrWhite      this affects the text color in the highlight
-    GrStringDraw( context, selectedProfile->Name, AUTO_STRING_LENGTH, 5, textStart, OPAQUE_TEXT);
+    GrStringDraw( context, selectedProfile.Name, AUTO_STRING_LENGTH, 5, textStart, OPAQUE_TEXT);
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 
