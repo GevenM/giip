@@ -51,11 +51,8 @@ void LoadBanner(void);
 void LoadLeftButton(const char * text);
 void LoadMiddleButton(const char * text);
 void LoadRightButton(const char * text);
-void ClearRightButton();
-
 
 void ClearCreateBasProf_Idle(y_basal *p_profile);
-
 
 void PrintError();
 
@@ -1618,13 +1615,6 @@ void ClearCreateBasProf_Idle(y_basal *p_profile){
 }
 
 
-
-
-
-
-
-
-
 /**********************************************************************//**
  * @brief  UnsignedInt_To_ASCII
  *
@@ -1653,11 +1643,6 @@ int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII)
 
     return i;
 }
-
-
-
-
-
 
 
 
@@ -1698,7 +1683,6 @@ void ClearRightButton(){
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 }
-
 
 void LoadBanner(void){
 
@@ -1763,12 +1747,6 @@ void LoadBanner(void){
 	GrContextForegroundSet(&g_sContext, ClrBlack);
 	GrContextBackgroundSet(&g_sContext, ClrWhite);
 }
-
-
-
-
-
-
 
 void ClearInputProfile(){
 	int i;

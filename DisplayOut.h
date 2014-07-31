@@ -63,5 +63,7 @@ extern void LoadLeftButton(const char * text);
 extern void LoadMiddleButton(const char * text);
 extern void LoadRightButton(const char * text);
 
+extern void ClearRightButton();
+
 #endif
 

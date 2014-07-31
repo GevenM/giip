@@ -6,6 +6,7 @@
 #include "grlib.h"
 #include "LcdDriver/Sharp96x96.h"
 #include <string.h>
+#include "RTC.h"
 
 extern void PrintNoRemind(tContext *context);
 extern void PrintRemindCreateNotAllowed(tContext *context);
