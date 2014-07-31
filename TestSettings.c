@@ -7,7 +7,7 @@
 #include "DisplayOut.h"
 
 
-void ShowDay(){
+void ShowDay( tContext *context ){
 	char outDay[32] = "";
 	int date = GetCurrentDayOfWeek();
 	char name[10];
@@ -16,5 +16,5 @@ void ShowDay(){
 
 	strcpy(outDay, "Day: ");
 	strcat(outDay, name);
-	GrStringDraw(&g_sContext, outDay, AUTO_STRING_LENGTH, 5, 74, OPAQUE_TEXT);
+	GrStringDraw( context, outDay, AUTO_STRING_LENGTH, 5, 74, OPAQUE_TEXT);
 }

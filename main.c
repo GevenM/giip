@@ -68,12 +68,8 @@ void main(void){
     // Set up the LCD
     Sharp96x96_LCDInit();
 
-    GrContextInit(&g_sContext, &g_sharp96x96LCD);
-  	GrContextForegroundSet(&g_sContext, ClrBlack);
-  	GrContextBackgroundSet(&g_sContext, ClrWhite);
-  	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-  	GrClearDisplay(&g_sContext);
-  	GrFlush(&g_sContext);
+    InitDisplayContext ();
+
 
 
   	InitMonitoredVariables();

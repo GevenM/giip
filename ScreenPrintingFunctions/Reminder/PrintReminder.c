@@ -12,8 +12,8 @@ void PrintReminder(tContext *context, y_menus f_menuChoice){
 
 
 	// Menu options
-	GrStringDraw(&g_sContext, "Create Reminder", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Remove Reminder", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+	GrStringDraw( context, "Create Reminder", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw( context, "Remove Reminder", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
 
 
 	// Highlight selected item
@@ -35,5 +35,4 @@ void PrintReminder(tContext *context, y_menus f_menuChoice){
 	GrContextForegroundSet(context, ClrBlack);
 	GrContextBackgroundSet(context, ClrWhite);
 
-	GrFlush(context);
 }

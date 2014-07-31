@@ -9,8 +9,8 @@
 #include "ScreenPrintingFunctions/Bolus/!PrintBolus_Master.h"
 #include "ScreenPrintingFunctions/Reminder/!PrintReminder_Master.h"
 #include "ScreenPrintingFunctions/Main/!Main_Master.h"
+#include "ScreenPrintingFunctions/Settings/!PrintSettings_Master.h"
 
-#include "TestSettings.h"
 
 tContext g_sContext;
 tRectangle myRectangleBotMid = { 33, 82, 63, 95};
@@ -72,8 +72,6 @@ void ClearCreateBasProf_Idle(y_basal *p_profile);
 
 void PrintError();
 
-void PrintSettings();
-
 
 
 void PrintMessage(char outString[32]);
@@ -119,6 +117,16 @@ void PrintRemoveReminder_Confirm();
 
 void UpdateScreen();
 
+void InitDisplayContext(){
+    GrContextInit(&g_sContext, &g_sharp96x96LCD);
+  	GrContextForegroundSet(&g_sContext, ClrBlack);
+  	GrContextBackgroundSet(&g_sContext, ClrWhite);
+  	GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+  	GrClearDisplay(&g_sContext);
+  	GrFlush(&g_sContext);
+
+}
+
 void DisplayOut(void){
 	switch(c_pwrStatus){
 	case e_pwrStatus_standby:
@@ -161,8 +169,8 @@ void PrintScreen(){
 	case BasalNoActive: PrintBasNoActive(&g_sContext, f_menuChoice); break;
 
 	case Bolus: PrintBolus( &g_sContext, f_menuChoice ); break;
-	case Reminder: PrintReminder(&g_sContext, f_menuChoice); break;
-	case Settings: PrintSettings(); break;
+	case Reminder: PrintReminder( &g_sContext, f_menuChoice ); break;
+	case Settings: PrintSettings( &g_sContext, f_menuChoice ); break;
 
 	case BolusAlreadyActive: PrintBolusAlreadyActive( &g_sContext ); break;
 	case Bolus_Manage: PrintBolus_Manage( &g_sContext, f_menuChoice ); break;
@@ -1654,44 +1662,7 @@ void PrintError(){
 	;
 }
 
-void PrintSettings(){
-	char outString[32] = "";
-	unsigned char text_start = 18;
 
-	// Draw top and bottom banner and buttons
-	LoadLeftButton("BACK");
-	LoadMiddleButton("SEL");
-	//LoadRightButton("");
-
-	//Test Prints to show in settings screen
-	ShowDay();
-
-	// Menu options
-	GrStringDraw(&g_sContext, "Clear Flash", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Edit Calendar", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-
-
-	// Highlight selected item
-	switch (f_menuChoice) {
-	case Settings_ClearFlash:
-		text_start = 18;
-		strcpy(outString, "Clear Flash");
-		break;
-	case Settings_DateTime:
-		text_start = 31;
-		strcpy(outString, "Edit Calendar");
-		break;
-	default: break;
-	}
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	GrFlush(&g_sContext);
-}
 
 void ClearCreateBasProf_Idle(y_basal *p_profile){
 	GrStringDraw(&g_sContext, p_profile->Name, AUTO_STRING_LENGTH, 5, 44, TRANSPARENT_TEXT);

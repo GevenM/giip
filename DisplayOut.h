@@ -30,7 +30,7 @@ extern const char * convertToChar(unsigned int x);
 
 extern int UnsignedInt_To_ASCII(unsigned int hex, char *ASCII);
 
-extern tContext g_sContext;
+//extern tContext g_sContext;
 extern tRectangle myRectangleBotMid;
 extern tRectangle myRectangleBotRight;
 extern tRectangle myRectangleBotLeft;
@@ -40,6 +40,7 @@ extern tRectangle myRectangleScreen;
 
 extern bool updateScreen;
 
+extern void InitDisplayContext();
 
 extern void LoadLeftButton(const char * text);
 extern void LoadMiddleButton(const char * text);

@@ -12,11 +12,11 @@ void PrintMainMenu( tContext *context, y_menus f_menuChoice ){
 
 
 	// Menu options
-	GrStringDraw(&g_sContext, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Reminder", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Settings", AUTO_STRING_LENGTH, 5, 57, OPAQUE_TEXT);
-	GrStringDraw(&g_sContext, "Shut Down", AUTO_STRING_LENGTH, 5, 70, OPAQUE_TEXT);
+	GrStringDraw( context, "Basal Menu", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
+	GrStringDraw( context, "Bolus Menu", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+	GrStringDraw( context, "Reminder", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
+	GrStringDraw( context, "Settings", AUTO_STRING_LENGTH, 5, 57, OPAQUE_TEXT);
+	GrStringDraw( context, "Shut Down", AUTO_STRING_LENGTH, 5, 70, OPAQUE_TEXT);
 
 
     // Highlight selected item
@@ -45,10 +45,10 @@ void PrintMainMenu( tContext *context, y_menus f_menuChoice ){
     default: break;
     }
 
-    GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-    GrContextBackgroundSet(&g_sContext, ClrBlack);    //ClrWhite      this affects the text color in the highlight
-    GrStringDraw(&g_sContext, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
+    GrContextForegroundSet( context, ClrWhite); //ClrBlack       this affects the highlight color
+    GrContextBackgroundSet( context, ClrBlack);    //ClrWhite      this affects the text color in the highlight
+    GrStringDraw( context, outString, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet( context, ClrBlack);
+	GrContextBackgroundSet( context, ClrWhite);
 
 }
