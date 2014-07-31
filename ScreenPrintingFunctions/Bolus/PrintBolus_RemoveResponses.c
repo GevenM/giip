@@ -38,3 +38,32 @@ void PrintRemoveBolusPreset_Invalid( tContext *context ){
 	LoadRightButton("RETY");
 
 }
+
+void PrintRemoveBolusPreset_Idle( tContext *context, y_bolus selectedBolus ){
+	int numberOfPresets = GetNumberOfBolusPresets();
+
+	// Get names of saved presets and draw them
+	y_bolusName *Name;
+	Name = (y_bolusName *) malloc( sizeof( y_bolusName ));
+
+	int i;
+	for ( i = 0; i < numberOfPresets; i++ ){
+		GetPresetName( Name, i );
+		GrStringDraw( context, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
+	}
+	free(Name);
+
+	// highlight the selected profile
+	unsigned char text_start = 18;
+	int index = GetPresetIndex( &selectedBolus );
+	text_start = 16 + 10 * index;
+
+	GrContextForegroundSet( context, ClrWhite); //ClrBlack       this affects the highlight color
+	GrContextBackgroundSet( context, ClrBlack); //ClrWhite      this affects the text color in the highlight
+	GrStringDraw( context, selectedBolus.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
+	GrContextForegroundSet( context, ClrBlack);
+	GrContextBackgroundSet( context, ClrWhite);
+
+	LoadLeftButton( "CANC" );
+	LoadMiddleButton( "SEL" );
+}

@@ -69,7 +69,7 @@ void ClearInputProfile();
 void InputProfileToBasalProfile(y_basal *basProf);
 
 
-void PrintRemoveBolusPreset_Idle();
+
 
 void PrintCreateReminder_Idle();
 void PrintCreateReminder_Confirm();
@@ -170,7 +170,7 @@ void PrintScreen(){
 	case CreateBolusPreset_Confirm:PrintCreateBolusPreset_Confirm( &g_sContext ); break;
 	case CreateBolusPreset_Invalid:PrintCreateBolusPreset_Invalid( &g_sContext ); break;
 
-	case RemoveBolusPreset_Idle:PrintRemoveBolusPreset_Idle(); break;
+	case RemoveBolusPreset_Idle:PrintRemoveBolusPreset_Idle( &g_sContext, m_bolSelected ); break;
 	case RemoveBolusPreset_Confirm:PrintRemoveBolusPreset_Confirm( &g_sContext ); break;
 	case RemoveBolusPreset_Invalid:PrintRemoveBolusPreset_Invalid( &g_sContext ); break;
 
@@ -1819,35 +1819,7 @@ void InputProfileToBasalProfile( y_basal *basProf ){
 }
 
 
-void PrintRemoveBolusPreset_Idle(){
-	int numberOfPresets = GetNumberOfBolusPresets();
 
-	// Get names of saved presets and draw them
-	y_bolusName *Name;
-	Name = (y_bolusName *) malloc( sizeof( y_bolusName ));
-
-	int i;
-	for ( i = 0; i < numberOfPresets; i++ ){
-		GetPresetName( Name, i );
-		GrStringDraw( &g_sContext, *Name, AUTO_STRING_LENGTH, 5, 16 + ( 10 * i ), OPAQUE_TEXT );
-	}
-	free(Name);
-
-	// highlight the selected profile
-	unsigned char text_start = 18;
-	int index = GetPresetIndex( &m_bolSelected );
-	text_start = 16 + 10 * index;
-
-	GrContextForegroundSet(&g_sContext, ClrWhite); //ClrBlack       this affects the highlight color
-	GrContextBackgroundSet(&g_sContext, ClrBlack); //ClrWhite      this affects the text color in the highlight
-	GrStringDraw(&g_sContext, m_bolSelected.Name, AUTO_STRING_LENGTH, 5, text_start, OPAQUE_TEXT);
-	GrContextForegroundSet(&g_sContext, ClrBlack);
-	GrContextBackgroundSet(&g_sContext, ClrWhite);
-
-	LoadLeftButton( "CANC" );
-	LoadMiddleButton( "SEL" );
-	GrFlush(&g_sContext);
-}
 
 void PrintCreateReminder_Idle(){
 	int digits = 0, domDigits = 0;

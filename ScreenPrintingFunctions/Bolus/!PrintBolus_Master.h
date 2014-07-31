@@ -15,7 +15,7 @@ extern void PrintBolusAlreadyActive( tContext *context );
 extern void PrintBolusCreateNotAllowed( tContext *context );
 extern void PrintNoBolusPreset( tContext *context );
 
-
+extern void PrintRemoveBolusPreset_Idle( tContext *context, y_bolus selectedBolus );
 extern void PrintRemoveBolusPreset_Confirm( tContext *context );
 extern void PrintRemoveBolusPreset_Invalid( tContext *context );
 
