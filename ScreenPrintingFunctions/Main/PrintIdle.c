@@ -1,15 +1,18 @@
 #include "!Main_Master.h"
+#include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 #include "DisplayOut.h"
 
 #include "TemporaryBasal.h"
 #include "BasalProfiles.h"
 #include "BolusPresets.h"
 #include "RTC.h"
+#include "TriggerReminder.h"
 
 void PrintIdle( tContext *context ){
 	char buffer[10] = "";
 	char outString[32] = "";
 	int digits;
+
 
 	// Print basal status
 	if ( TemporaryBasalIsActive() ){
@@ -63,6 +66,7 @@ void PrintIdle( tContext *context ){
 		GrStringDraw( context, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT );
 	}
 
+
 	// Print bolus status
 	if( BolusIsActive() ){
 
@@ -88,6 +92,5 @@ void PrintIdle( tContext *context ){
 
 	// Load bottom buttons
 	LoadMiddleButton(  context , "MENU" );
-
 
 }

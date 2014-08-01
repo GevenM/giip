@@ -2,7 +2,7 @@
 #include "RTC.h"
 
 #include "InsulinOutputCalculator.h" // dependency should be removed
-
+#include "TriggerReminder.h" // called every minute.
 
 Calendar p_currentTime;
 
@@ -26,7 +26,7 @@ void InitRTC(){
 	currentTime.Seconds    = 0x00;
 	currentTime.Minutes    = 0x12;
 	currentTime.Hours      = 0x01;
-	currentTime.DayOfWeek  = 0x01;
+	currentTime.DayOfWeek  = 0x06;
 	currentTime.DayOfMonth = 0x14;
 	currentTime.Month      = 0x05;
 	currentTime.Year       = 0x1988;
@@ -159,10 +159,8 @@ void RTC_A_ISR(void)
 	switch (__even_in_range(RTCIV, 16)) {
 	case 0: break;  //No interrupts
 	case 2:         //RTCRDYIFG
-			//Toggle P1.0 every second
-			GPIO_toggleOutputOnPin(
-					GPIO_PORT_P1,
-					GPIO_PIN0);
+
+
 
 			p_currentTime = GetCurrentCalendar();
 			InsulinOutputCalculator();
@@ -171,6 +169,7 @@ void RTC_A_ISR(void)
 	case 4:         //RTCEVIFG
 			//Interrupts every minute
 
+		TriggerReminder();
 			//Read out New Time a Minute Later BREAKPOINT HERE
 			//newTime = RTC_A_getCalendarTime(RTC_A_BASE);
 			break;

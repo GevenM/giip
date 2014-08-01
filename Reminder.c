@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "flash.h"
 #include <string.h>
-
+#include "RTC.h"
 
 // Allocates space on flash for the given variable
 #pragma DATA_SECTION(reminderSet, ".mydata3");
@@ -99,6 +99,13 @@ int GetReminderIndex( y_reminder *reminder ){
 }
 
 bool ReminderIsValid( y_reminder *reminder ){
+	GetDay( &reminder->Time );
+	if( reminder->Time.DayOfWeek == 0 || reminder->Time.DayOfWeek == 6 ){ //if reminder on weekend
+		if( reminder->Frequency == e_remindFreq_weekdays ) return false;
+	} else { // if reminder on a weekday
+		if ( reminder->Frequency == e_remindFreq_weekends ) return false;
+	}
+
 	if( GetReminderIndex( reminder ) == -1 ){
 		if( strcmp( reminder->Name, "" ) != 0 ){
 			if( strcmp( reminder->Message, "" ) != 0 ){
@@ -156,4 +163,70 @@ y_reminder GetReminderFromIndex( int index ){
 void GetReminderName( y_remindName *name, int index ){
 	LoadRemindersFromFlash();
 	strncpy( *name, reminderSetLocal.Reminder[ index ].Name, k_remindNameLength );
+}
+
+void IncrementReminderDay( y_reminder *reminder ){
+	int day = BCDtoInt( reminder->Time.DayOfMonth );
+
+	if ( day < 28 ) reminder->Time.DayOfMonth = IntToBCD( ++day );
+	else {
+		if ( reminder->Time.Month == 0x04 || reminder->Time.Month == 0x06 || reminder->Time.Month == 0x09 || reminder->Time.Month == 0x11 ){
+			if ( day < 30 ) reminder->Time.DayOfMonth = IntToBCD( ++day );
+			else {
+				reminder->Time.DayOfMonth = 1;
+				IncrementReminderMonth( reminder );
+			}
+		} else if ( reminder->Time.Month == 0x02 ){
+			int year = BCDtoInt( reminder->Time.Year );
+			if ( IsLeapYear(year) ){
+				if ( day < 29 ) reminder->Time.DayOfMonth = IntToBCD( ++day );
+				else {
+						reminder->Time.DayOfMonth = 1;
+						IncrementReminderMonth( reminder );
+				}
+			} else {
+				if ( day < 28 ) reminder->Time.DayOfMonth = IntToBCD( ++day );
+				else {
+					reminder->Time.DayOfMonth = 1;
+					IncrementReminderMonth( reminder );
+				}
+			}
+		} else {
+			if ( day < 31 ) reminder->Time.DayOfMonth = IntToBCD( ++day );
+			else {
+				reminder->Time.DayOfMonth = 1;
+				IncrementReminderMonth( reminder );
+			}
+		}
+
+	}
+}
+
+void IncrementReminderMonth( y_reminder *reminder ){
+	int month = BCDtoInt( reminder->Time.Month );
+
+	if( month < 12 ) {
+		month++;
+		reminder->Time.Month = IntToBCD( month );
+
+	} else {
+		reminder->Time.Month = 1;
+		IncrementReminderYear( reminder );
+	}
+}
+
+void IncrementReminderYear( y_reminder *reminder ){
+	int year = BCDtoInt( reminder->Time.Year & 0xFF );
+
+	if( year < 99 ) {
+		year++;
+		reminder->Time.Year = reminder->Time.Year & 0xff00;
+		reminder->Time.Year | IntToBCD( year );
+
+	} else {
+		int century = BCDtoInt( reminder->Time.Year >> 8 );
+		century++;
+		reminder->Time.Year =  reminder->Time.Year & 0x0000;
+		reminder->Time.Year | ( IntToBCD( century ) << 8 );
+	}
 }

@@ -26,4 +26,8 @@ extern int GetNumberOfReminders();
 extern y_reminder GetReminderFromIndex( int index );
 extern void GetReminderName( y_remindName *name, int index );
 
+extern void IncrementReminderDay( y_reminder *reminder );
+extern void IncrementReminderMonth( y_reminder *reminder );
+extern void IncrementReminderYear( y_reminder *reminder );
+
 #endif

@@ -17,5 +17,6 @@ extern void PrintCreateReminder_Confirm(tContext *context);
 extern void PrintCreateReminder_Invalid(tContext *context);
 extern void PrintRemoveReminder_Idle(tContext *context);
 extern void PrintRemoveReminder_Confirm(tContext *context);
+extern void PrintPendingReminder( tContext *context );
 
 #endif

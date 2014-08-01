@@ -4,6 +4,7 @@
 #include "RTC.h"
 #include "InsulinOutputCalculator.h"
 #include "Reminder.h"
+#include "TriggerReminder.h"
 
 #include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
 #include "ScreenPrintingFunctions/Basal/TemporaryBasal/!PrintTmpBas_Master.h"
@@ -78,6 +79,7 @@ void DisplayOut(void){
 		break;
 
 	case e_pwrStatus_ready:
+
 		UpdateScreen();
 		//PrintScreen();
 		break;
@@ -168,9 +170,11 @@ void PrintScreen(){
 	case Settings_DateTime: PrintSettings_DateTime(&g_sContext, p_calendar, p_calendarIndex); break;
 	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(&g_sContext); break;
 
+	case Reminder_ReminderPending: PrintPendingReminder( &g_sContext ); break;
 
 	default: PrintError(); break;
 	}
+
 	GrFlush(&g_sContext);
 }
 
@@ -179,9 +183,13 @@ void UpdateScreen(){
 	case e_operation_idle:
 		switch (c_menuScreen){
 		case None:
-			if (M_menuReq) {
-				c_menuScreen = Main;
-				f_menuChoice = Basal;
+			if ( ReminderIsPending() ){
+				c_menuScreen = Reminder_ReminderPending;
+			} else {
+				if (M_menuReq) {
+					c_menuScreen = Main;
+					f_menuChoice = Basal;
+				}
 			}
 			break;
 		case Main:
@@ -736,6 +744,7 @@ void UpdateScreen(){
 
 			} else if ( M_selReq ) {
 				if ( CalendarIsValid( p_calendar )){
+					GetDay( &p_calendar );
 					SetCalendar( p_calendar );
 					updateScreen = true;
 				}
@@ -746,11 +755,19 @@ void UpdateScreen(){
 				c_menuScreen = Settings;
 			}
 			break;
+		case Reminder_ReminderPending:
+			if ( M_selReq ){
+				PendingReminderAckHandler();
+				c_menuScreen = None;
+				GPIO_setOutputLowOnPin( GPIO_PORT_P1, GPIO_PIN0);
+			}
+			break;
 
 		default: c_menuScreen = None;
 			break;
 		}
 		break;
+
 
 	case e_operation_createBasProf:
 		switch (c_basCreateStatus){
@@ -1466,25 +1483,51 @@ void UpdateScreen(){
 
 			} else if ( remindEntryIndex == FREQ ){
 				if ( M_downReq ){
-					switch ( p_reminder.Frequency ){
-					case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_daily; break;
-					case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_weekly; break;
-					case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_weekdays; break;
-					case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekends; break;
-					case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_oneTime; break;
-					default: break;
+					GetDay( &p_reminder.Time );
+					if ( p_reminder.Time.DayOfWeek == 6 || p_reminder.Time.DayOfWeek == 0 ){
+						switch ( p_reminder.Frequency ){
+						case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_daily; break;
+						case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_weekly; break;
+						case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_weekends; break;
+						case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekends; break;
+						case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_oneTime; break;
+						default: break;
+						}
+					} else {
+						switch ( p_reminder.Frequency ){
+						case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_daily; break;
+						case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_weekly; break;
+						case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_weekdays; break;
+						case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_oneTime; break;
+						case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_oneTime; break;
+						default: break;
+						}
 					}
 					updateScreen = true;
+
 				} else if ( M_upReq ){
-					switch ( p_reminder.Frequency ){
-					case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_weekends; break;
-					case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_oneTime; break;
-					case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_daily; break;
-					case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekly; break;
-					case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_weekly; break;
-					default: break;
+					GetDay( &p_reminder.Time );
+					if ( p_reminder.Time.DayOfWeek == 6 || p_reminder.Time.DayOfWeek == 0 ){
+						switch ( p_reminder.Frequency ){
+						case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_weekends; break;
+						case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_oneTime; break;
+						case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_daily; break;
+						case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekly; break;
+						case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_weekly; break;
+						default: break;
+						}
+					} else {
+						switch ( p_reminder.Frequency ){
+						case e_remindFreq_oneTime: p_reminder.Frequency = e_remindFreq_weekdays; break;
+						case e_remindFreq_daily: p_reminder.Frequency = e_remindFreq_oneTime; break;
+						case e_remindFreq_weekly: p_reminder.Frequency = e_remindFreq_daily; break;
+						case e_remindFreq_weekdays: p_reminder.Frequency = e_remindFreq_weekly; break;
+						case e_remindFreq_weekends: p_reminder.Frequency = e_remindFreq_weekdays; break;
+						default: break;
+						}
 					}
 					updateScreen = true;
+
 				} else if ( M_rightReq ) {
 					remindEntryIndex = MSG;
 					updateScreen = true;

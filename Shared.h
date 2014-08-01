@@ -85,7 +85,9 @@ typedef enum {
 
 	Settings_ClearFlash,
 	Settings_DateTime,
-	Settings_DateTime_NotAllowed
+	Settings_DateTime_NotAllowed,
+
+	Reminder_ReminderPending
 } y_menus;
 
 

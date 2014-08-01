@@ -14,6 +14,6 @@ extern void LoadMiddleButton( tContext *context, const char * text );
 extern void LoadRightButton( tContext *context, const char * text );
 
 void ClearRightButton( tContext *context );
-
+void ClearScreenContent( tContext *context );
 
 #endif
