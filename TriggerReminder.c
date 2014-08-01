@@ -92,7 +92,7 @@ void PendingReminderAckHandler(){
 
 	case e_remindFreq_weekdays:
 		RemoveReminderFromSet( &p_pendingReminder );
-		if( GetCurrentDayOfWeek() == 5 ){ // if it's friday, increment to monday
+		if( p_pendingReminder.Time.DayOfWeek == 5 ){ // if reminder is for friday, increment to monday
 			IncrementReminderDay( &p_pendingReminder );
 			IncrementReminderDay( &p_pendingReminder );
 			IncrementReminderDay( &p_pendingReminder );
@@ -105,7 +105,7 @@ void PendingReminderAckHandler(){
 
 	case e_remindFreq_weekends:
 		RemoveReminderFromSet( &p_pendingReminder );
-		if( GetCurrentDayOfWeek() == 0 ){// if it's sunday
+		if( p_pendingReminder.Time.DayOfWeek == 0 ){// if reminder is for sunday
 			for( i = 1; i < 7 ; i++ ){ // increment until it's saturday
 				IncrementReminderDay( &p_pendingReminder );
 			}
