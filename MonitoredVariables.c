@@ -1,15 +1,6 @@
 #include <stdbool.h>
 #include "MonitoredVariables.h"
 
-bool M_menuReq;
-bool M_backReq;
-bool M_selReq;
-bool M_upReq;
-bool M_downReq;
-bool M_rightReq;
-bool M_leftReq;
-bool M_nextReq;
-bool M_addReq;
 
 bool M_pwrReq;
 bool M_bolStartReq;
@@ -68,94 +59,85 @@ y_response M_remindRemResp;
 
 
 void UpdateMonitoredVariables(){
-	M_backReq = I_leftSelBtn;
-	M_selReq = I_middleSelBtn;
-	M_upReq = I_upDirBtn;
-	M_downReq = I_downDirBtn;
-	M_menuReq = I_middleSelBtn;
-	M_rightReq = I_rightDirBtn;
-	M_leftReq = I_leftDirBtn;
-	M_nextReq =  I_rightSelBtn;
-	M_addReq =  I_rightSelBtn;
 
-	//M_selReq must be updated before the following requests.
+	//I_middleSelBtn must be updated before the following requests.
 	M_pwrReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Main &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == ShutDown;
 
 	M_bolStartReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Bolus_Start &&
 			!BolusIsActive();
 
 	M_reminderCreateReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Reminder &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Reminder_Create &&
 			ReminderCreationAllowed();
 
 	M_reminderRemoveReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Reminder &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Reminder_Remove &&
 			ReminderRemovalAllowed();
 
 	M_basStopReq =
 			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalBothActive || c_menuScreen == BasalProfActive) &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Basal_StopProfile;
 
 	M_tmpBasStopReq =
 			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalBothActive || c_menuScreen == BasalTmpActive ) &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Basal_StopTmp;
 
 	M_tmpBasStartReq =
 			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalProfActive || c_menuScreen == BasalNoActive ) &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Basal_StartTmp;
 
 	M_basStartReq =
 			c_operation == e_operation_idle &&
 			(c_menuScreen == BasalTmpActive || c_menuScreen == BasalNoActive) &&
-			M_selReq &&
+			I_middleSelBtn &&
 			BasalProfileExists() &&
 			f_menuChoice == Basal_StartProfile;
 
 	M_basCreateReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Basal_Manage &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Basal_Manage_Create &&
 			BasalCreationAllowed();
 
 	M_basRemoveReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Basal_Manage &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Basal_Manage_Remove &&
 			BasalProfileExists();
 
 	M_bolCreateReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus_Manage &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Bolus_Manage_Create &&
 			BolusPresetCreationAllowed();
 
 	M_bolRemoveReq =
 			c_operation == e_operation_idle &&
 			c_menuScreen == Bolus_Manage &&
-			M_selReq &&
+			I_middleSelBtn &&
 			f_menuChoice == Bolus_Manage_Remove &&
 			BolusPresetExists();
 
@@ -232,13 +214,6 @@ void UpdateMonitoredVariables(){
 }
 
 void InitMonitoredVariables(){
-	M_menuReq = false;
-	M_backReq = false;
-	M_selReq = false;
-	M_upReq = false;
-	M_downReq = false;
-	M_nextReq = false;
-	M_addReq = false;
 
 	M_pwrReq = false;
 	M_bolStartReq = false;

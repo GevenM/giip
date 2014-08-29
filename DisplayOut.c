@@ -186,16 +186,16 @@ void UpdateScreen(){
 			if ( ReminderIsPending() ){
 				c_menuScreen = Reminder_ReminderPending;
 			} else {
-				if (M_menuReq) {
+				if (I_middleSelBtn) {
 					c_menuScreen = Main;
 					f_menuChoice = Basal;
 				}
 			}
 			break;
 		case Main:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = None;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal: f_menuChoice = ShutDown;break;
 				case Bolus: f_menuChoice = Basal;break;
@@ -204,7 +204,7 @@ void UpdateScreen(){
 				case ShutDown: f_menuChoice = Settings;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal: f_menuChoice = Bolus;break;
 				case Bolus: f_menuChoice = Reminder;break;
@@ -213,7 +213,7 @@ void UpdateScreen(){
 				case ShutDown: f_menuChoice = Basal;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				switch (f_menuChoice){
 				case Basal:
 					if(BasalIsActive() && TemporaryBasalIsActive()){
@@ -252,22 +252,22 @@ void UpdateScreen(){
 			break;
 
 		case Bolus:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Bolus;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Bolus_Start: f_menuChoice = Bolus_Manage;break;
 				case Bolus_Manage: f_menuChoice = Bolus_Start;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Bolus_Start: f_menuChoice = Bolus_Manage;break;
 				case Bolus_Manage: f_menuChoice = Bolus_Start;break;
 				default:  break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				switch (f_menuChoice){
 				case Bolus_Start:
 					if(BolusIsActive()){
@@ -290,25 +290,25 @@ void UpdateScreen(){
 			break;
 
 		case Bolus_Manage:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Bolus;
 				f_menuChoice = Bolus_Manage;
 
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Bolus_Manage_Create: f_menuChoice = Bolus_Manage_Remove;break;
 				case Bolus_Manage_Remove: f_menuChoice = Bolus_Manage_Create;break;
 				default:  break;
 				}
 
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Bolus_Manage_Create: f_menuChoice = Bolus_Manage_Remove;break;
 				case Bolus_Manage_Remove: f_menuChoice = Bolus_Manage_Create;break;
 				default:  break;
 				}
 
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				switch (f_menuChoice){
 				case Bolus_Manage_Create:
 					if(BolusPresetCreationAllowed()){
@@ -332,22 +332,22 @@ void UpdateScreen(){
 			break;
 
 		case Reminder:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Reminder;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Reminder_Create: f_menuChoice = Reminder_Remove;break;
 				case Reminder_Remove: f_menuChoice = Reminder_Create;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Reminder_Create: f_menuChoice = Reminder_Remove;break;
 				case Reminder_Remove: f_menuChoice = Reminder_Create;break;
 				default:  break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				switch (f_menuChoice){
 				case Reminder_Create:
 					if( ReminderCreationAllowed() ){
@@ -373,21 +373,21 @@ void UpdateScreen(){
 			break;
 
 		case Settings:
-			if( M_downReq ){
+			if( I_downDirBtn ){
 				switch( f_menuChoice ){
 				case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
 				case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
 				}
-			} else if ( M_upReq ){
+			} else if ( I_upDirBtn ){
 				switch( f_menuChoice ){
 					case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
 					case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
 				}
-			} else if (M_backReq){
+			} else if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Settings;
 
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				switch( f_menuChoice ){
 				case Settings_ClearFlash:
 					InitBasalSet();
@@ -410,24 +410,24 @@ void UpdateScreen(){
 			break;
 
 		case BasalBothActive:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Basal;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal_StopProfile: f_menuChoice = Basal_Manage;break;
 				case Basal_StopTmp: f_menuChoice = Basal_StopProfile;break;
 				case Basal_Manage: f_menuChoice = Basal_StopTmp;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal_StopProfile: f_menuChoice = Basal_StopTmp;break;
 				case Basal_StopTmp: f_menuChoice = Basal_Manage;break;
 				case Basal_Manage: f_menuChoice = Basal_StopProfile;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_StopProfile: break;
@@ -438,24 +438,24 @@ void UpdateScreen(){
 			}
 			break;
 		case BasalNoActive:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Basal;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal_StartProfile: f_menuChoice = Basal_Manage;break;
 				case Basal_StartTmp: f_menuChoice = Basal_StartProfile;break;
 				case Basal_Manage: f_menuChoice = Basal_StartTmp;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal_StartProfile: f_menuChoice = Basal_StartTmp;break;
 				case Basal_StartTmp: f_menuChoice = Basal_Manage;break;
 				case Basal_Manage: f_menuChoice = Basal_StartProfile;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_StartProfile:
@@ -476,24 +476,24 @@ void UpdateScreen(){
 			}
 			break;
 		case BasalTmpActive:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Basal;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal_StartProfile: f_menuChoice = Basal_Manage;break;
 				case Basal_StopTmp: f_menuChoice = Basal_StartProfile;break;
 				case Basal_Manage: f_menuChoice = Basal_StopTmp;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal_StartProfile: f_menuChoice = Basal_StopTmp;break;
 				case Basal_StopTmp: f_menuChoice = Basal_Manage;break;
 				case Basal_Manage: f_menuChoice = Basal_StartProfile;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_StartProfile:
@@ -511,24 +511,24 @@ void UpdateScreen(){
 			}
 			break;
 		case BasalProfActive:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Main;
 				f_menuChoice = Basal;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal_StopProfile: f_menuChoice = Basal_Manage;break;
 				case Basal_StartTmp: f_menuChoice = Basal_StopProfile;break;
 				case Basal_Manage: f_menuChoice = Basal_StartTmp;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal_StopProfile: f_menuChoice = Basal_StartTmp;break;
 				case Basal_StartTmp: f_menuChoice = Basal_Manage;break;
 				case Basal_Manage: f_menuChoice = Basal_StopProfile;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_StopProfile: break;
@@ -542,7 +542,7 @@ void UpdateScreen(){
 			}
 			break;
 		case Basal_Manage:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				if(BasalIsActive() && TemporaryBasalIsActive()){
 					c_menuScreen = BasalBothActive;
 				} else if (BasalIsActive() && !TemporaryBasalIsActive()){
@@ -553,19 +553,19 @@ void UpdateScreen(){
 					c_menuScreen = BasalNoActive;
 				}
 				f_menuChoice = Basal_Manage;
-			} else if (M_upReq){
+			} else if (I_upDirBtn){
 				switch (f_menuChoice){
 				case Basal_Manage_Create: f_menuChoice = Basal_Manage_Remove;break;
 				case Basal_Manage_Remove: f_menuChoice = Basal_Manage_Create;break;
 				default:  break;
 				}
-			} else if (M_downReq){
+			} else if (I_downDirBtn){
 				switch (f_menuChoice){
 				case Basal_Manage_Create: f_menuChoice = Basal_Manage_Remove;break;
 				case Basal_Manage_Remove: f_menuChoice = Basal_Manage_Create;break;
 				default: break;
 				}
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				c_menuScreen = f_menuChoice;
 				switch (f_menuChoice){
 				case Basal_Manage_Create:
@@ -588,7 +588,7 @@ void UpdateScreen(){
 			break;
 
 		case NoBasProf:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				if(BasalIsActive() && TemporaryBasalIsActive()){
 					c_menuScreen = BasalBothActive;
 					f_menuChoice = Basal_StopProfile;
@@ -606,45 +606,45 @@ void UpdateScreen(){
 			break;
 
 		case BasCreateNotAllowed:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Basal_Manage;
 				f_menuChoice = Basal_Manage_Create;
 			}
 			break;
 
 		case BolusAlreadyActive:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Bolus;
 			}
 			break;
 
 		case RemindCreateNotAllowed:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Reminder;
 			}
 			break;
 
 		case NoRemind:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Reminder;
 			}
 			break;
 
 		case BolusCreateNotAllowed:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Bolus_Manage;
 			}
 			break;
 
 		case NoBolusPreset:
-			if (M_backReq){
+			if (I_leftSelBtn){
 				c_menuScreen = Bolus;
 				f_menuChoice = Bolus_Start;
 			}
 			break;
 
 		case Settings_DateTime:
-			if ( M_upReq ){
+			if ( I_upDirBtn ){
 				switch ( p_calendarIndex ){
 				int value;
 				case SEC:
@@ -686,7 +686,7 @@ void UpdateScreen(){
 				}
 				updateScreen = true;
 
-			} else if ( M_downReq ){
+			} else if ( I_downDirBtn ){
 				switch ( p_calendarIndex ){
 				int value;
 				case SEC:
@@ -729,20 +729,20 @@ void UpdateScreen(){
 				}
 				updateScreen = true;
 
-			} else if ( M_rightReq ) {
+			} else if ( I_rightDirBtn ) {
 				p_calendarIndex = (p_calendarIndex + 1) % (YEAR_2 + 1);
 				updateScreen = true;
 
-			} else if ( M_leftReq ) {
+			} else if ( I_leftDirBtn ) {
 				if (p_calendarIndex == 0 ) p_calendarIndex = YEAR_2;
 				else p_calendarIndex--;
 				updateScreen = true;
 
-			} else if ( M_backReq ) {
+			} else if ( I_leftSelBtn ) {
 				c_menuScreen = Settings;
 				f_menuChoice = Settings_DateTime;
 
-			} else if ( M_selReq ) {
+			} else if ( I_middleSelBtn ) {
 				if ( CalendarIsValid( p_calendar )){
 					GetDay( &p_calendar );
 					SetCalendar( p_calendar );
@@ -751,12 +751,12 @@ void UpdateScreen(){
 			}
 			break;
 		case Settings_DateTime_NotAllowed:
-			if ( M_selReq ){
+			if ( I_middleSelBtn ){
 				c_menuScreen = Settings;
 			}
 			break;
 		case Reminder_ReminderPending:
-			if ( M_selReq ){
+			if ( I_middleSelBtn ){
 				PendingReminderAckHandler();
 				c_menuScreen = None;
 				GPIO_setOutputLowOnPin( GPIO_PORT_P1, GPIO_PIN0);
@@ -783,33 +783,33 @@ void UpdateScreen(){
 					updateScreen = true;
 				}
 
-				if (M_upReq){ // Increment current character by one and wrap around the alphabet if needed.
+				if (I_upDirBtn){ // Increment current character by one and wrap around the alphabet if needed.
 					if (nameIndex==0 && p_inputProfile.Name[0] == 90) p_inputProfile.Name[0] = 65; //ASCII 90 = Z, 65 = A
 					else if (p_inputProfile.Name[nameIndex] == 122) p_inputProfile.Name[nameIndex] = 97; //ASCII 122 = z, 97 = a
 					else p_inputProfile.Name[nameIndex]++;
 					updateScreen = true;
 
-				} else if(M_downReq){ // Decrement current character by one and wrap around the alphabet if needed.
+				} else if(I_downDirBtn){ // Decrement current character by one and wrap around the alphabet if needed.
 					if (nameIndex==0 && p_inputProfile.Name[nameIndex] == 65) p_inputProfile.Name[nameIndex] = 90;
 					else if (p_inputProfile.Name[nameIndex] == 97) p_inputProfile.Name[nameIndex] = 122;
 					else p_inputProfile.Name[nameIndex]--;
 					updateScreen = true;
 
-				} else if(M_rightReq){ // Go to next character and initialize it to 'a'
+				} else if(I_rightDirBtn){ // Go to next character and initialize it to 'a'
 					if(nameIndex<10){
 						p_inputProfile.Name[++nameIndex] = 97;
 						updateScreen = true;
 					}
 
-				} else if (M_leftReq){ // Go to previous character (if possible) and remove last character.
+				} else if (I_leftDirBtn){ // Go to previous character (if possible) and remove last character.
 					if(nameIndex > 0){
 						p_inputProfile.Name[nameIndex--] = 0;
 						updateScreen = true;
 					}
-				} else if (M_nextReq){
+				} else if (I_rightSelBtn){
 					basCreateStatus_NameEntered = true;
 					updateScreen = true;
-				} else if (M_selReq){
+				} else if (I_middleSelBtn){
 					InputProfileToBasalProfile(&m_basProf);
 					M_basProf = true;
 					updateScreen = true;
@@ -835,7 +835,7 @@ void UpdateScreen(){
 				// a time period. Each of the time periods has a corresponding rate, which is stored in the p_inputProfile.Rate array.
 				// example: segments array holds {20, 15, 10, 3, 0, ...} each segment unit corresponds to 30min, so the time periods are
 				// {00:00-10:00, 10:00-17:30, 17:30-22:30, 22:30-24:00, ...}
-				if (M_upReq){
+				if (I_upDirBtn){
 					if (rateIndex == 0){ // One of the time periods is highlighted. Increment the selected time period if possible.
 						if (segments[segmentIndex+1] > 1){
 							segments[segmentIndex]++;
@@ -846,7 +846,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if(M_downReq){
+				} else if(I_downDirBtn){
 					if (rateIndex == 0){ // Decrement the selected time period if possible.
 						if (segments[segmentIndex]>1){
 							segments[segmentIndex]--;
@@ -859,7 +859,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if(M_rightReq){
+				} else if(I_rightDirBtn){
 					if (rateIndex == 1){ // if rate is selected, go to the next time period if one exists.
 						if (segments[segmentIndex+1]>0){
 							segmentIndex++;
@@ -870,7 +870,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if (M_leftReq){
+				} else if (I_leftDirBtn){
 					if (rateIndex == 1){ // if a rate is selected, go to the corresponding time period
 						rateIndex = 0;
 					} else { // if the time period is selected, go back to the previous rate if there is one, otherwise go back to editing the name.
@@ -881,11 +881,11 @@ void UpdateScreen(){
 						updateScreen = true;
 					}
 
-				} else if (M_nextReq){
+				} else if (I_rightSelBtn){
 					basCreateStatus_NameEntered = false;
 					updateScreen = true;
 
-				} else if (M_selReq){
+				} else if (I_middleSelBtn){
 					InputProfileToBasalProfile(&m_basProf);
 					M_basProf = true;
 					updateScreen = true;
@@ -921,7 +921,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveBasProf_Idle;
 			int profileIndex;
-			if (M_downReq){
+			if (I_downDirBtn){
 				profileIndex = GetProfileIndex( &m_basRemSelected );
 				if(profileIndex == GetNumberBasalProfiles() - 1 ){
 					LoadProfile( &m_basRemSelected, 0 );
@@ -933,7 +933,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if(M_upReq){
+			} else if(I_upDirBtn){
 				profileIndex = GetProfileIndex( &m_basRemSelected );
 				if(profileIndex == 0 ){
 					LoadProfile( &m_basRemSelected, GetNumberBasalProfiles() - 1 );
@@ -945,7 +945,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				M_basRemSelected = true;
 				updateScreen = true;
 			}
@@ -964,7 +964,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = StartBasProf_Idle;
 			int profileIndex;
-			if (M_downReq){
+			if (I_downDirBtn){
 				profileIndex = GetProfileIndex( &m_basActSelected );
 				if(profileIndex == GetNumberBasalProfiles() - 1 ){
 					LoadProfile( &m_basActSelected, 0 );
@@ -976,7 +976,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if(M_upReq){
+			} else if(I_upDirBtn){
 				profileIndex = GetProfileIndex( &m_basActSelected );
 				if(profileIndex == 0 ){
 					LoadProfile( &m_basActSelected, GetNumberBasalProfiles() - 1 );
@@ -988,7 +988,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				M_basActSelected = true;
 				updateScreen = true;
 			}
@@ -1012,42 +1012,42 @@ void UpdateScreen(){
 
 			if(tmpBasal_DurationEntered == false){ //Editing tmp basal duration
 
-				if(M_upReq){
+				if(I_upDirBtn){
 					if(m_tmpBas.Duration >= k_maxTmpDuration ) m_tmpBas.Duration = k_minTmpDuration;
 					else m_tmpBas.Duration = m_tmpBas.Duration + 60;
 					updateScreen = true;
 				}
-				else if(M_downReq) { // decrement numbers
+				else if(I_downDirBtn) { // decrement numbers
 					if(m_tmpBas.Duration <= k_minTmpDuration) m_tmpBas.Duration = k_maxTmpDuration;
 					else m_tmpBas.Duration = m_tmpBas.Duration - 60;
 					updateScreen = true;
 				}
-				else if (M_nextReq || M_rightReq){ // hit next, duration is entered
+				else if (I_rightSelBtn || I_rightDirBtn){ // hit next, duration is entered
 					tmpBasal_DurationEntered = true;
 					updateScreen = true;
 				}
-				else if (M_selReq){ // hit next, duration is entered
+				else if (I_middleSelBtn){ // hit next, duration is entered
 					tmpBasal_DurationEntered = false;
 					M_tmpBas = true;
 				}
 
 			}
 			else {
-				if(M_upReq){ // increment numbers
+				if(I_upDirBtn){ // increment numbers
 					if(m_tmpBas.Rate >= k_maxTmpRate) m_tmpBas.Rate = k_minTmpRate;
 					else m_tmpBas.Rate += 3600;
 					updateScreen = true;
 				}
-				else if(M_downReq) { // decrement numbers
+				else if(I_downDirBtn) { // decrement numbers
 					if(m_tmpBas.Rate <= k_minTmpRate) m_tmpBas.Rate = k_maxTmpRate;
 					else m_tmpBas.Rate -= 3600;
 					updateScreen = true;
 				}
-				else if(M_nextReq || M_leftReq){
+				else if(I_rightSelBtn || I_leftDirBtn){
 					tmpBasal_DurationEntered = false;
 					updateScreen = true;
 				}
-				else if (M_selReq){ // hit next, duration is entered
+				else if (I_middleSelBtn){ // hit next, duration is entered
 					tmpBasal_DurationEntered = false;
 					M_tmpBas = true;
 				}
@@ -1077,35 +1077,35 @@ void UpdateScreen(){
 				}
 
 				int index = strlen( m_bolus.Name ) - 1;
-				if (M_upReq){ // Increment current character by one and wrap around the alphabet if needed.
+				if (I_upDirBtn){ // Increment current character by one and wrap around the alphabet if needed.
 					if (index == 0 && m_bolus.Name[0] == 90) m_bolus.Name[0] = 65; //ASCII 90 = Z, 65 = A
 					else if (m_bolus.Name[ index ] == 122) m_bolus.Name[ index ] = 97; //ASCII 122 = z, 97 = a
 					else m_bolus.Name[ index ]++;
 					updateScreen = true;
 
-				} else if( M_downReq ){ // Decrement current character by one and wrap around the alphabet if needed.
+				} else if( I_downDirBtn ){ // Decrement current character by one and wrap around the alphabet if needed.
 					if (index == 0 && m_bolus.Name[ index ] == 65 ) m_bolus.Name[ index ] = 90;
 					else if (m_bolus.Name[ index ] == 97 ) m_bolus.Name[ index ] = 122;
 					else m_bolus.Name[ index ]--;
 					updateScreen = true;
 
-				} else if( M_rightReq ){ // Go to next character and initialize it to 'a'
+				} else if( I_rightDirBtn ){ // Go to next character and initialize it to 'a'
 					if( index < 10){
 						m_bolus.Name[ ++index ] = 97;
 						updateScreen = true;
 					}
 
-				} else if ( M_leftReq ){ // Go to previous character (if possible) and remove last character.
+				} else if ( I_leftDirBtn ){ // Go to previous character (if possible) and remove last character.
 					if( index > 0 ){
 						m_bolus.Name[ index-- ] = 0;
 						updateScreen = true;
 					}
 
-				} else if ( M_nextReq ){ // Switch to entering Amount
+				} else if ( I_rightSelBtn ){ // Switch to entering Amount
 					bolCreateStatus_NameEntered = true;
 					updateScreen = true;
 
-				} else if ( M_selReq ){ // Submit Preset
+				} else if ( I_middleSelBtn ){ // Submit Preset
 					M_bolus = true;
 					updateScreen = true;
 
@@ -1115,21 +1115,21 @@ void UpdateScreen(){
 
 			} else { // Editing Amount
 
-				if ( M_upReq ){
+				if ( I_upDirBtn ){
 					m_bolus.Amount += 3600;
 					updateScreen = true;
 
-				} else if( M_downReq ){
+				} else if( I_downDirBtn ){
 					if (m_bolus.Amount >= 3600){
 						m_bolus.Amount -= 3600;
 						updateScreen = true;
 					}
 
-				} else if ( M_nextReq ){
+				} else if ( I_rightSelBtn ){
 					bolCreateStatus_NameEntered = false;
 					updateScreen = true;
 
-				} else if (M_selReq){
+				} else if (I_middleSelBtn){
 					M_bolus = true;
 					updateScreen = true;
 					bolCreateStatus_NameEntered = false;
@@ -1147,7 +1147,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveBolusPreset_Idle;
 			int presetIndex;
-			if (M_downReq){
+			if (I_downDirBtn){
 				presetIndex = GetPresetIndex( &m_bolSelected );
 				if(presetIndex == GetNumberOfBolusPresets() - 1 ){
 					LoadPreset( &m_bolSelected, 0 );
@@ -1159,7 +1159,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if(M_upReq){
+			} else if(I_upDirBtn){
 				presetIndex = GetPresetIndex( &m_bolSelected );
 				if(presetIndex == 0 ){
 					LoadPreset( &m_bolSelected, GetNumberOfBolusPresets() - 1 );
@@ -1171,7 +1171,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if (M_selReq){
+			} else if (I_middleSelBtn){
 				M_bolSelected = true;
 				updateScreen = true;
 			}
@@ -1187,7 +1187,7 @@ void UpdateScreen(){
 		case e_bolStatus_idle:
 			c_menuScreen = StartBolus_Idle;
 
-			if (M_upReq){
+			if (I_upDirBtn){
 				switch( p_selectedMethod ){
 				case e_bolMethod_calculator: p_selectedMethod = e_bolMethod_manual; break;
 				case e_bolMethod_manual: p_selectedMethod = e_bolMethod_preset; break;
@@ -1195,7 +1195,7 @@ void UpdateScreen(){
 				}
 				updateScreen = true;
 
-			} else if( M_downReq ){
+			} else if( I_downDirBtn ){
 				switch( p_selectedMethod){
 				case e_bolMethod_calculator: p_selectedMethod = e_bolMethod_preset; break;
 				case e_bolMethod_manual: p_selectedMethod = e_bolMethod_calculator; break;
@@ -1203,7 +1203,7 @@ void UpdateScreen(){
 				}
 				updateScreen = true;
 
-			} else if ( M_selReq ){
+			} else if ( I_middleSelBtn ){
 				M_selectedMethod = p_selectedMethod;
 				if (p_selectedMethod == e_bolMethod_preset) LoadPreset( &m_bolSelected, 0 ); // selects first preset.
 				else if (p_selectedMethod == e_bolMethod_manual ) {
@@ -1224,7 +1224,7 @@ void UpdateScreen(){
 
 			if( BolusPresetExists() ){
 				int presetIndex;
-				if (M_downReq){
+				if (I_downDirBtn){
 					presetIndex = GetPresetIndex( &m_bolSelected );
 					if(presetIndex == GetNumberOfBolusPresets() - 1 ){
 						LoadPreset( &m_bolSelected, 0 );
@@ -1236,7 +1236,7 @@ void UpdateScreen(){
 					}
 
 
-				} else if(M_upReq){
+				} else if(I_upDirBtn){
 					presetIndex = GetPresetIndex( &m_bolSelected );
 					if(presetIndex == 0 ){
 						LoadPreset( &m_bolSelected, GetNumberOfBolusPresets() - 1 );
@@ -1248,7 +1248,7 @@ void UpdateScreen(){
 					}
 
 
-				} else if (M_selReq){
+				} else if (I_middleSelBtn){
 					M_bolSelected = true;
 					updateScreen = true;
 				}
@@ -1259,42 +1259,42 @@ void UpdateScreen(){
 			c_menuScreen = StartBolus_Calculator;
 
 			if(bolStartCalc_CarbsEntered == false){
-				if(M_upReq){
+				if(I_upDirBtn){
 					m_carbs++;
 					updateScreen = true;
 				}
-				else if(M_downReq) {
+				else if(I_downDirBtn) {
 					if( m_carbs > 0 ){
 						m_carbs--;
 						updateScreen = true;
 					}
 				}
-				else if (M_rightReq){
+				else if (I_rightDirBtn){
 					bolStartCalc_CarbsEntered = true;
 					updateScreen = true;
 				}
-				else if (M_selReq){
+				else if (I_middleSelBtn){
 					bolStartCalc_CarbsEntered = false;
 					M_carbs = true;
 					M_bloodGlucose = true;
 				}
 			}
 			else {
-				if(M_upReq){
+				if(I_upDirBtn){
 					m_bloodGlucose++;
 					updateScreen = true;
 				}
-				else if(M_downReq) {
+				else if(I_downDirBtn) {
 					if( m_bloodGlucose > 0 ){
 						m_bloodGlucose--;
 						updateScreen = true;
 					}
 				}
-				else if (M_leftReq){
+				else if (I_leftDirBtn){
 					bolStartCalc_CarbsEntered = false;
 					updateScreen = true;
 				}
-				else if (M_selReq){
+				else if (I_middleSelBtn){
 					bolStartCalc_CarbsEntered = false;
 					M_carbs = true;
 					M_bloodGlucose = true;
@@ -1305,17 +1305,17 @@ void UpdateScreen(){
 		case e_bolStatus_manual:
 			c_menuScreen = StartBolus_Manual;
 
-			if( M_upReq ){
+			if( I_upDirBtn ){
 				m_bolus.Amount += 3600;
 				updateScreen = true;
 
-			} else if( M_downReq ) {
+			} else if( I_downDirBtn ) {
 				if( m_bolus.Amount >= 3600 ){
 					m_bolus.Amount -= 3600;
 					updateScreen = true;
 				}
 			}
-			else if ( M_selReq ){
+			else if ( I_middleSelBtn ){
 				M_bolus = true;
 			}
 
@@ -1331,7 +1331,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = CreateReminder_Idle;
 
-			if ( M_selReq ){ // Submit Preset
+			if ( I_middleSelBtn ){ // Submit Preset
 				M_reminder = true;
 				CopyReminder( &p_reminder, &m_reminder );
 				updateScreen = true;
@@ -1350,36 +1350,36 @@ void UpdateScreen(){
 				}
 
 				int index = strlen( p_reminder.Name ) - 1;
-				if ( M_upReq ){ // Increment current character by one and wrap around the alphabet if needed.
+				if ( I_upDirBtn ){ // Increment current character by one and wrap around the alphabet if needed.
 					if (index == 0 && p_reminder.Name[0] == 90) p_reminder.Name[0] = 65; //ASCII 90 = Z, 65 = A
 					else if (p_reminder.Name[ index ] == 122) p_reminder.Name[ index ] = 97; //ASCII 122 = z, 97 = a
 					else p_reminder.Name[ index ]++;
 					updateScreen = true;
 
-				} else if( M_downReq ){ // Decrement current character by one and wrap around the alphabet if needed.
+				} else if( I_downDirBtn ){ // Decrement current character by one and wrap around the alphabet if needed.
 					if (index == 0 && p_reminder.Name[ index ] == 65 ) p_reminder.Name[ index ] = 90;
 					else if ( p_reminder.Name[ index ] == 97 ) p_reminder.Name[ index ] = 122;
 					else p_reminder.Name[ index ]--;
 					updateScreen = true;
 
-				} else if( M_rightReq ){ // Go to next character and initialize it to 'a'
+				} else if( I_rightDirBtn ){ // Go to next character and initialize it to 'a'
 					if( index < k_remindNameLength - 1){
 						p_reminder.Name[ ++index ] = 97;
 						updateScreen = true;
 					}
 
-				} else if ( M_leftReq ){ // Go to previous character (if possible) and remove last character.
+				} else if ( I_leftDirBtn ){ // Go to previous character (if possible) and remove last character.
 					if( index > 0 ){
 						p_reminder.Name[ index-- ] = 0;
 						updateScreen = true;
 					}
 
-				} else if ( M_nextReq ){ // Switch to entering Amount
+				} else if ( I_rightSelBtn ){ // Switch to entering Amount
 					remindEntryIndex++;
 					updateScreen = true;
 				}
 			} else if ( remindEntryIndex == DATETIME ){
-				if ( M_upReq ){
+				if ( I_upDirBtn ){
 					switch ( p_remindSubIndex ){
 					int value;
 					//case SEC:
@@ -1421,7 +1421,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if ( M_downReq ){
+				} else if ( I_downDirBtn ){
 					switch ( p_remindSubIndex ){
 					int value;
 					//case SEC:
@@ -1464,7 +1464,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if ( M_rightReq ) {
+				} else if ( I_rightDirBtn ) {
 					if ( p_remindSubIndex == MIN ) p_remindSubIndex = DOM;
 					else if ( p_remindSubIndex == YEAR_2 ){
 						remindEntryIndex = FREQ;
@@ -1473,7 +1473,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if ( M_leftReq ) {
+				} else if ( I_leftDirBtn ) {
 					if ( p_remindSubIndex == DOM ) p_remindSubIndex = MIN;
 					else if (p_remindSubIndex == HR ) remindEntryIndex = NAME;
 					else p_remindSubIndex--;
@@ -1482,7 +1482,7 @@ void UpdateScreen(){
 				}
 
 			} else if ( remindEntryIndex == FREQ ){
-				if ( M_downReq ){
+				if ( I_downDirBtn ){
 					GetDay( &p_reminder.Time );
 					if ( p_reminder.Time.DayOfWeek == 6 || p_reminder.Time.DayOfWeek == 0 ){
 						switch ( p_reminder.Frequency ){
@@ -1505,7 +1505,7 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if ( M_upReq ){
+				} else if ( I_upDirBtn ){
 					GetDay( &p_reminder.Time );
 					if ( p_reminder.Time.DayOfWeek == 6 || p_reminder.Time.DayOfWeek == 0 ){
 						switch ( p_reminder.Frequency ){
@@ -1528,11 +1528,11 @@ void UpdateScreen(){
 					}
 					updateScreen = true;
 
-				} else if ( M_rightReq ) {
+				} else if ( I_rightDirBtn ) {
 					remindEntryIndex = MSG;
 					updateScreen = true;
 
-				} else if ( M_leftReq ) {
+				} else if ( I_leftDirBtn ) {
 					remindEntryIndex = DATETIME;
 					updateScreen = true;
 
@@ -1546,33 +1546,33 @@ void UpdateScreen(){
 				}
 
 				int index = strlen( p_reminder.Message ) - 1;
-				if ( M_upReq ){ // Increment current character by one and wrap around the alphabet if needed.
+				if ( I_upDirBtn ){ // Increment current character by one and wrap around the alphabet if needed.
 					if (index == 0 && p_reminder.Message[0] == 90) p_reminder.Message[0] = 65; //ASCII 90 = Z, 65 = A
 					else if (p_reminder.Message[ index ] == 122) p_reminder.Message[ index ] = 32; //ASCII 122 = z, 97 = a, 32 = space
 					else if (p_reminder.Message[index ] == 32 ) p_reminder.Message[ index ] = 97;
 					else p_reminder.Message[ index ]++;
 					updateScreen = true;
 
-				} else if( M_downReq ){ // Decrement current character by one and wrap around the alphabet if needed.
+				} else if( I_downDirBtn ){ // Decrement current character by one and wrap around the alphabet if needed.
 					if (index == 0 && p_reminder.Message[ index ] == 65 ) p_reminder.Message[ index ] = 90;
 					else if ( p_reminder.Message[ index ] == 97 ) p_reminder.Message[ index ] = 32;
 					else if ( p_reminder.Message[index ] == 32 ) p_reminder.Message[ index ] = 122;
 					else p_reminder.Message[ index ]--;
 					updateScreen = true;
 
-				} else if( M_rightReq ){ // Go to next character and initialize it to ' '
+				} else if( I_rightDirBtn ){ // Go to next character and initialize it to ' '
 					if( index < k_remindMessageLength - 1){
 						p_reminder.Message[ ++index ] = 32;
 						updateScreen = true;
 					}
 
-				} else if ( M_leftReq ){ // Go to previous character (if possible) and remove last character.
+				} else if ( I_leftDirBtn ){ // Go to previous character (if possible) and remove last character.
 					if( index > 0 ){
 						p_reminder.Message[ index-- ] = 0;
 						updateScreen = true;
 					}
 
-				} else if ( M_nextReq ){ // Switch to entering Amount
+				} else if ( I_rightSelBtn ){ // Switch to entering Amount
 					remindEntryIndex = FREQ;
 					updateScreen = true;
 
@@ -1592,7 +1592,7 @@ void UpdateScreen(){
 		case e_opStatus_idle:
 			c_menuScreen = RemoveReminder_Idle;
 			int reminderIndex;
-			if ( M_downReq ){
+			if ( I_downDirBtn ){
 				reminderIndex = GetReminderIndex( &m_reminder );
 				if( reminderIndex == GetNumberOfReminders() - 1 ){
 					m_reminder = GetReminderFromIndex ( 0 );
@@ -1604,7 +1604,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if(M_upReq){
+			} else if(I_upDirBtn){
 				reminderIndex = GetReminderIndex( &m_reminder );
 				if( reminderIndex == 0 ){
 					m_reminder = GetReminderFromIndex ( GetNumberOfReminders() - 1 );
@@ -1616,7 +1616,7 @@ void UpdateScreen(){
 				}
 
 
-			} else if ( M_selReq ){
+			} else if ( I_middleSelBtn ){
 				M_reminder = true;
 				updateScreen = true;
 			}

@@ -13,16 +13,6 @@ extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();
 
 
-extern bool M_menuReq;
-extern bool M_backReq;
-extern bool M_selReq;
-extern bool M_upReq;
-extern bool M_downReq;
-extern bool M_rightReq;
-extern bool M_leftReq;
-extern bool M_nextReq;
-extern bool M_addReq;
-
 extern bool M_pwrReq;
 extern bool M_bolStartReq;
 extern bool M_reminderCreateReq;
