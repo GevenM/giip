@@ -13,8 +13,6 @@ void PrintIdle( tContext *context ){
 	char outString[32] = "";
 	int digits;
 
-	// Clear previous entries from screen
-	ClearScreenContent( context );
 
 	// Print basal status
 	if ( TemporaryBasalIsActive() ){
@@ -42,7 +40,6 @@ void PrintIdle( tContext *context ){
 
 
 	} else if( BasalIsActive() ){
-
 		int currentHour = GetCurrentHour();
 		currentHour = BCDtoInt( currentHour );
 
@@ -59,6 +56,13 @@ void PrintIdle( tContext *context ){
 		GrStringDraw( context, outString , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT );
 
 	} else {
+		// Clear previous entries from screen
+		GrContextForegroundSet( context, ClrWhite );
+		GrStringDraw( context, "XXXXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT );
+		GrStringDraw( context, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 35, OPAQUE_TEXT );
+		GrStringDraw( context, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 45, OPAQUE_TEXT );
+		GrContextForegroundSet( context, ClrBlack );
+
 		GrStringDraw( context, "No Basal" , AUTO_STRING_LENGTH, 5, 25, OPAQUE_TEXT );
 	}
 
@@ -77,6 +81,12 @@ void PrintIdle( tContext *context ){
 		GrStringDraw( context, outString , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT );
 
 	} else {
+		// Clear previous entries from screen
+		GrContextForegroundSet( context, ClrWhite );
+		GrStringDraw( context, "XXXXXXXXXXXXXX" , AUTO_STRING_LENGTH, 15, 65, OPAQUE_TEXT );
+		GrContextForegroundSet( context, ClrBlack );
+
+
 		GrStringDraw( context, "No Bolus" , AUTO_STRING_LENGTH, 5, 55, OPAQUE_TEXT );
 	}
 

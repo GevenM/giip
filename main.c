@@ -36,9 +36,7 @@
 #include "RemoveReminder.h"
 
 void InputEvents();
-void InitBuzzer();
-void ToggleBuzzer();
-void ResetBuzzer();
+
 
 
 #include "BasalProfiles.h"
@@ -61,9 +59,6 @@ void main(void){
     clockInit(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
 
     InitRTC();
-    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN5);
-
-    TIMER_A_generatePWM( TIMER_A2_BASE, TIMER_A_CLOCKSOURCE_ACLK, TIMER_A_CLOCKSOURCE_DIVIDER_8, 64, TIMER_A_CAPTURECOMPARE_REGISTER_2, TIMER_A_OUTPUTMODE_RESET_SET, 32 );
 
 
 
@@ -91,8 +86,6 @@ void main(void){
 
 		DisplayOut();
 
-		UpdateOperation();
-
 		// Call Function Table functions
 		CreateBasalProfile();
 		RemoveBasalProfile();
@@ -106,7 +99,7 @@ void main(void){
 		CreateReminder();
 		RemoveReminder();
 
-
+		UpdateOperation();
 
 
 
@@ -131,8 +124,6 @@ void main(void){
 		if ( currentSec != prevSec ){
 			updateScreen = true;
 			prevSec = currentSec;
-
-			//ToggleBuzzer();
 		}
 
 
@@ -158,26 +149,7 @@ void main(void){
 	}
 }
 
-void InitBuzzer(){
-	P2DIR |= BIT5;                       // P2.5 output
-	P2SEL |= BIT5;                       // P2.5 options select
-	TA2CCR0 = 128;                            // PWM Period/2
-	TA2CCTL2 = OUTMOD_6;                      // CCR2 toggle
-	TA2CCR2 = 96;                             // CCR2 PWM duty cycle
-	TA2CTL = TASSEL_2 + MC_3 + TACLR;         // SMCLK, up-down mode, clear TAR
 
-
-}
-
-void ToggleBuzzer(){
-;
-}
-
-void ResetBuzzer(){
-	TA2CCTL2 = OUTMOD_5;                      // CCR2 reset
-	TA2CCR2 = 96;                             // CCR2 PWM duty cycle
-	TA2CTL = TASSEL_2 + MC_3 + TACLR;         // SMCLK, up-down mode, clear TAR
-}
 
 //Convert the input variables from buttons to discrete events by performing rising edge detection.
 void InputEvents(){
