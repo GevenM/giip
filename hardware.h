@@ -3,14 +3,42 @@
 
 #include "msp430.h"
 
+#define LEFT_SEL_BTN_PORT		GPIO_PORT_P1
+#define LEFT_SEL_BTN_PIN  		BIT4
+#define LEFT_SEL_BTN_INPUT 		P1IN
+
+#define MIDDLE_SEL_BTN_PORT 	GPIO_PORT_P1
+#define MIDDLE_SEL_BTN_PIN  	BIT3
+#define MIDDLE_SEL_BTN_INPUT 	P1IN
+
+#define RIGHT_SEL_BTN_PORT 		GPIO_PORT_P1
+#define RIGHT_SEL_BTN_PIN 		BIT2
+#define RIGHT_SEL_BTN_INPUT 	P1IN
+
+#define LEFT_DIR_BTN_PORT 		GPIO_PORT_P4
+#define LEFT_DIR_BTN_PIN 		BIT3
+#define LEFT_DIR_BTN_INPUT 		P4IN
+
+#define RIGHT_DIR_BTN_PORT 		GPIO_PORT_P3
+#define RIGHT_DIR_BTN_PIN 		BIT7
+#define RIGHT_DIR_BTN_INPUT 	P3IN
+
+#define UP_DIR_BTN_PORT 		GPIO_PORT_P4
+#define UP_DIR_BTN_PIN 			BIT0
+#define UP_DIR_BTN_INPUT 		P4IN
+
+#define DOWN_DIR_BTN_PORT 		GPIO_PORT_P8
+#define DOWN_DIR_BTN_PIN 		BIT2
+#define DOWN_DIR_BTN_INPUT 		P8IN
+
 // Specify the input pins for push buttons
-#define i_leftSelBtn 	!(P1IN & BIT4) // P1.4
-#define i_middleSelBtn 	!(P1IN & BIT3) // P1.3
-#define i_rightSelBtn 	!(P1IN & BIT2) // P1.2
-#define i_leftDirBtn 	!(P4IN & BIT3) // P4.3
-#define i_rightDirBtn 	!(P3IN & BIT7) // P3.7
-#define i_upDirBtn 		!(P4IN & BIT0) // P4.0
-#define i_downDirBtn 	!(P8IN & BIT2) // P8.2
+#define i_leftSelBtn 	!( LEFT_SEL_BTN_INPUT 	& LEFT_SEL_BTN_PIN )
+#define i_middleSelBtn 	!( MIDDLE_SEL_BTN_INPUT & MIDDLE_SEL_BTN_PIN )
+#define i_rightSelBtn 	!( RIGHT_SEL_BTN_INPUT 	& RIGHT_SEL_BTN_PIN )
+#define i_leftDirBtn 	!( LEFT_DIR_BTN_INPUT 	& LEFT_DIR_BTN_PIN )
+#define i_rightDirBtn 	!( RIGHT_DIR_BTN_INPUT	& RIGHT_DIR_BTN_PIN )
+#define i_upDirBtn 		!( UP_DIR_BTN_INPUT 	& UP_DIR_BTN_PIN )
+#define i_downDirBtn 	!( DOWN_DIR_BTN_INPUT 	& DOWN_DIR_BTN_PIN )
 
 
 #define GPIO_ALL	GPIO_PIN0|GPIO_PIN1|GPIO_PIN2|GPIO_PIN3| \
