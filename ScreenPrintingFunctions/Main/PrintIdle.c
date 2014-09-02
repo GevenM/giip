@@ -2,9 +2,9 @@
 #include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 #include "DisplayOut.h"
 
-#include "TemporaryBasal.h"
-#include "BasalProfiles.h"
-#include "BolusPresets.h"
+#include "TemporaryBasalFunctions/TemporaryBasal.h"
+#include "BasalFunctions/BasalProfiles.h"
+#include "BolusFunctions/BolusPresets.h"
 #include "RTC.h"
 #include "TriggerReminder.h"
 

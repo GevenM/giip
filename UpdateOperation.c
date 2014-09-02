@@ -3,17 +3,17 @@
 
 #include "Shared.h"
 #include "DisplayOut.h"
-#include "CreateBasalProfile.h"
-#include "RemoveBasalProfile.h"
-#include "ActivateBasalProfile.h"
-#include "DeactivateBasalProfile.h"
-#include "ActivateTemporaryBasal.h"
-#include "DeactivateTemporaryBasal.h"
-#include "CreateBolusPreset.h"
-#include "RemoveBolusPreset.h"
-#include "ActivateBolus.h"
-#include "CreateReminder.h"
-#include "RemoveReminder.h"
+#include "BasalFunctions/CreateBasalProfile.h"
+#include "BasalFunctions/RemoveBasalProfile.h"
+#include "BasalFunctions/ActivateBasalProfile.h"
+#include "BasalFunctions/DeactivateBasalProfile.h"
+#include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
+#include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
+#include "BolusFunctions/CreateBolusPreset.h"
+#include "BolusFunctions/RemoveBolusPreset.h"
+#include "BolusFunctions/ActivateBolus.h"
+#include "ReminderFunctions/CreateReminder.h"
+#include "ReminderFunctions/RemoveReminder.h"
 
 
 void UpdateOperation(){

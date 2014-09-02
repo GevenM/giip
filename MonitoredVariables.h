@@ -4,10 +4,10 @@
 #include "shared.h"
 #include "hardware.h"
 #include <string.h>
-#include "BasalProfiles.h"
-#include "TemporaryBasal.h"
-#include "BolusPresets.h"
-#include "Reminder.h"
+#include "BasalFunctions/BasalProfiles.h"
+#include "TemporaryBasalFunctions/TemporaryBasal.h"
+#include "BolusFunctions/BolusPresets.h"
+#include "ReminderFunctions/Reminder.h"
 
 extern void UpdateMonitoredVariables();
 extern void InitMonitoredVariables();

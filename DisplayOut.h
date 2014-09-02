@@ -8,8 +8,8 @@
 #include "hardware.h"
 #include "MonitoredVariables.h"
 #include "Shared.h"
-#include "BasalProfiles.h"
-#include "TemporaryBasal.h"
+#include "BasalFunctions/BasalProfiles.h"
+#include "TemporaryBasalFunctions/TemporaryBasal.h"
 
 
 //datetime definitions

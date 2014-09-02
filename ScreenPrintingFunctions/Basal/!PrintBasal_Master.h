@@ -6,7 +6,7 @@
 #include "grlib.h"
 #include "LcdDriver/Sharp96x96.h"
 #include <string.h>
-#include "BasalProfiles.h"
+#include "BasalFunctions/BasalProfiles.h"
 #include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 
 extern void PrintBasal_Manage( tContext *context, y_menus f_menuChoice );

@@ -1,9 +1,9 @@
 #include "DisplayOut.h"
 #include <string.h>
-#include "ActivateBolus.h"
+#include "BolusFunctions/ActivateBolus.h"
 #include "RTC.h"
 #include "InsulinOutputCalculator.h"
-#include "Reminder.h"
+#include "ReminderFunctions/Reminder.h"
 #include "TriggerReminder.h"
 
 #include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
