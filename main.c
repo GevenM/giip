@@ -1,7 +1,3 @@
-
-
-
-
 // Basic MSP430 and driverLib #includes
 #include "msp430.h"
 #include "driverlib/MSP430F5xx_6xx/wdt_a.h"

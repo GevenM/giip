@@ -1,5 +1,3 @@
-
-
 #include "Shared.h"
 #include "BasalProfiles.h"
 #include "BolusPresets.h"

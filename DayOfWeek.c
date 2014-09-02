@@ -1,3 +1,6 @@
+// following the formula from:
+// http://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#A_tabular_method_to_calculate_the_day_of_the_week
+
 #include "DayOfWeek.h"
 #include "RTC.h"
 #include "DisplayOut.h"
