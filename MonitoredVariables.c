@@ -77,7 +77,7 @@ void UpdateMonitoredVariables(){
 	M_leftReq = I_leftDirBtn;
 	M_nextReq =  I_rightSelBtn;
 	M_addReq =  I_rightSelBtn;
-
+	__no_operation;
 	//M_selReq must be updated before the following requests.
 	M_pwrReq =
 			c_operation == e_operation_idle &&
