@@ -1,4 +1,4 @@
-#include "Reminder.h"
+#include "ReminderFunctions/Reminder.h"
 #include "RTC.h"
 #include "Shared.h"
 #include <string.h>

@@ -121,6 +121,7 @@ void boardInit(){
 void ledInit(){
     //Set P1.0 to output direction
     GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN0 );
+    GPIO_setAsOutputPin( GPIO_PORT_P4, GPIO_PIN7 );
 }
 
 void timerInit(){
@@ -140,6 +141,20 @@ void timerInit(){
     					);
 }
 
+void motorInit(){
+	GPIO_setAsOutputPin( MOTOR_COIL_A1_PORT, MOTOR_COIL_A1_PIN );
+	GPIO_setAsOutputPin( MOTOR_COIL_A2_PORT, MOTOR_COIL_A2_PIN );
+	GPIO_setAsOutputPin( MOTOR_COIL_B1_PORT, MOTOR_COIL_B1_PIN );
+	GPIO_setAsOutputPin( MOTOR_COIL_B2_PORT, MOTOR_COIL_B2_PIN );
+	GPIO_setAsOutputPin( MOTOR_ENABLE_PORT, MOTOR_ENABLE_PIN );
+
+	GPIO_setOutputLowOnPin( MOTOR_COIL_A1_PORT, MOTOR_COIL_A1_PIN );
+	GPIO_setOutputLowOnPin( MOTOR_COIL_A2_PORT, MOTOR_COIL_A2_PIN );
+	GPIO_setOutputLowOnPin( MOTOR_COIL_B1_PORT, MOTOR_COIL_B1_PIN );
+	GPIO_setOutputLowOnPin( MOTOR_COIL_B2_PORT, MOTOR_COIL_B2_PIN );
+	GPIO_setOutputLowOnPin( MOTOR_ENABLE_PORT, MOTOR_ENABLE_PIN );
+}
+
 void buttonInit(){
 	GPIO_setAsInputPinWithPullUpresistor( LEFT_SEL_BTN_PORT, LEFT_SEL_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( MIDDLE_SEL_BTN_PORT, MIDDLE_SEL_BTN_PIN );
@@ -148,6 +163,11 @@ void buttonInit(){
 	GPIO_setAsInputPinWithPullUpresistor( RIGHT_DIR_BTN_PORT, RIGHT_DIR_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( UP_DIR_BTN_PORT, UP_DIR_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( DOWN_DIR_BTN_PORT, DOWN_DIR_BTN_PIN );
+
+	GPIO_setAsInputPinWithPullUpresistor( SENSOR_1_BTN_PORT, SENSOR_1_BTN_PIN );
+	GPIO_setAsInputPinWithPullUpresistor( SENSOR_2_BTN_PORT, SENSOR_2_BTN_PIN );
+
+	GPIO_setAsPeripheralModuleFunctionInputPin( SENSOR_LEVEL_PORT, SENSOR_LEVEL_PIN );
 
 	//  P1DIR &= ~BIT4;
 	//  P1DIR &= ~BIT3;

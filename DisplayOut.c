@@ -98,9 +98,9 @@ void DisplayOut(void){
 	}
 }
 
-void PrintScreen(){
+void PrintScreen(unsigned int reservoirLevel){
 	//ClearScreen();
-	LoadBanner( &g_sContext );
+	LoadBanner( &g_sContext, reservoirLevel );
 	switch( c_menuScreen ){
 	case None: PrintIdle( &g_sContext ); break;
 	case Main: PrintMainMenu( &g_sContext, f_menuChoice ); break;

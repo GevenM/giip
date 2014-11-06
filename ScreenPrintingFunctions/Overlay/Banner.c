@@ -2,7 +2,7 @@
 #include "DisplayOut.h"
 #include "InsulinOutputCalculator.h"
 
-void LoadBanner( tContext *context){
+void LoadBanner( tContext *context, unsigned int reservoirLevel ){
 
 	int hour = GetCurrentHour();
 	int min = GetCurrentMin();
@@ -34,12 +34,20 @@ void LoadBanner( tContext *context){
 
 
 	// Draw top banner
+
+
 	GrRectFill( context, &myRectangleTopBan);
 	GrContextForegroundSet( context, ClrWhite);
 	GrContextBackgroundSet( context, ClrBlack);
 	GrStringDrawCentered( context, outString, AUTO_STRING_LENGTH, 75 , 7, TRANSPARENT_TEXT);
 	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
-	//GrStringDrawCentered(&g_sContext, "res%", AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
+
+	//strcpy(buffer, "");
+	//digits = 0;
+	digits = UnsignedInt_To_ASCII( reservoirLevel, buffer );
+	strcpy(outString, "");
+	strncat(outString, buffer, digits);
+	GrStringDrawCentered( context, outString, AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 
