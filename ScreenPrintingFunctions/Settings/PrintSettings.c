@@ -17,6 +17,7 @@ void PrintSettings( tContext *context, y_menus f_menuChoice ){
 	// Menu options
 	GrStringDraw( context, "Clear Flash", AUTO_STRING_LENGTH, 5, 18, OPAQUE_TEXT);
 	GrStringDraw( context, "Edit Calendar", AUTO_STRING_LENGTH, 5, 31, OPAQUE_TEXT);
+	GrStringDraw( context, "Test Motor", AUTO_STRING_LENGTH, 5, 44, OPAQUE_TEXT);
 
 
 	// Highlight selected item
@@ -28,6 +29,10 @@ void PrintSettings( tContext *context, y_menus f_menuChoice ){
 	case Settings_DateTime:
 		text_start = 31;
 		strcpy(outString, "Edit Calendar");
+		break;
+	case Settings_MotorTest:
+		text_start = 44;
+		strcpy(outString, "Test Motor");
 		break;
 	default: break;
 	}

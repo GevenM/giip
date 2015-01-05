@@ -37,7 +37,7 @@ bool I_downDirBtn = false;
  * in the Descriptor Tool (currently set to 4MHz in this example, since that's
  * what the Launchpad uses).  See the Programmer's Guide for more information.
  */
-void clockInit(unsigned long mclkFreq){
+void InitClock(unsigned long mclkFreq){
 
     UCS_clockSignalInit(
     	   UCS_FLLREF,
@@ -57,16 +57,7 @@ void clockInit(unsigned long mclkFreq){
             UCSCTL4 = (UCSCTL4 & ~(SELA_7)) | (SELA__REFOCLK);
 }
 
-void boardInit(){
-	/*
-	 * This function drives all the I/O's as output-low, to avoid floating inputs
-	 * (which cause extra power to be consumed).  This setting is compatible with
-	 * TI FET target boards, the F5529 Launchpad, and F5529 Experimenters Board;
-	 * but may not be compatible with custom hardware, which may have components
-	 * attached to the I/Os that could be affected by these settings.  So if using
-	 * other boards, this function may need to be modified.
-	 */
-
+void InitHardware(){
 	#ifdef __MSP430_HAS_PORT1_R__
 		GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_ALL);
 		GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_ALL);
@@ -116,15 +107,20 @@ void boardInit(){
 		GPIO_setOutputLowOnPin(GPIO_PORT_PJ, GPIO_ALL);
 		GPIO_setAsOutputPin(GPIO_PORT_PJ, GPIO_ALL);
 	#endif
+
+
+	InitLED();
+	InitButtonsSensors();
+	InitMotor();
 }
 
-void ledInit(){
+void InitLED(){
     //Set P1.0 to output direction
     GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN0 );
     GPIO_setAsOutputPin( GPIO_PORT_P4, GPIO_PIN7 );
 }
 
-void timerInit(){
+/*void timerInit(){
     TIMER_A_configureUpMode(TIMER_A1_BASE,TIMER_A_CLOCKSOURCE_SMCLK,
                         TIMER_A_CLOCKSOURCE_DIVIDER_64,65535-1,
                         TIMER_A_TAIE_INTERRUPT_ENABLE,
@@ -139,9 +135,9 @@ void timerInit(){
     TIMER_A_startCounter(TIMER_A1_BASE,
     		TIMER_A_UP_MODE
     					);
-}
+}*/
 
-void motorInit(){
+void InitMotor(){
 	GPIO_setAsOutputPin( MOTOR_COIL_A1_PORT, MOTOR_COIL_A1_PIN );
 	GPIO_setAsOutputPin( MOTOR_COIL_A2_PORT, MOTOR_COIL_A2_PIN );
 	GPIO_setAsOutputPin( MOTOR_COIL_B1_PORT, MOTOR_COIL_B1_PIN );
@@ -155,7 +151,7 @@ void motorInit(){
 	GPIO_setOutputLowOnPin( MOTOR_ENABLE_PORT, MOTOR_ENABLE_PIN );
 }
 
-void buttonInit(){
+void InitButtonsSensors(){
 	GPIO_setAsInputPinWithPullUpresistor( LEFT_SEL_BTN_PORT, LEFT_SEL_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( MIDDLE_SEL_BTN_PORT, MIDDLE_SEL_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( RIGHT_SEL_BTN_PORT, RIGHT_SEL_BTN_PIN );

@@ -7,6 +7,7 @@
 #include "BolusFunctions/BolusPresets.h"
 #include "RTC.h"
 #include "TriggerReminder.h"
+#include "InsulinDeliveryMechanism.h"
 
 void PrintIdle( tContext *context ){
 	char buffer[10] = "";
@@ -66,9 +67,9 @@ void PrintIdle( tContext *context ){
 	// Print bolus status
 	if( BolusIsActive() ){
 
-		UnsignedInt_To_ASCII( f_activeBolus.Amount / 3600, outString );
+		UnsignedInt_To_ASCII( (f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5)) / 3600, outString );
 
-		UnsignedInt_To_ASCII( ( f_activeBolus.Amount % 3600 ) / 360, buffer );
+		UnsignedInt_To_ASCII( (( f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5)) % 3600 ) / 360, buffer );
 		strncat( outString, ".", 1 );
 		strncat( outString, buffer, 1 );
 		strncat( outString, " IU Remain", 10 );

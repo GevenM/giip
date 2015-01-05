@@ -70,6 +70,7 @@ void InsulinOutputCalculator(){
 }
 
 int GetCurrentInsulinOutput(){
+	f_activeBolus.Amount -= f_bolusOut;
 	return f_basalOut + f_bolusOut;
 }
 

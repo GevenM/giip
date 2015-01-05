@@ -86,6 +86,8 @@ typedef enum {
 	Settings_ClearFlash,
 	Settings_DateTime,
 	Settings_DateTime_NotAllowed,
+	Settings_MotorTest,
+	Settings_MotorTest_TestScreen,
 
 	Reminder_ReminderPending
 } y_menus;

@@ -1,8 +1,9 @@
 #include "!PrintOverlay_Master.h"
 #include "DisplayOut.h"
 #include "InsulinOutputCalculator.h"
+#include "InsulinReservoir.h"
 
-void LoadBanner( tContext *context, unsigned int reservoirLevel ){
+void LoadBanner( tContext *context ){
 
 	int hour = GetCurrentHour();
 	int min = GetCurrentMin();
@@ -24,37 +25,29 @@ void LoadBanner( tContext *context, unsigned int reservoirLevel ){
 	strncat(outString, buffer, digits);
 	digits = UnsignedInt_To_ASCII( min & 0xF, buffer );
 	strncat(outString, buffer, digits);
-	//strncat(outString, ":", 1);
-
-	// Get Seconds
-	//digits = UnsignedInt_To_ASCII( sec >> 4, buffer );
-	//strncat(outString, buffer, digits);
-	//digits = UnsignedInt_To_ASCII( sec & 0xF, buffer );
-	//strncat(outString, buffer, digits);
-
 
 	// Draw top banner
-
-
 	GrRectFill( context, &myRectangleTopBan);
 	GrContextForegroundSet( context, ClrWhite);
 	GrContextBackgroundSet( context, ClrBlack);
+
 	GrStringDrawCentered( context, outString, AUTO_STRING_LENGTH, 75 , 7, TRANSPARENT_TEXT);
 	//GrStringDrawCentered(&g_sContext, "bat%", AUTO_STRING_LENGTH, 15, 7, TRANSPARENT_TEXT);
 
-	//strcpy(buffer, "");
-	//digits = 0;
-	digits = UnsignedInt_To_ASCII( reservoirLevel, buffer );
+	// write insulin reservoir level
+	digits = UnsignedInt_To_ASCII( GetInsulinReservoirLevelInPercent(), buffer );
 	strcpy(outString, "");
 	strncat(outString, buffer, digits);
+	strncat(outString, "%", 1);
 	GrStringDrawCentered( context, outString, AUTO_STRING_LENGTH, 48, 7, TRANSPARENT_TEXT);
+
 	GrContextForegroundSet( context, ClrBlack);
 	GrContextBackgroundSet( context, ClrWhite);
 
 
 
 
-
+	// TEMPORARY CODE TO BE ABLE TO SEE OUTPUT RATES
 	// Get basal and bolus rate
 	strcpy(outString, "");
 	digits = UnsignedInt_To_ASCII( f_basalOut, buffer );

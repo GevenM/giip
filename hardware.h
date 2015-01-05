@@ -89,12 +89,12 @@
 #define BUTTON2_VECTOR	PORT1_VECTOR
 #endif
 
-void clockInit(unsigned long mclkFreq);
-void boardInit();
-void timerInit();
-void ledInit();
-void buttonInit();
-void motorInit();
+extern void InitClock(unsigned long mclkFreq);
+extern void InitHardware();
+//void timerInit();
+void InitLED();
+void InitButtonsSensors();
+void InitMotor();
 
 
 extern bool i_1_leftSelBtn;

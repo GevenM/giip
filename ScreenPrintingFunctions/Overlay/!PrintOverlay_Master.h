@@ -8,7 +8,7 @@
 #include <string.h>
 #include "RTC.h"
 
-extern void LoadBanner( tContext *context , unsigned int reservoirLevel);
+extern void LoadBanner( tContext *context );
 extern void LoadLeftButton( tContext *context, const char * text );
 extern void LoadMiddleButton( tContext *context, const char * text );
 extern void LoadRightButton( tContext *context, const char * text );

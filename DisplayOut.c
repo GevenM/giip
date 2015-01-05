@@ -5,6 +5,7 @@
 #include "InsulinOutputCalculator.h"
 #include "ReminderFunctions/Reminder.h"
 #include "TriggerReminder.h"
+#include "InsulinDeliveryMechanism.h"
 
 #include "ScreenPrintingFunctions/Basal/!PrintBasal_Master.h"
 #include "ScreenPrintingFunctions/Basal/TemporaryBasal/!PrintTmpBas_Master.h"
@@ -98,9 +99,9 @@ void DisplayOut(void){
 	}
 }
 
-void PrintScreen(unsigned int reservoirLevel){
+void PrintScreen(){
 	//ClearScreen();
-	LoadBanner( &g_sContext, reservoirLevel );
+	LoadBanner( &g_sContext );
 	switch( c_menuScreen ){
 	case None: PrintIdle( &g_sContext ); break;
 	case Main: PrintMainMenu( &g_sContext, f_menuChoice ); break;
@@ -169,6 +170,7 @@ void PrintScreen(unsigned int reservoirLevel){
 
 	case Settings_DateTime: PrintSettings_DateTime(&g_sContext, p_calendar, p_calendarIndex); break;
 	case Settings_DateTime_NotAllowed: PrintSettings_DateTime_NotAllowed(&g_sContext); break;
+	case Settings_MotorTest: PrintSettings_MotorTest( &g_sContext ); break;
 
 	case Reminder_ReminderPending: PrintPendingReminder( &g_sContext ); break;
 
@@ -376,12 +378,14 @@ void UpdateScreen(){
 			if( M_downReq ){
 				switch( f_menuChoice ){
 				case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
-				case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
+				case Settings_DateTime: f_menuChoice = Settings_MotorTest; break;
+				case Settings_MotorTest: f_menuChoice = Settings_ClearFlash; break;
 				}
 			} else if ( M_upReq ){
 				switch( f_menuChoice ){
-					case Settings_ClearFlash: f_menuChoice = Settings_DateTime; break;
+					case Settings_ClearFlash: f_menuChoice = Settings_MotorTest; break;
 					case Settings_DateTime: f_menuChoice = Settings_ClearFlash; break;
+					case Settings_MotorTest: f_menuChoice = Settings_DateTime; break;
 				}
 			} else if (M_backReq){
 				c_menuScreen = Main;
@@ -404,8 +408,11 @@ void UpdateScreen(){
 						c_menuScreen = f_menuChoice;
 					}
 					break;
-				}
 
+				case Settings_MotorTest:
+					c_menuScreen = Settings_MotorTest;
+					break;
+				}
 			}
 			break;
 
@@ -755,6 +762,18 @@ void UpdateScreen(){
 				c_menuScreen = Settings;
 			}
 			break;
+
+		case Settings_MotorTest:
+			if ( M_rightReq ){
+				ForceMotorForward();
+			} else if ( M_leftReq ){
+				ForceMotorBackward();
+			} else if ( M_downReq ){
+				ForceMotorStop();
+			} else if ( M_backReq ){
+				ForceMotorStop();
+				c_menuScreen = Settings;
+			}
 		case Reminder_ReminderPending:
 			if ( M_selReq ){
 				PendingReminderAckHandler();
