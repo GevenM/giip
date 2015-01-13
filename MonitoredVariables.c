@@ -24,6 +24,7 @@ bool M_basRemoveReq;
 bool M_bolCreateReq;
 bool M_bolRemoveReq;
 
+
 y_response M_basCreateResp = e_response_noValue;
 
 y_basal m_basRemSelected;
@@ -65,7 +66,8 @@ bool M_reminder;
 y_response M_remindCreateResp;
 y_response M_remindRemResp;
 
-
+bool M_occlusionInLine;
+bool M_bubbleInLine;
 
 void UpdateMonitoredVariables(){
 	M_backReq = I_leftSelBtn;
@@ -229,6 +231,14 @@ void UpdateMonitoredVariables(){
 		else if ( I_leftSelBtn ) M_remindRemResp = e_response_cancel;
 		else M_remindRemResp = e_response_noValue;
 	}
+
+	if ( I_sensor1Btn || i_sensor1Btn ){
+		M_occlusionInLine = true;
+	}
+
+	if ( I_sensor2Btn || i_sensor2Btn ){
+		M_bubbleInLine = true;
+	}
 }
 
 void InitMonitoredVariables(){
@@ -283,4 +293,7 @@ void InitMonitoredVariables(){
 	M_reminder = false;
 	M_remindCreateResp = e_response_noValue;
 	M_remindRemResp = e_response_noValue;
+
+	M_occlusionInLine = false;
+	M_bubbleInLine = false;
 }

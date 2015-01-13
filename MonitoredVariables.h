@@ -77,5 +77,7 @@ extern bool M_reminder;
 extern y_response M_remindCreateResp;
 extern y_response M_remindRemResp;
 
+extern bool M_occlusionInLine;
+extern bool M_bubbleInLine;
 
 #endif

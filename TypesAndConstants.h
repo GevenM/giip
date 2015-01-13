@@ -95,8 +95,14 @@ typedef enum{
 	e_pwrStatus_ready,
 	e_pwrStatus_standby,
 	e_pwrStatus_post,
-	e_pwrStatus_offReq
+	e_pwrStatus_offReq,
+	e_pwrStatus_error
 } y_pwrStatus;
+
+typedef enum{
+	e_safe,
+	e_notSafe
+} y_safetyStatus;
 
 typedef char y_remindMessage[ k_remindMessageLength + 1 ];
 typedef char y_remindName[ k_remindNameLength + 1 ];

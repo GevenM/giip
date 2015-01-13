@@ -33,18 +33,19 @@ float GetInsulinOutputBuffer(){
 }
 
 void DeliverPendingInsulin(){
+	if (c_pwrStatus == e_pwrStatus_ready ){
+		// Check if there's any insulin that still needs to be delivered from current program cycle
+		// add this insulin to the buffer to be delivered
+		p_insulinOutputBuffer += GetCurrentInsulinOutput();
+		ClearCurrentInsulinOutputs(); //we don't want to add the same value multiple times
 
-	// Check if there's any insulin that still needs to be delivered from current program cycle
-	// add this insulin to the buffer to be delivered
-	p_insulinOutputBuffer += GetCurrentInsulinOutput();
-	ClearCurrentInsulinOutputs(); //we don't want to add the same value multiple times
 
-
-	// if the amount of insulin to be delivered is greater than or equal to the step size, deliver it. Also Check if there's enough insulin.
-	if( p_insulinOutputBuffer >= k_stepVolume  && GetInsulinReservoirLevelInIU() >= k_stepVolume ){
-		stepDirection = FORWARD;
-	} else {
-		stepDirection = STOPPED;
+		// if the amount of insulin to be delivered is greater than or equal to the step size, deliver it. Also Check if there's enough insulin.
+		if( p_insulinOutputBuffer >= k_stepVolume  && GetInsulinReservoirLevelInIU() >= k_stepVolume ){
+			stepDirection = FORWARD;
+		} else {
+			stepDirection = STOPPED;
+		}
 	}
 }
 

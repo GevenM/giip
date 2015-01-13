@@ -89,7 +89,9 @@ typedef enum {
 	Settings_MotorTest,
 	Settings_MotorTest_TestScreen,
 
-	Reminder_ReminderPending
+	Reminder_ReminderPending,
+
+	Error
 } y_menus;
 
 
@@ -101,6 +103,7 @@ extern y_menus f_1_menuChoice;
 
 extern y_operation c_operation;
 extern y_pwrStatus c_pwrStatus;
+extern y_safetyStatus c_safetyStatus;
 
 extern y_opStatus c_basCreateStatus;
 extern y_opStatus c_basRemStatus;

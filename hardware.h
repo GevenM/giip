@@ -104,6 +104,8 @@ extern bool i_1_leftDirBtn;
 extern bool i_1_rightDirBtn;
 extern bool i_1_upDirBtn;
 extern bool i_1_downDirBtn;
+extern bool i_1_sensor1Btn;
+extern bool i_1_sensor2Btn;
 
 extern bool I_leftSelBtn;
 extern bool I_middleSelBtn;
@@ -112,5 +114,7 @@ extern bool I_rightDirBtn;
 extern bool I_leftDirBtn;
 extern bool I_upDirBtn;
 extern bool I_downDirBtn;
+extern bool I_sensor1Btn;
+extern bool I_sensor2Btn;
 
 #endif

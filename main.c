@@ -34,6 +34,8 @@
 #include "InsulinDeliveryMechanism.h"
 #include "InsulinReservoir.h"
 
+#include "SafetyStatus.h"
+
 void InputEvents();
 
 #include "BasalFunctions/BasalProfiles.h"
@@ -72,6 +74,13 @@ void main(void){
 		InputEvents();
 		UpdateMonitoredVariables();
 		UpdateInsulinReservoirSensor();
+		UpdateSafetyStatus();
+
+		if ( c_safetyStatus == e_notSafe ){
+			c_pwrStatus = e_pwrStatus_error;
+		} else {
+			c_pwrStatus = e_pwrStatus_ready;
+		}
 
 		DisplayOut();
 
@@ -154,6 +163,13 @@ void InputEvents(){
 
 	I_downDirBtn = i_downDirBtn & !i_1_downDirBtn;
 	i_1_downDirBtn=i_downDirBtn;
+
+
+	I_sensor1Btn = i_sensor1Btn &! i_1_sensor1Btn;
+	i_1_sensor1Btn = i_sensor1Btn;
+
+	I_sensor2Btn = i_sensor2Btn &! i_1_sensor2Btn;
+	i_1_sensor2Btn = i_sensor2Btn;
 }
 
 

@@ -16,6 +16,7 @@ y_menus c_1_menuScreen = None;
 y_menus f_menuChoice = Basal;
 y_menus f_1_menuChoice = Basal;
 y_pwrStatus c_pwrStatus = e_pwrStatus_standby;
+y_safetyStatus c_safetyStatus = e_safe;
 
 
 y_opStatus c_basCreateStatus = e_opStatus_idle;

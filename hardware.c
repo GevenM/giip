@@ -17,6 +17,8 @@ bool i_1_leftDirBtn = false;
 bool i_1_rightDirBtn = false;
 bool i_1_upDirBtn = false;
 bool i_1_downDirBtn = false;
+bool i_1_sensor1Btn = false;
+bool i_1_sensor2Btn = false;
 
 bool I_leftSelBtn = false;
 bool I_middleSelBtn = false;
@@ -25,6 +27,8 @@ bool I_rightDirBtn = false;
 bool I_leftDirBtn = false;
 bool I_upDirBtn = false;
 bool I_downDirBtn = false;
+bool I_sensor1Btn = false;
+bool I_sensor2Btn = false;
 
 /* Configures the system clocks:
  * MCLK = SMCLK = DCO/FLL = mclkFreq (expected to be expressed in Hz)
