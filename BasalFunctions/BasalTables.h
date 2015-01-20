@@ -7,18 +7,18 @@
 #include<stdbool.h>
 
 
-bool F_createBasalProfile;
-y_basal F_basalProfileToCreate;
+extern bool F_createBasalProfile;
+extern y_basal F_basalProfileToCreate;
 
-bool F_removeBasalProfile;
-y_basal F_basalProfileToRemove;
+extern bool F_removeBasalProfile;
+extern y_basal F_basalProfileToRemove;
 
-y_basal f_activeBasal;
-bool f_basalIsActive;
+extern y_basal f_activeBasal;
+extern bool f_basalIsActive;
 
-bool F_startBasal;
-bool F_stopBasal;
-y_basal F_basalToStart;
+extern bool F_startBasal;
+extern bool F_stopBasal;
+extern y_basal F_basalToStart;
 
 extern void CreateBasalProfile();
 extern bool BasalProfileCreationCompleted();
