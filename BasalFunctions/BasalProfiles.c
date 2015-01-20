@@ -26,20 +26,8 @@ void InitBasalSet(){
 	SaveProfilesToFlash();
 }
 
-// Takes a profile and updates the name and rates.
-void CreateProfile(y_basal *me, char *Name, unsigned char Rate[]){
-	//strncpy( me->Name, Name, K_NAME_LENGTH-1);
 
-	//int i;
-	//for (i = 0; i<K_RATES; i++){
-	//	me->Rate[i] = Rate[i];
-	//}
-}
 
-// Changes the name of the given profile with the provided name
-void ChangeProfileName(y_basal *me, char * Name){
-	//strncpy( me->Name, Name, K_NAME_LENGTH-1);
-}
 
 // Add a basal profile to a set of basal profiles.
 int AddProfileToSet(y_basal *profile){

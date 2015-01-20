@@ -1670,6 +1670,11 @@ void UpdateScreen(){
 					AcknowledgeBubble();
 					c_menuScreen = None;
 				}
+			} else if ( GetSafetyStatus() == e_emptyReservoir ){
+				if ( M_selReq ){
+					RefillReservoir();
+					c_menuScreen = None;
+				}
 			}
 			break;
 

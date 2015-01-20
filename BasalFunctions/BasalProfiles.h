@@ -13,8 +13,6 @@ typedef struct y_basalSet{
 } y_basalSet;
 
 
-extern void CreateProfile(y_basal *me, char *Name, unsigned char Rate[]);
-extern void ChangeProfileName(y_basal *me, char *Name);
 extern void InitBasalSet();
 extern bool BasalCreationAllowed();
 extern bool BasalProfileExists();
@@ -29,8 +27,9 @@ extern bool BasalIsActive();
 extern int AddProfileToSet(y_basal *profile);
 extern int RemoveProfileFromSet(y_basal *profile);
 extern void CopyProfile(y_basal *fromProfile, y_basal *toProfile);
+
 extern int GetProfileIndex( y_basal * profile);
-extern void LoadProfile( y_basal *profile, int index);
+void LoadProfile( y_basal *profile, int index);
 extern bool ProfileCompare(y_basal *profile1, y_basal *profile2);
 
 extern int GetCurrentTimeSegment ();

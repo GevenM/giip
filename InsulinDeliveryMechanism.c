@@ -77,6 +77,15 @@ void ForceMotorBackward(){
 void ForceMotorStop(){
 	forceDirection = STOPPED;
 }
+
+void RefillReservoir(){
+	while ( GetInsulinReservoirLevelInPercent() < 90 ){
+		ForceMotorBackward();
+	}
+	ForceMotorStop();
+}
+
+
 // Timer A0 interrupt service routine
 
 #pragma vector = TIMER0_A0_VECTOR

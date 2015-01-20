@@ -8,4 +8,7 @@
 extern void CreateBasalProfile();
 extern bool BasalProfileCreationCompleted();
 
+extern void BasalProfileCreation();
+extern void ResetFVariables();
+
 #endif

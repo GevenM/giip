@@ -101,7 +101,10 @@ typedef enum{
 
 typedef enum{
 	e_safe,
-	e_notSafe
+	e_bubbleInLine,
+	e_occlusionInLine,
+	e_emptyReservoir,
+	e_lowReservoir
 } y_safetyStatus;
 
 typedef char y_remindMessage[ k_remindMessageLength + 1 ];

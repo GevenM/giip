@@ -6,7 +6,7 @@
 extern void InitInsulinDeliveryMechanism();
 extern void DeliverPendingInsulin();
 extern float GetInsulinOutputBuffer();
-
+extern void RefillReservoir();
 
 extern void EnableInsulinDeliveryMechanism();
 extern void DisableInsulinDeliveryMechanism();

@@ -76,7 +76,7 @@ void main(void){
 		UpdateInsulinReservoirSensor();
 		UpdateSafetyStatus();
 
-		if ( c_safetyStatus == e_notSafe ){
+		if ( c_safetyStatus == e_bubbleInLine || c_safetyStatus == e_occlusionInLine || c_safetyStatus == e_emptyReservoir ){
 			c_pwrStatus = e_pwrStatus_error;
 		} else {
 			c_pwrStatus = e_pwrStatus_ready;
@@ -85,20 +85,24 @@ void main(void){
 		DisplayOut();
 
 		// Call Function Table functions
-		CreateBasalProfile();
-		RemoveBasalProfile();
-		ActivateBasalProfile();
-		DeactivateBasalProfile();
-		ActivateTemporaryBasal();
-		DeactivateTemporaryBasal();
-		CreateBolusPreset();
-		RemoveBolusPreset();
-		ActivateBolus();
-		CreateReminder();
-		RemoveReminder();
-		UpdateOperation();
+		CreateBasalProfile(); // 7, 8
+		RemoveBasalProfile(); // 10, 11
+		BasalProfileCreation(); //39
 
+
+		ActivateBasalProfile(); // 13, 14
+		DeactivateBasalProfile(); // 16, 17
+		ActivateTemporaryBasal(); // 18, 19
+		DeactivateTemporaryBasal(); //21, 22
+		CreateBolusPreset(); // 23, 24
+		RemoveBolusPreset(); // 26, 27
+		ActivateBolus(); // 28, 29
+		CreateReminder(); //34, 35
+		RemoveReminder(); //37, 38
+		UpdateOperation(); //6
+		ResetFVariables();
 		DeliverPendingInsulin();
+
 
 
 		// If temporary basal is active we need to check how much is left. Decrement the duration every minute. If the duration is 0, stop the temp basal
