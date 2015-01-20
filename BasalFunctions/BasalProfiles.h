@@ -4,6 +4,7 @@
 #include "../Flash.h"
 #include <stdbool.h>
 #include "../Shared.h"
+#include "BasalTables.h"
 
 #define k_maxNumberOfBasalProfiles 4  // at 48 segments and 12 name length, 4 profiles fit on one segment of flash
 

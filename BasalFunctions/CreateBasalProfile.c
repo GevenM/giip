@@ -1,18 +1,7 @@
-#include "CreateBasalProfile.h"
-
-
-void SaveBasalProfile(y_basal *profile);
-
-bool F_createBasalProfile;
-y_basal F_basalProfileToCreate;
-
-bool F_removeBasalProfile;
-y_basal F_basalProfileToRemove;
+#include "BasalTables.h"
 
 y_basal p_basProf;
-
-
-//y_basal F_basalProfileToCreate;
+y_basal p_basRemSelected;
 
 void CreateBasalProfile(){
 	if ( c_operation == e_operation_createBasProf ){
@@ -82,41 +71,4 @@ void CreateBasalProfile(){
 		//F_createBasalProfile = false;
 		CopyProfile(&k_emptyBas, &p_basProf);
 	}
-}
-
-bool BasalProfileCreationCompleted(){
-	if (F_createBasalProfile || M_basCreateResp == e_response_cancel ){
-		//F_createBasalProfile = false;
-		return true;
-	}
-
-	return false;
-}
-
-
-
-void SaveBasalProfile(y_basal *profile){
-	AddProfileToSet(profile);
-}
-
-
-void BasalProfileCreation(){
-	if ( c_pwrStatus == e_pwrStatus_ready ){
-		if( F_createBasalProfile ){
-			AddProfileToSet( &F_basalProfileToCreate );
-		} else if ( F_removeBasalProfile ){
-			RemoveProfileFromSet( &F_basalProfileToRemove );
-		} else {
-			;
-		}
-	} else {
-		;
-	}
-}
-
-void ResetFVariables(){
-	CopyProfile(&k_emptyBas, &F_basalProfileToCreate);
-	F_createBasalProfile = false;
-	CopyProfile(&k_emptyBas, &F_basalProfileToRemove);
-	F_removeBasalProfile = false;
 }

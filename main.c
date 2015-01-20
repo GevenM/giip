@@ -18,10 +18,8 @@
 #include "DisplayOut.h"
 
 #include "UpdateOperation.h"
-#include "BasalFunctions/CreateBasalProfile.h"
-#include "BasalFunctions/RemoveBasalProfile.h"
-#include "BasalFunctions/ActivateBasalProfile.h"
-#include "BasalFunctions/DeactivateBasalProfile.h"
+#include "BasalFunctions/BasalTables.h"
+
 #include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
 #include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
 #include "BolusFunctions/CreateBolusPreset.h"
@@ -87,11 +85,12 @@ void main(void){
 		// Call Function Table functions
 		CreateBasalProfile(); // 7, 8
 		RemoveBasalProfile(); // 10, 11
-		BasalProfileCreation(); //39
-
+		UpdateBasalProfileSet(); //39
 
 		ActivateBasalProfile(); // 13, 14
 		DeactivateBasalProfile(); // 16, 17
+		UpdateActiveBasalProfile(); //40
+
 		ActivateTemporaryBasal(); // 18, 19
 		DeactivateTemporaryBasal(); //21, 22
 		CreateBolusPreset(); // 23, 24
@@ -100,7 +99,9 @@ void main(void){
 		CreateReminder(); //34, 35
 		RemoveReminder(); //37, 38
 		UpdateOperation(); //6
-		ResetFVariables();
+
+		ResetFVariablesBasal();
+
 		DeliverPendingInsulin();
 
 

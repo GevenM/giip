@@ -3,7 +3,9 @@
 
 
 
-y_basal f_activeBasal = {"", {0}};
+//y_basal f_activeBasal = {"", {0}};
+//bool f_basalIsActive = false;
+
 y_tmpBasal f_activeTmpBasal = {0, 0};
 y_bolus f_activeBolus = {"", 0};
 
@@ -32,7 +34,7 @@ y_opStatus c_remindRemStatus = e_opStatus_idle;
 y_bolStatus c_bolStartStatus;
 
 
-bool f_basalIsActive = false;
+
 bool f_temporaryBasalIsActive = false;
 bool f_bolusInProgress = false;
 

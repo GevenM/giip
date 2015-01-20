@@ -3,10 +3,8 @@
 
 #include "Shared.h"
 #include "DisplayOut.h"
-#include "BasalFunctions/CreateBasalProfile.h"
-#include "BasalFunctions/RemoveBasalProfile.h"
-#include "BasalFunctions/ActivateBasalProfile.h"
-#include "BasalFunctions/DeactivateBasalProfile.h"
+#include "BasalFunctions/BasalTables.h"
+
 #include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
 #include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
 #include "BolusFunctions/CreateBolusPreset.h"

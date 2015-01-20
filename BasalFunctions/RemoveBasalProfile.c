@@ -1,8 +1,5 @@
-#include "RemoveBasalProfile.h"
+ #include "BasalTables.h"
 
-
-
-bool F_removeBasalProfile; // from NL expression [Remove Basal Profile]
 y_basal p_basRemSelected;
 
 
@@ -13,15 +10,15 @@ void RemoveBasalProfile(){
 			if (M_basRemSelected){
 				if(!BasalProfileIsActive(&m_basRemSelected)){
 					c_basRemStatus = e_opStatus_confirm;
-					F_removeBasalProfile = false;
+					//F_removeBasalProfile = false;
 					CopyProfile(&m_basRemSelected, &p_basRemSelected);
 				}
 				else {
 					c_basRemStatus = e_opStatus_invalid;
-					F_removeBasalProfile = false;
+					//F_removeBasalProfile = false;
 				}
 			} else {
-				F_removeBasalProfile = false;
+				;//F_removeBasalProfile = false;
 			}
 			break;
 
@@ -29,17 +26,18 @@ void RemoveBasalProfile(){
 			if (M_basRemResp == e_response_accept){
 				c_basRemStatus = e_opStatus_idle;
 				F_removeBasalProfile = true;
-				RemoveProfileFromSet(&p_basRemSelected);
-				CopyProfile(&k_emptyBas, &p_basRemSelected);
+				CopyProfile( &p_basRemSelected, &F_basalProfileToRemove );
+				//RemoveProfileFromSet(&p_basRemSelected);
+				CopyProfile( &k_emptyBas, &p_basRemSelected );
 
 			} else if( M_basRemResp == e_response_retry){
 				c_basRemStatus = e_opStatus_idle;
-				F_removeBasalProfile = false;
+				//F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else if (M_basRemResp == e_response_cancel){
 				c_basRemStatus = e_opStatus_idle;
-				F_removeBasalProfile = false;
+				//F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			}
@@ -48,16 +46,16 @@ void RemoveBasalProfile(){
 		case e_opStatus_invalid:
 			if(M_basRemResp == e_response_retry){
 				c_basRemStatus = e_opStatus_idle;
-				F_removeBasalProfile = false;
+				//F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else if (M_basRemResp == e_response_cancel){
 				c_basRemStatus = e_opStatus_idle;
-				F_removeBasalProfile = false;
+				//F_removeBasalProfile = false;
 				CopyProfile(&k_emptyBas, &p_basRemSelected);
 
 			} else {
-				F_removeBasalProfile = false;
+				;//F_removeBasalProfile = false;
 			}
 
 			break;
@@ -68,14 +66,3 @@ void RemoveBasalProfile(){
 		CopyProfile(&k_emptyBas, &p_basRemSelected);
 	}
 }
-
-bool BasalProfileRemovalCompleted(){
-	if (F_removeBasalProfile || M_basRemResp == e_response_cancel){
-		F_removeBasalProfile = false;
-		return true;
-	}
-
-	return false;
-}
-
-
