@@ -1,5 +1,5 @@
 #include "Shared.h"
-#include "BasalFunctions/BasalProfiles.h"
+#include "BasalProfiles.h"
 #include "BolusFunctions/BolusPresets.h"
 #include "TemporaryBasalFunctions/TemporaryBasal.h"
 

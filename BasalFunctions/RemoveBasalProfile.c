@@ -1,4 +1,4 @@
- #include "BasalTables.h"
+ #include "BasalFunctions.h"
 
 y_basal p_basRemSelected;
 
@@ -8,7 +8,7 @@ void RemoveBasalProfile(){
 		switch(c_basRemStatus){
 		case e_opStatus_idle:
 			if (M_basRemSelected){
-				if(!BasalProfileIsActive(&m_basRemSelected)){
+				if(!SelectedBasalProfileIsActive(&m_basRemSelected)){
 					c_basRemStatus = e_opStatus_confirm;
 					//F_removeBasalProfile = false;
 					CopyProfile(&m_basRemSelected, &p_basRemSelected);
@@ -62,7 +62,7 @@ void RemoveBasalProfile(){
 		default: break;
 		}
 	} else {
-		F_removeBasalProfile = false;
+		//F_removeBasalProfile = false;
 		CopyProfile(&k_emptyBas, &p_basRemSelected);
 	}
 }

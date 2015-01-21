@@ -1,4 +1,4 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
 bool BasalProfileDeactivationCompleted(){
 	if ( F_stopBasal || M_basStopResp == e_response_cancel ){

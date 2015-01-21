@@ -1,4 +1,4 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
 void DeactivateBasalProfile(){
 	if ( c_operation == e_operation_stopBasProf ){

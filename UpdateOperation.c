@@ -3,7 +3,7 @@
 
 #include "Shared.h"
 #include "DisplayOut.h"
-#include "BasalFunctions/BasalTables.h"
+#include "BasalFunctions/BasalFunctions.h"
 
 #include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
 #include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"

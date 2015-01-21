@@ -1,4 +1,4 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
 y_basal p_basActSelected;
 
@@ -7,7 +7,7 @@ void ActivateBasalProfile(){
 		switch(c_basStartStatus){
 		case e_opStatus_idle:
 			if (M_basActSelected){
-				if (ActivateBasalProfileIsValid( &m_basActSelected )){
+				if (SelectedBasalProfileIsValid( &m_basActSelected )){
 					c_basStartStatus = e_opStatus_confirm;
 					//F_startBasal = false;
 					CopyProfile(&m_basActSelected, &p_basActSelected);

@@ -1,7 +1,5 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
-bool f_basalIsActive = false;
-y_basal f_activeBasal;
 
 void UpdateActiveBasalProfile(){
 	if ( c_pwrStatus == e_pwrStatus_ready ){

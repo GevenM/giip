@@ -8,7 +8,7 @@
 #include "hardware.h"
 #include "MonitoredVariables.h"
 #include "Shared.h"
-#include "BasalFunctions/BasalProfiles.h"
+#include "BasalProfiles.h"
 #include "TemporaryBasalFunctions/TemporaryBasal.h"
 
 

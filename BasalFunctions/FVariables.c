@@ -1,4 +1,7 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
+
+bool f_basalIsActive = false;
+y_basal f_activeBasal;
 
 bool F_createBasalProfile = false;
 y_basal F_basalProfileToCreate;

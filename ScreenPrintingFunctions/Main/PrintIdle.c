@@ -3,7 +3,7 @@
 #include "DisplayOut.h"
 
 #include "TemporaryBasalFunctions/TemporaryBasal.h"
-#include "BasalFunctions/BasalProfiles.h"
+#include "BasalFunctions/BasalFunctions.h"
 #include "BolusFunctions/BolusPresets.h"
 #include "RTC.h"
 #include "TriggerReminder.h"

@@ -1,4 +1,4 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
 void UpdateBasalProfileSet(){
 	if ( c_pwrStatus == e_pwrStatus_ready ){

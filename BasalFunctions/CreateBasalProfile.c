@@ -1,4 +1,4 @@
-#include "BasalTables.h"
+#include "BasalFunctions.h"
 
 y_basal p_basProf;
 y_basal p_basRemSelected;
@@ -13,7 +13,7 @@ void CreateBasalProfile(){
 				CopyProfile(&k_emptyBas, &p_basProf);
 			} else {
 				if(M_basProf){
-					if (BasalProfileIsValid( &m_basProf )){
+					if ( EnteredBasalProfileIsValid( &m_basProf ) ){
 						c_basCreateStatus = e_opStatus_confirm;
 						CopyProfile(&m_basProf, &p_basProf);
 						//F_createBasalProfile = false;

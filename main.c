@@ -18,7 +18,7 @@
 #include "DisplayOut.h"
 
 #include "UpdateOperation.h"
-#include "BasalFunctions/BasalTables.h"
+#include "BasalFunctions/BasalFunctions.h"
 
 #include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
 #include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
@@ -36,7 +36,7 @@
 
 void InputEvents();
 
-#include "BasalFunctions/BasalProfiles.h"
+#include "BasalProfiles.h"
 #include "Flash.h"
 
 void main(void){
@@ -83,16 +83,16 @@ void main(void){
 		DisplayOut();
 
 		// Call Function Table functions
-		CreateBasalProfile(); // 7, 8
-		RemoveBasalProfile(); // 10, 11
+		CreateBasalProfile(); // 7
+		RemoveBasalProfile(); // 10
 		UpdateBasalProfileSet(); //39
 
-		ActivateBasalProfile(); // 13, 14
-		DeactivateBasalProfile(); // 16, 17
+		ActivateBasalProfile(); // 13
+		DeactivateBasalProfile(); // 16
 		UpdateActiveBasalProfile(); //40
 
-		ActivateTemporaryBasal(); // 18, 19
-		DeactivateTemporaryBasal(); //21, 22
+		ActivateTemporaryBasal(); // 18
+		DeactivateTemporaryBasal(); //21
 		CreateBolusPreset(); // 23, 24
 		RemoveBolusPreset(); // 26, 27
 		ActivateBolus(); // 28, 29
