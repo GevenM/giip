@@ -98,26 +98,7 @@ int GetReminderIndex( y_reminder *reminder ){
 	return i;
 }
 
-bool ReminderIsValid( y_reminder *reminder ){
-	GetDay( &reminder->Time );
-	if( reminder->Time.DayOfWeek == 0 || reminder->Time.DayOfWeek == 6 ){ //if reminder on weekend
-		if( reminder->Frequency == e_remindFreq_weekdays ) return false;
-	} else { // if reminder on a weekday
-		if ( reminder->Frequency == e_remindFreq_weekends ) return false;
-	}
 
-	if( GetReminderIndex( reminder ) == -1 ){
-		if( strcmp( reminder->Name, "" ) != 0 ){
-			if( strcmp( reminder->Message, "" ) != 0 ){
-				if ( ReminderDateTimeValid( reminder )){
-					return true;
-				}
-			}
-		}
-	}
-	return true;
-
-}
 
 bool ReminderDateTimeValid( y_reminder *reminder ){
 	return true; // NEED TO FILL IN THIS FUNCTION
@@ -229,4 +210,40 @@ void IncrementReminderYear( y_reminder *reminder ){
 		reminder->Time.Year &= 0x0000;
 		reminder->Time.Year |= ( IntToBCD( century ) << 8 );
 	}
+}
+
+extern bool ReminderNameIsValidAndUnique( y_reminder *reminder ){
+	if( strcmp( reminder->Name, "" ) == 0 ){
+		return false;
+	}
+
+	LoadRemindersFromFlash();
+
+	int i;
+	for( i = 0 ; i < reminderSetLocal.NumberOfReminders ; i++ ){
+		if ( strcmp( reminderSetLocal.Reminder[i].Name, reminder->Name ) == 0){
+			return false;
+		}
+	}
+	return true;
+}
+
+extern bool ReminderTimesAreValid( y_reminder *reminder ){
+	if( reminder->Time.DayOfWeek == 0 || reminder->Time.DayOfWeek == 6 ){ //if reminder on weekend
+		if( reminder->Frequency == e_remindFreq_weekdays ) return false;
+	} else { // if reminder on a weekday
+		if ( reminder->Frequency == e_remindFreq_weekends ) return false;
+	}
+
+	if ( ! ReminderDateTimeValid( reminder )){
+		return false;
+	}
+	return true;
+}
+
+extern bool ReminderMessageIsValid( y_reminder *reminder ){
+	if( strcmp( reminder->Message, "" ) == 0 ){
+		return false;
+	}
+	return true;
 }

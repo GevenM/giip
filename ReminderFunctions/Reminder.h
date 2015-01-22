@@ -18,7 +18,7 @@ extern void InitReminderSet();
 extern bool ReminderCreationAllowed();
 extern bool ReminderRemovalAllowed();
 
-extern bool ReminderIsValid( y_reminder *reminder );
+
 extern void CopyReminder ( y_reminder *from, y_reminder *to );
 
 extern int GetReminderIndex( y_reminder *reminder );
@@ -30,4 +30,8 @@ extern void IncrementReminderDay( y_reminder *reminder );
 extern void IncrementReminderMonth( y_reminder *reminder );
 extern void IncrementReminderYear( y_reminder *reminder );
 
+
+extern bool ReminderNameIsValidAndUnique( y_reminder *reminder );
+extern bool ReminderTimesAreValid( y_reminder *reminder );
+extern bool ReminderMessageIsValid( y_reminder *reminder );
 #endif

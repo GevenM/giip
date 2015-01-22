@@ -1,6 +1,5 @@
-#include "RemoveReminder.h"
+#include "ReminderFunctions.h"
 
-static bool F_removeReminder = false;
 static y_reminder p_reminder;
 
 void RemoveReminder(){
@@ -9,7 +8,7 @@ void RemoveReminder(){
 		case e_opStatus_idle:
 			if( M_reminder ){
 				c_remindRemStatus = e_opStatus_confirm;
-				F_removeReminder = false;
+				//F_removeReminder = false;
 				CopyReminder( &m_reminder, &p_reminder );
 			} else {
 				F_removeReminder = false;
@@ -20,17 +19,18 @@ void RemoveReminder(){
 			if ( M_remindRemResp == e_response_accept ){
 				c_remindRemStatus = e_opStatus_idle;
 				F_removeReminder = true;
-				RemoveReminderFromSet( &p_reminder );
+				CopyReminder( &p_reminder, &F_reminderToRemove );
+			//	RemoveReminderFromSet( &p_reminder );
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindRemResp == e_response_retry ){
 				c_remindRemStatus = e_opStatus_idle;
-				F_removeReminder = false;
+				//F_removeReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindRemResp == e_response_cancel ){
 				c_remindRemStatus = e_opStatus_idle;
-				F_removeReminder = false;
+				//F_removeReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			}
@@ -38,17 +38,11 @@ void RemoveReminder(){
 		default: break;
 		}
 	} else {
-		F_removeReminder = false;
+		//F_removeReminder = false;
 		CopyReminder( &k_emptyReminder, &p_reminder );
 	}
 }
 
-bool ReminderRemovalCompleted(){
-	if (F_removeReminder || M_remindRemResp == e_response_cancel ){
-		F_removeReminder = false;
-		return true;
-	}
-	return false;
-}
+
 
 

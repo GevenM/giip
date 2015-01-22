@@ -7,8 +7,8 @@
 #include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
 #include "BolusFunctions/BolusFunctions.h"
 
-#include "ReminderFunctions/CreateReminder.h"
-#include "ReminderFunctions/RemoveReminder.h"
+#include "ReminderFunctions/ReminderFunctions.h"
+
 
 
 void UpdateOperation(){

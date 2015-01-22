@@ -23,8 +23,8 @@
 #include "BolusFunctions/BolusFunctions.h"
 
 #include "RTC.h"
-#include "ReminderFunctions/CreateReminder.h"
-#include "ReminderFunctions/RemoveReminder.h"
+#include "ReminderFunctions/ReminderFunctions.h"
+
 
 #include "InsulinDeliveryMechanism.h"
 #include "InsulinReservoir.h"
@@ -95,26 +95,19 @@ void main(void){
 		CreateBolusPreset(); // 23, 24
 		RemoveBolusPreset(); // 26, 27
 		ActivateBolus(); // 28, 29
-		UpdateBolusPresetSet();
-		UpdateActiveBolus();
-
-		// bolus is active, check if it's all delivered and stop bolus if it is
-		//if ( BolusIsActive() ){
-		//	if ( f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5) <= 16 ) {
-		//		CopyBolusPreset( &k_emptyBol, &f_activeBolus);
-		//		updateScreen = true;
-		//	}
-		//}
-
-
+		UpdateBolusPresetSet(); // 42
+		UpdateActiveBolus(); // 43
 
 		CreateReminder(); //34, 35
 		RemoveReminder(); //37, 38
+		UpdateReminders(); //44
+
 		UpdateOperation(); //6
 
 		ResetFVariablesBasal();
 		ResetFVariablesTemporaryBasal();
 		ResetFVariablesBolus();
+		ResetFVariablesReminder();
 
 		DeliverPendingInsulin();
 

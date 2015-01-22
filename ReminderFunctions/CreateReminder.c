@@ -1,8 +1,7 @@
-#include "CreateReminder.h"
+#include "ReminderFunctions.h"
 #include "MonitoredVariables.h"
 #include "Reminder.h"
 
-bool F_createReminder = false;
 y_reminder p_reminder;
 
 void CreateReminder(){
@@ -12,7 +11,7 @@ void CreateReminder(){
 			if ( M_reminder ){
 				if ( ReminderIsValid( &m_reminder )){
 					c_remindCreateStatus = e_opStatus_confirm;
-					F_createReminder = false;
+					//F_createReminder = false;
 					CopyReminder( &m_reminder, &p_reminder );
 				} else {
 					c_remindCreateStatus = e_opStatus_invalid;
@@ -27,17 +26,18 @@ void CreateReminder(){
 			if ( M_remindCreateResp == e_response_accept ){
 				c_remindCreateStatus = e_opStatus_idle;
 				F_createReminder = true;
-				AddReminderToSet( &p_reminder );
+				//AddReminderToSet( &p_reminder );
+				CopyReminder( &p_reminder, &F_reminderToCreate );
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindCreateResp == e_response_retry ){
 				c_remindCreateStatus = e_opStatus_idle;
-				F_createReminder = false;
+			//	F_createReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindCreateResp == e_response_cancel ){
 				c_remindCreateStatus = e_opStatus_idle;
-				F_createReminder = false;
+			//	F_createReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			}
@@ -46,30 +46,22 @@ void CreateReminder(){
 		case e_opStatus_invalid:
 			if ( M_remindCreateResp == e_response_retry ){
 				c_remindCreateStatus = e_opStatus_idle;
-				F_createReminder = false;
+				//F_createReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else if ( M_remindCreateResp == e_response_cancel ){
 				c_remindCreateStatus = e_opStatus_idle;
-				F_createReminder = false;
+				//F_createReminder = false;
 				CopyReminder( &k_emptyReminder, &p_reminder );
 
 			} else {
-				F_createReminder = false;
+			;//	F_createReminder = false;
 			}
 			break;
 		}
 
 	} else {
-		F_createReminder = false;
+		;//F_createReminder = false;
 	}
 }
 
-
-bool ReminderCreationCompleted(){
-	if (F_createReminder || M_remindCreateResp == e_response_cancel ){
-		F_createReminder = false;
-		return true;
-	}
-	return false;
-}
