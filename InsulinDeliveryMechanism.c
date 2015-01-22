@@ -6,7 +6,7 @@
 #include "msp430.h"
 
 const float k_stepVolume = 15.552; //ml/step *3600
-
+const int k_motorOutputFreqLimit = 600; //maximum number of steps motor can take per minute
 
 #define FORWARD  1
 #define BACKWARD  2
@@ -20,8 +20,13 @@ int currentStep = 0;
 
 void InitInsulinDeliveryMechanism(){
     // initialize Timer0_A for motors
-    TA0CCR0 = 3000;  // set up terminal count
+    TA0CCR0 = 7500000 / k_motorOutputFreqLimit;  // set up terminal count
     TA0CTL = TASSEL_2 + ID_3 + MC_1; // configure and start timer
+
+    //TASSEL_2 selects the internal 1MHz clock (SMCLK).
+    //ID_3 sets the clock division to 8. Hence one timer clock cycle is 8s.
+    //MC_1 sets the count mode to count up.
+    //In this mode, the timer will count for 125000/outputlimit x 8s = x s before restarting at zero.
 
     TA0CCTL0 = CCIE;   // enable timer interrupts
     __enable_interrupt();      // enable interrupts

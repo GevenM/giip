@@ -94,8 +94,8 @@ void main(void){
 
 		CreateBolusPreset(); // 23, 24
 		RemoveBolusPreset(); // 26, 27
-		ActivateBolus(); // 28, 29
 		UpdateBolusPresetSet(); // 42
+		ActivateBolus(); // 28, 29
 		UpdateActiveBolus(); // 43
 
 		CreateReminder(); //34, 35
