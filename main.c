@@ -19,12 +19,9 @@
 
 #include "UpdateOperation.h"
 #include "BasalFunctions/BasalFunctions.h"
+#include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
+#include "BolusFunctions/BolusFunctions.h"
 
-#include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
-#include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
-#include "BolusFunctions/CreateBolusPreset.h"
-#include "BolusFunctions/RemoveBolusPreset.h"
-#include "BolusFunctions/ActivateBolus.h"
 #include "RTC.h"
 #include "ReminderFunctions/CreateReminder.h"
 #include "ReminderFunctions/RemoveReminder.h"
@@ -61,7 +58,6 @@ void main(void){
 
   	PrintScreen();
 
-  	int prevMin;
   	int currentSec = 0;
   	int prevSec = 0;
 
@@ -93,34 +89,39 @@ void main(void){
 
 		ActivateTemporaryBasal(); // 18
 		DeactivateTemporaryBasal(); //21
+		UpdateActiveTemporaryBasal(); //41
+
+
 		CreateBolusPreset(); // 23, 24
 		RemoveBolusPreset(); // 26, 27
 		ActivateBolus(); // 28, 29
+		UpdateBolusPresetSet();
+		UpdateActiveBolus();
+
+		// bolus is active, check if it's all delivered and stop bolus if it is
+		//if ( BolusIsActive() ){
+		//	if ( f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5) <= 16 ) {
+		//		CopyBolusPreset( &k_emptyBol, &f_activeBolus);
+		//		updateScreen = true;
+		//	}
+		//}
+
+
+
 		CreateReminder(); //34, 35
 		RemoveReminder(); //37, 38
 		UpdateOperation(); //6
 
 		ResetFVariablesBasal();
+		ResetFVariablesTemporaryBasal();
+		ResetFVariablesBolus();
 
 		DeliverPendingInsulin();
 
 
 
-		// If temporary basal is active we need to check how much is left. Decrement the duration every minute. If the duration is 0, stop the temp basal
-		if( TemporaryBasalIsActive() ){
-			if ( prevMin != GetCurrentMin() ) f_activeTmpBasal.Duration = f_activeTmpBasal.Duration - 1;
-			if ( f_activeTmpBasal.Duration == 0 ) StopTemporaryBasal();
-			prevMin = GetCurrentMin(); // Update minute roll over
-			updateScreen = true;
-		}
 
-		// bolus is active, check if it's all delivered and stop bolus if it is
-		if ( BolusIsActive() ){
-			if ( f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5) <= 16 ) {
-				CopyBolusPreset( &k_emptyBol, &f_activeBolus);
-				updateScreen = true;
-			}
-		}
+
 
 		// update screen every second
 		currentSec = GetCurrentSec ();

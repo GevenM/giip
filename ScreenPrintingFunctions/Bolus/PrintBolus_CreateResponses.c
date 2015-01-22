@@ -1,5 +1,7 @@
 #include "!PrintBolus_Master.h"
 #include "DisplayOut.h"
+#include "BolusFunctions/BolusFunctions.h"
+
 
 void PrintCreateBolusPreset_Confirm( tContext *context ){
 	//char buffer[10] = "";
@@ -15,10 +17,15 @@ void PrintCreateBolusPreset_Confirm( tContext *context ){
 
 	GrStringDraw( context, "Name: " , AUTO_STRING_LENGTH, 5, 40, OPAQUE_TEXT );
 
-	// ****** NEED a getBolus to activate and then write these commented outputs
-	//GrStringDraw( context, m_bolus.Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
 
+	y_bolus *p_bolusPtr;
+	p_bolusPtr = ( y_bolus * ) malloc ( sizeof( y_bolus ));
 
+	*p_bolusPtr = GetBolusToCreate();
+
+	GrStringDraw( context, p_bolusPtr->Name, AUTO_STRING_LENGTH, 15, 50, OPAQUE_TEXT);
+
+	free(p_bolusPtr);
 	//digits = UnsignedInt_To_ASCII(m_bolus.Amount / 3600, buffer);
 	//strcpy(outString, "Amount: ");
 	//strncat(outString, buffer, digits);

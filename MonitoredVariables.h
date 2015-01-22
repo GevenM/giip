@@ -5,7 +5,7 @@
 #include "hardware.h"
 //#include <string.h>
 #include "BasalProfiles.h"
-#include "TemporaryBasalFunctions/TemporaryBasal.h"
+#include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
 #include "BolusFunctions/BolusPresets.h"
 #include "ReminderFunctions/Reminder.h"
 

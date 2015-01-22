@@ -1,7 +1,9 @@
 #include "Shared.h"
 #include "BasalProfiles.h"
 #include "BolusFunctions/BolusPresets.h"
-#include "TemporaryBasalFunctions/TemporaryBasal.h"
+#include "BolusFunctions/BolusFunctions.h"
+
+#include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
 
 unsigned char deltaT = 1; // represents 1 second timestep
 
@@ -70,7 +72,7 @@ void InsulinOutputCalculator(){
 }
 
 int GetCurrentInsulinOutput(){
-	f_activeBolus.Amount -= f_bolusOut;
+	//f_activeBolus.Amount -= f_bolusOut;
 	return f_basalOut + f_bolusOut;
 }
 

@@ -124,11 +124,7 @@ extern bool ReminderExists();
 
 
 //extern bool BasalIsActive();
-extern bool TemporaryBasalIsActive();
-
-
-extern y_tmpBasal f_activeTmpBasal;
-extern y_bolus f_activeBolus;
+//extern bool TemporaryBasalIsActive();
 
 
 #endif

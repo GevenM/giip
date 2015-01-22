@@ -1,6 +1,6 @@
 #include "!PrintBolus_Master.h"
 #include "DisplayOut.h"
-#include "BolusFunctions/ActivateBolus.h"
+#include "BolusFunctions/BolusFunctions.h"
 
 void PrintStartBolus_Confirm( tContext *context ){
 	// Draw Header
@@ -11,7 +11,7 @@ void PrintStartBolus_Confirm( tContext *context ){
 	bolus = (y_bolus *) malloc( sizeof( y_bolus ));
 
 	// Get the bolus to activate
-	BolusToActivate( bolus );
+	*bolus = GetBolusToActivate();
 
 	// Draw bolus name
 	GrStringDraw( context, "Name: " , AUTO_STRING_LENGTH, 5, 37, OPAQUE_TEXT);

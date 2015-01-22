@@ -1,6 +1,6 @@
 
 #include <string.h>
-
+#include "BolusFunctions.h"
 #include "BolusFunctions/BolusPresets.h"
 #include "../Shared.h"
 #include "stdlib.h"
@@ -45,23 +45,7 @@ void CopyBolusPreset(y_bolus *fromPreset, y_bolus *toPreset){
 }
 
 
-bool EnteredBolusIsValid(y_bolus *preset){
-	LoadPresetsFromFlash();
 
-	// Check that given name is not blank
-	if ( !strcmp(preset->Name, ""))
-			return false;
-
-	// Check that profile name is unique
-	int i;
-	for ( i = 0 ; i < bolusSetLocal.NumberOfBolusPresets ; i++ ){
-		if ( PresetCompare( preset, &bolusSetLocal.Preset[ i ] ))
-			return false;
-	}
-
-	// check that it's within bounds and other criteria
-	return BolusIsValid( preset );
-}
 
 bool PresetCompare( y_bolus *preset1, y_bolus *preset2 ){
 	// if the names match, the profiles are the same.
@@ -172,6 +156,26 @@ bool BolusPresetIsActive(y_bolus *preset){
 	return !strcmp(preset->Name, f_activeBolus.Name);
 }
 
+void CopyPreset(y_bolus *fromPreset, y_bolus *toPreset){
+	*toPreset = *fromPreset;
+}
+
+bool PresetNameIsValidAndUnique( y_bolus *preset ){
+	if( strcmp( preset->Name, "" ) == 0 ){
+		return false;
+	}
+
+	LoadPresetsFromFlash();
+
+	int i;
+	for( i = 0 ; i < bolusSetLocal.NumberOfBolusPresets ; i++ ){
+		if ( strcmp( bolusSetLocal.Preset[i].Name, preset->Name ) == 0){
+			return false;
+		}
+	}
+	return true;
+}
+
 bool BolusPresetExists(){
 	LoadPresetsFromFlash();
 
@@ -197,23 +201,9 @@ void LoadPreset( y_bolus *preset, int index){
 	CopyBolusPreset(&bolusSetLocal.Preset[index], preset);
 }
 
-y_bolus CalculateBolus( y_glucose glucose, y_carbs carbs ){
-	y_bolus bolus;
 
-	strncpy( bolus.Name, "*Calculated", k_bolusNameLength );
-	bolus.Amount = 3600; //Need to do calculation here.
 
-	return bolus;
-}
-
-bool CalculatedBolusIsValid( y_bolus bolus ){
-
-	return EnteredBolusIsValid( &bolus );
-
-}
-
-bool BolusIsValid( y_bolus *bolus ){
-
+bool BolusIsInBounds( y_bolus *bolus ){
 	// Check that the amount is within allowable bounds
 	if ( bolus->Amount < k_minBolusBound || bolus->Amount > k_maxBolusBound ){
 		return false;

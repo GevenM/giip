@@ -1,6 +1,6 @@
 #include "DisplayOut.h"
 #include <string.h>
-#include "BolusFunctions/ActivateBolus.h"
+#include "BolusFunctions/BolusFunctions.h"
 #include "RTC.h"
 #include "InsulinOutputCalculator.h"
 #include "ReminderFunctions/Reminder.h"

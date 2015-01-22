@@ -6,8 +6,8 @@
 //y_basal f_activeBasal = {"", {0}};
 //bool f_basalIsActive = false;
 
-y_tmpBasal f_activeTmpBasal = {0, 0};
-y_bolus f_activeBolus = {"", 0};
+//y_tmpBasal f_activeTmpBasal = {0, 0};
+//y_bolus f_activeBolus = {"", 0};
 
 
 
@@ -35,8 +35,8 @@ y_bolStatus c_bolStartStatus;
 
 
 
-bool f_temporaryBasalIsActive = false;
-bool f_bolusInProgress = false;
+//bool f_temporaryBasalIsActive = false;
+//bool f_bolusInProgress = false;
 
 
 bool ScheduleCreationAllowed(){

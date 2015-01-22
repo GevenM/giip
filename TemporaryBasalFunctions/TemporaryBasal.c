@@ -1,5 +1,5 @@
-#include "TemporaryBasal.h"
-#include "Shared.h"
+#include "TemporaryBasalFunctions.h"
+
 
 void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
 
@@ -9,15 +9,15 @@ void CopyTmpBasal(y_tmpBasal *fromTmpBasal, y_tmpBasal *toTmpBasal){
 
 }
 
-bool ActivateTemporaryBasalIsValid(y_tmpBasal *profile){
+bool TemporaryRateOutOfBound( y_tmpBasal *profile ){
 
-	if ( profile->Rate < k_minTmpRate || profile->Rate > k_maxTmpRate) //each single rate is within allowable bounds
-			return false;
-
-	if (profile->Rate*(profile->Duration/60) > k_maxDailyInsulin) //compare sum of rates to daily max
-		return false;
-	else
+	if ( profile->Rate < k_minTmpRate || profile->Rate > k_maxTmpRate) //the rate is outside allowable bounds
 		return true;
+
+	if (profile->Rate*(profile->Duration/60) > k_maxDailyInsulin) // the rate is outside allowable daily tolerance
+		return true;
+
+	return false;
 }
 
 

@@ -4,12 +4,9 @@
 #include "Shared.h"
 #include "DisplayOut.h"
 #include "BasalFunctions/BasalFunctions.h"
+#include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
+#include "BolusFunctions/BolusFunctions.h"
 
-#include "TemporaryBasalFunctions/ActivateTemporaryBasal.h"
-#include "TemporaryBasalFunctions/DeactivateTemporaryBasal.h"
-#include "BolusFunctions/CreateBolusPreset.h"
-#include "BolusFunctions/RemoveBolusPreset.h"
-#include "BolusFunctions/ActivateBolus.h"
 #include "ReminderFunctions/CreateReminder.h"
 #include "ReminderFunctions/RemoveReminder.h"
 

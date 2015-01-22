@@ -2,8 +2,9 @@
 #include "ScreenPrintingFunctions/Overlay/!PrintOverlay_Master.h"
 #include "DisplayOut.h"
 
-#include "TemporaryBasalFunctions/TemporaryBasal.h"
+#include "TemporaryBasalFunctions/TemporaryBasalFunctions.h"
 #include "BasalFunctions/BasalFunctions.h"
+#include "BolusFunctions/BolusFunctions.h"
 #include "BolusFunctions/BolusPresets.h"
 #include "RTC.h"
 #include "TriggerReminder.h"
@@ -65,7 +66,7 @@ void PrintIdle( tContext *context ){
 
 
 	// Print bolus status
-	if( BolusIsActive() ){
+	if( f_bolusInProgress ){
 
 		UnsignedInt_To_ASCII( (f_activeBolus.Amount + (int)(GetInsulinOutputBuffer()+0.5)) / 3600, outString );
 
