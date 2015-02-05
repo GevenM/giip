@@ -3,7 +3,7 @@
 
 
 
-extern void InitInsulinReservoirSensor();
+extern void InitInsulinReservoirSensorADC();
 extern void UpdateInsulinReservoirSensor();
 
 extern unsigned long GetInsulinReservoirLevelInIU();

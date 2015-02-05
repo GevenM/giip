@@ -7,7 +7,7 @@ const float k_insulinReservoirCapacity = 20; //ml
 unsigned int reservoirLevel = 0;
 
 
-void InitInsulinReservoirSensor(){
+void InitInsulinReservoirSensorADC(){
     // adc stuff
     REFCTL0 &= ~REFMSTR;                      // Reset REFMSTR to hand over control to
                                                 // ADC12_A ref control registers
@@ -20,6 +20,7 @@ void InitInsulinReservoirSensor(){
     ADC12CTL0 |= ADC12ENC; // enables conversion
 }
 
+// Triggers the ADC conversion
 void UpdateInsulinReservoirSensor(){
     ADC12CTL0 &= ~ADC12SC;
     ADC12CTL0 |= ADC12SC;                   // Sampling and conversion start

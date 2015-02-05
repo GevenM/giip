@@ -93,9 +93,12 @@ extern void InitClock(unsigned long mclkFreq);
 extern void InitHardware();
 //void timerInit();
 void InitLED();
-void InitButtonsSensors();
 void InitMotor();
 
+void InitUserInputButtons();
+void InitBubbleSensor();
+void InitOcclusionSensor();
+void InitReservoirLevelSensor();
 
 extern bool i_1_leftSelBtn;
 extern bool i_1_middleSelBtn;

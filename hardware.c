@@ -114,7 +114,10 @@ void InitHardware(){
 
 
 	InitLED();
-	InitButtonsSensors();
+	InitUserInputButtons();
+	InitBubbleSensor();
+	InitOcclusionSensor();
+	InitReservoirLevelPins();
 	InitMotor();
 }
 
@@ -123,23 +126,6 @@ void InitLED(){
     GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN0 );
     GPIO_setAsOutputPin( GPIO_PORT_P4, GPIO_PIN7 );
 }
-
-/*void timerInit(){
-    TIMER_A_configureUpMode(TIMER_A1_BASE,TIMER_A_CLOCKSOURCE_SMCLK,
-                        TIMER_A_CLOCKSOURCE_DIVIDER_64,65535-1,
-                        TIMER_A_TAIE_INTERRUPT_ENABLE,
-                        TIMER_A_CCIE_CCR0_INTERRUPT_ENABLE, TIMER_A_SKIP_CLEAR);
-
-    TIMER_A_initCompare(TIMER_A1_BASE,
-    					TIMER_A_CAPTURECOMPARE_REGISTER_1,
-    					TIMER_A_CAPTURECOMPARE_INTERRUPT_DISABLE,
-    					TIMER_A_OUTPUTMODE_OUTBITVALUE,
-    					62500 );
-
-    TIMER_A_startCounter(TIMER_A1_BASE,
-    		TIMER_A_UP_MODE
-    					);
-}*/
 
 void InitMotor(){
 	GPIO_setAsOutputPin( MOTOR_COIL_A1_PORT, MOTOR_COIL_A1_PIN );
@@ -155,7 +141,7 @@ void InitMotor(){
 	GPIO_setOutputLowOnPin( MOTOR_ENABLE_PORT, MOTOR_ENABLE_PIN );
 }
 
-void InitButtonsSensors(){
+void InitUserInputButtons(){
 	GPIO_setAsInputPinWithPullUpresistor( LEFT_SEL_BTN_PORT, LEFT_SEL_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( MIDDLE_SEL_BTN_PORT, MIDDLE_SEL_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( RIGHT_SEL_BTN_PORT, RIGHT_SEL_BTN_PIN );
@@ -163,17 +149,16 @@ void InitButtonsSensors(){
 	GPIO_setAsInputPinWithPullUpresistor( RIGHT_DIR_BTN_PORT, RIGHT_DIR_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( UP_DIR_BTN_PORT, UP_DIR_BTN_PIN );
 	GPIO_setAsInputPinWithPullUpresistor( DOWN_DIR_BTN_PORT, DOWN_DIR_BTN_PIN );
+}
 
+void InitBubbleSensor(){
 	GPIO_setAsInputPinWithPullUpresistor( SENSOR_1_BTN_PORT, SENSOR_1_BTN_PIN );
+}
+
+void InitOcclusionSensor(){
 	GPIO_setAsInputPinWithPullUpresistor( SENSOR_2_BTN_PORT, SENSOR_2_BTN_PIN );
+}
 
+void InitReservoirLevelPins(){
 	GPIO_setAsPeripheralModuleFunctionInputPin( SENSOR_LEVEL_PORT, SENSOR_LEVEL_PIN );
-
-	//  P1DIR &= ~BIT4;
-	//  P1DIR &= ~BIT3;
-	//  P1DIR &= ~BIT2;
-	// P3DIR &= ~BIT7;
-	 // P4DIR &= ~BIT3;
-	 // P4DIR &= ~BIT0;
-	 // P8DIR &= ~BIT2;
 }

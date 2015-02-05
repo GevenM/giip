@@ -47,7 +47,7 @@ void main(void){
     InitClock(8000000);   // Config clocks. MCLK=SMCLK=FLL=8MHz; ACLK=REFO=32kHz
     InitRTC();
     InitInsulinDeliveryMechanism();
-    InitInsulinReservoirSensor();
+    InitInsulinReservoirSensorADC();
     Sharp96x96_LCDInit(); // Set up the LCD
     InitDisplayContext ();
   	InitMonitoredVariables();
